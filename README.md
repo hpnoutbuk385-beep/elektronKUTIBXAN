@@ -39,8 +39,7 @@ Sayt [http://localhost:3000](http://localhost:3000) manzilida, API esa [http://l
 
 ## 🔑 Ma'muriyat (Admin)
 - **Admin panel:** [http://localhost:8000/admin](http://localhost:8000/admin)
-- **Login:** `admin`
-- **Parol:** `admin`
+- *(Tizim xavfsizligini ta'minlash maqsadida standart parol ko'rsatilmagan. Iltimos, o'z adminingizni django orqali yarating).*
 
 ## 📘 Funksiyalar
 - **QR Skaner**: Kitob berish va qaytarish uchun tezkor QR tizimi.
