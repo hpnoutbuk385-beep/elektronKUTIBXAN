@@ -32,6 +32,8 @@ class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [permissions.IsAuthenticated]
+    search_fields = ['title', 'author', 'isbn']
+    filterset_fields = ['category', 'available_copies']
 
     def get_queryset(self):
         user = self.request.user

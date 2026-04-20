@@ -3,6 +3,7 @@ export const translations = {
     // Menu
     dashboard: "Dashboard",
     my_books: "Mening Kitoblarim",
+    profile: "Profil",
     leaderboard: "Reyting",
     rewards: "Mukofotlar",
     admin_panel: "Admin Panel",
@@ -175,6 +176,7 @@ export const translations = {
     // Menu
     dashboard: "Dashboard",
     my_books: "My Books",
+    profile: "Profile",
     leaderboard: "Leaderboard",
     rewards: "Rewards",
     admin_panel: "Admin Panel",

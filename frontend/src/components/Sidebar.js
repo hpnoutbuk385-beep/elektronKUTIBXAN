@@ -24,6 +24,7 @@ export default function Sidebar() {
   const menuItems = [
     { name: t('dashboard'), href: "/", icon: "📊" },
     { name: t('my_books'), href: "/books", icon: "📚" },
+    { name: t('profile'), href: "/profile", icon: "👤" },
     { name: t('leaderboard'), href: "/leaderboard", icon: "🏆" },
     { name: t('rewards'), href: "/rewards", icon: "🎁" },
     { name: t('admin_panel'), href: "/admin", icon: "🛡️" },

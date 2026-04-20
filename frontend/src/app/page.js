@@ -1,16 +1,21 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { fetchApi } from '@/lib/api';
 import { useLanguage } from '@/context/LanguageContext';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-export default function Dashboard() {
+function DashboardContent() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const { t } = useLanguage();
   const [stats, setStats] = useState([]);
-
   const [currentBooks, setCurrentBooks] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [searching, setSearching] = useState(false);
+  
+  const searchParams = useSearchParams();
+  const query = searchParams.get('search');
 
   useEffect(() => {
     async function loadData() {
@@ -19,18 +24,14 @@ export default function Dashboard() {
         const userData = await userRes.json();
         setUser(userData);
 
-        // Update basic stats from user data
         setStats([
           { label: t('stat_books'), value: "24", icon: "📖", color: "var(--primary)" },
           { label: t('stat_points'), value: userData.points?.toLocaleString() || "0", icon: "🌟", color: "var(--accent)" },
           { label: t('stat_rank'), value: "3", icon: "🏆", color: "var(--secondary)" },
         ]);
 
-        // Fetch user's transactions/books
         const transRes = await fetchApi('/transactions/');
         const transData = await transRes.json();
-        
-        // Handle both paginated and non-paginated responses
         const results = Array.isArray(transData) ? transData : transData.results || [];
         
         const activeBooks = results
@@ -40,90 +41,138 @@ export default function Dashboard() {
             id: tx.id,
             title: tx.book_details.title,
             author: tx.book_details.author,
-            progress: Math.floor(Math.random() * 60) + 10, // Randomized for demo, in real life would come from DB
+            progress: Math.floor(Math.random() * 60) + 10,
             cover: tx.book_details.image || "📒",
             isImage: !!tx.book_details.image
           }));
         
         setCurrentBooks(activeBooks);
       } catch (err) {
-        console.error("Dashboard data load error:", err);
+        console.error("Dashboard load error:", err);
       } finally {
         setLoading(false);
       }
     }
-
     loadData();
   }, [t]);
+
+  useEffect(() => {
+    async function performSearch() {
+      if (!query) {
+          setSearchResults([]);
+          return;
+      }
+      setSearching(true);
+      try {
+          const res = await fetchApi(`/books/?search=${query}`);
+          const data = await res.json();
+          setSearchResults(Array.isArray(data) ? data : data.results || []);
+      } catch (err) {
+          console.error("Search error", err);
+      } finally {
+          setSearching(false);
+      }
+    }
+    performSearch();
+  }, [query]);
 
   if (loading) return <div className="flex-center h-full">{t('loading')}</div>;
 
   return (
     <div className="dashboard animate-fade">
-      <div className="welcome-section">
-        <h1 className="welcome-title">{t('welcome')}, <span className="gradient-text">{user?.username || 'Talaba'}!</span> 👋</h1>
-        <p className="welcome-subtitle">{t('welcome_subtitle')}</p>
-      </div>
-
-      <div className="stats-grid">
-        {stats.map((stat) => (
-          <div key={stat.label} className="stat-card glass-panel">
-            <div className="stat-icon" style={{ backgroundColor: stat.color }}>{stat.icon}</div>
-            <div className="stat-info">
-              <p className="stat-label">{stat.label}</p>
-              <h3 className="stat-value">{stat.value}</h3>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="main-grid">
-        <div className="reading-list glass-panel">
-          <h3 className="section-title">{t('reading_now')}</h3>
-          <div className="book-list">
-            {currentBooks.length > 0 ? currentBooks.map((book) => (
-              <div key={book.id || book.title} className="book-item glass-card">
-                <div className="book-cover">
-                  {book.isImage ? <img src={book.cover} alt={book.title} className="cover-img" /> : book.cover}
-                </div>
-                <div className="book-details">
-                  <h4 className="book-title">{book.title}</h4>
-                  <p className="book-author">{book.author}</p>
-                  <div className="progress-container">
-                    <div className="progress-bar" style={{ width: `${book.progress}%` }}></div>
+      {query ? (
+          <div className="search-results-section glass-panel">
+              <div className="flex-between">
+                <h3 className="section-title">🔍 "{query}" qidiruv natijalari</h3>
+                <Link href="/" className="link text-small">X tozalash</Link>
+              </div>
+              {searching ? (
+                  <p>Qidirilmoqda...</p>
+              ) : (
+                  <div className="books-grid-mini">
+                      {searchResults.length > 0 ? searchResults.map(book => (
+                          <div key={book.id} className="book-card-mini glass-card">
+                              <div className="mini-cover">📚</div>
+                              <div className="mini-details">
+                                  <h4>{book.title}</h4>
+                                  <p>{book.author}</p>
+                                  <span className={`status-pill ${book.available_copies > 0 ? 'success' : 'danger'}`}>
+                                      {book.available_copies > 0 ? 'Mavjud' : 'Band'}
+                                  </span>
+                              </div>
+                          </div>
+                      )) : <p className="text-muted">Hech narsa topilmadi.</p>}
                   </div>
-                  <span className="progress-text">{book.progress}% {t('read')}</span>
-                </div>
-              </div>
-            )) : <p className="text-muted">{t('no_reading')}</p>}
+              )}
           </div>
-        </div>
-
-        <div className="actions-section">
-          <div className="qr-card glass-panel flex-center flex-col">
-            <div className="qr-icon-big">🔳</div>
-            <h3>{t('book_action')}</h3>
-            <p>{t('scan_qr')}</p>
-            <Link href="/scanner" className="btn-primary-link mt-20">{t('start_scan')}</Link>
-          </div>
-          
-          <div className="rank-card glass-panel mt-20">
-            <h3 className="section-title">{t('top_readers')}</h3>
-            <div className="rank-list">
-              <div className="rank-item">
-                <span className="rank-num">1</span>
-                <span className="rank-name">Azizbek R.</span>
-                <span className="rank-pts">1,540 PTS</span>
-              </div>
-              <div className="rank-item">
-                <span className="rank-num">2</span>
-                <span className="rank-name">Madina S.</span>
-                <span className="rank-pts">1,320 PTS</span>
-              </div>
+      ) : (
+        <>
+            <div className="welcome-section">
+                <h1 className="welcome-title">{t('welcome')}, <span className="gradient-text">{user?.username || 'Talaba'}!</span> 👋</h1>
+                <p className="welcome-subtitle">{t('welcome_subtitle')}</p>
             </div>
-          </div>
-        </div>
-      </div>
+
+            <div className="stats-grid">
+                {stats.map((stat) => (
+                <div key={stat.label} className="stat-card glass-panel">
+                    <div className="stat-icon" style={{ backgroundColor: stat.color }}>{stat.icon}</div>
+                    <div className="stat-info">
+                    <p className="stat-label">{stat.label}</p>
+                    <h3 className="stat-value">{stat.value}</h3>
+                    </div>
+                </div>
+                ))}
+            </div>
+
+            <div className="main-grid">
+                <div className="reading-list glass-panel">
+                <h3 className="section-title">{t('reading_now')}</h3>
+                <div className="book-list">
+                    {currentBooks.length > 0 ? currentBooks.map((book) => (
+                    <div key={book.id || book.title} className="book-item glass-card">
+                        <div className="book-cover">
+                        {book.isImage ? <img src={book.cover} alt={book.title} className="cover-img" /> : book.cover}
+                        </div>
+                        <div className="book-details">
+                        <h4 className="book-title">{book.title}</h4>
+                        <p className="book-author">{book.author}</p>
+                        <div className="progress-container">
+                            <div className="progress-bar" style={{ width: `${book.progress}%` }}></div>
+                        </div>
+                        <span className="progress-text">{book.progress}% {t('read')}</span>
+                        </div>
+                    </div>
+                    )) : <p className="text-muted">{t('no_reading')}</p>}
+                </div>
+                </div>
+
+                <div className="actions-section">
+                <div className="qr-card glass-panel flex-center flex-col">
+                    <div className="qr-icon-big">🔳</div>
+                    <h3>{t('book_action')}</h3>
+                    <p>{t('scan_qr')}</p>
+                    <Link href="/scanner" className="btn-primary-link mt-20">{t('start_scan')}</Link>
+                </div>
+                
+                <div className="rank-card glass-panel mt-20">
+                    <h3 className="section-title">{t('top_readers')}</h3>
+                    <div className="rank-list">
+                    <div className="rank-item">
+                        <span className="rank-num">1</span>
+                        <span className="rank-name">Azizbek R.</span>
+                        <span className="rank-pts">1,540 PTS</span>
+                    </div>
+                    <div className="rank-item">
+                        <span className="rank-num">2</span>
+                        <span className="rank-name">Madina S.</span>
+                        <span className="rank-pts">1,320 PTS</span>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </>
+      )}
 
       <style jsx>{`
         .dashboard { display: flex; flex-direction: column; gap: 30px; }
@@ -157,8 +206,28 @@ export default function Dashboard() {
         .rank-pts { font-weight: 600; color: var(--accent); }
         .mt-20 { margin-top: 20px; }
         .flex-col { flex-direction: column; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
         .text-muted { color: var(--text-muted); }
+        .text-small { font-size: 0.8rem; }
+        
+        .search-results-section { padding: 30px; min-height: 400px; }
+        .books-grid-mini { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .book-card-mini { padding: 15px; display: flex; gap: 15px; align-items: center; }
+        .mini-cover { font-size: 30px; background: rgba(255,255,255,0.05); width: 50px; height: 70px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+        .mini-details h4 { font-size: 0.95rem; margin-bottom: 3px; }
+        .mini-details p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; }
+        .status-pill { padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; }
+        .status-pill.success { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .status-pill.danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
       `}</style>
     </div>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={<div>Yuklanmoqda...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }

@@ -32,10 +32,19 @@ class CustomUser(AbstractUser):
     phone = models.CharField(max_length=20, blank=True)
     points = models.IntegerField(default=0)
     qr_code = models.CharField(max_length=255, unique=True, null=True, blank=True)
+    qr_code_image = models.ImageField(upload_to='user_qrcodes/', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.qr_code:
-            self.qr_code = f"USER-{self.username}-{self.id}"
+            import uuid
+            self.qr_code = f"USER-{self.username}-{uuid.uuid4().hex[:8]}"
+        
+        if not self.qr_code_image:
+            from library.utils import generate_qr_code
+            filename = f"user_qr_{self.username}.png"
+            qr_file = generate_qr_code(self.qr_code, filename)
+            self.qr_code_image.save(filename, qr_file, save=False)
+
         super().save(*args, **kwargs)
 
     class Meta:

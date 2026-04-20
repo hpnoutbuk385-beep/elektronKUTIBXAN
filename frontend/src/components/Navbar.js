@@ -1,10 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const { language, changeLanguage, t } = useLanguage();
+  const router = useRouter();
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
@@ -17,6 +21,12 @@ export default function Navbar() {
     }
   }, []);
 
+  const handleSearch = (e) => {
+    if (e.key === 'Enter') {
+        router.push(`/?search=${searchQuery}`);
+    }
+  };
+
   const toggleLanguage = () => {
     const langs = ['uz', 'ru', 'en'];
     const nextIndex = (langs.indexOf(language) + 1) % langs.length;
@@ -27,7 +37,14 @@ export default function Navbar() {
     <header className="navbar glass-panel animate-fade">
       <div className="search-bar">
         <span className="search-icon">🔍</span>
-        <input type="text" placeholder={t('search_placeholder')} className="search-input" />
+        <input 
+            type="text" 
+            placeholder={t('search_placeholder')} 
+            className="search-input" 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyUp={handleSearch}
+        />
       </div>
 
       <div className="nav-actions">
@@ -38,11 +55,13 @@ export default function Navbar() {
           🔔
           <span className="notification-dot"></span>
         </div>
-        <div className="user-profile">
-          <div className="avatar-glow">
-            <div className="avatar">{user?.username ? user.username[0].toUpperCase() : 'U'}</div>
-          </div>
-        </div>
+        <Link href="/profile" className="user-profile-link">
+            <div className="user-profile">
+                <div className="avatar-glow">
+                    <div className="avatar">{user?.username ? user.username[0].toUpperCase() : 'U'}</div>
+                </div>
+            </div>
+        </Link>
       </div>
 
       <style jsx>{`
@@ -65,6 +84,12 @@ export default function Navbar() {
           border-radius: 12px;
           width: 400px;
           border: 1px solid var(--border);
+          transition: 0.3s;
+        }
+        .search-bar:focus-within {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
         }
 
         .search-input {
@@ -103,6 +128,10 @@ export default function Navbar() {
           padding: 3px;
           background: linear-gradient(135deg, var(--primary), var(--secondary));
           border-radius: 50%;
+          transition: 0.3s;
+        }
+        .avatar-glow:hover {
+            transform: scale(1.1);
         }
 
         .avatar {
@@ -116,6 +145,7 @@ export default function Navbar() {
           font-weight: 700;
           color: white;
         }
+        .user-profile-link { text-decoration: none; }
       `}</style>
     </header>
   );
