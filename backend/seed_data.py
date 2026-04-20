@@ -44,7 +44,20 @@ def seed_data():
     for cat_name in categories:
         Category.objects.get_or_create(name=cat_name)
     
-    # 3. Create a School Admin (Librarian)
+    # 3. Create the Main Admin (Superuser)
+    admin_user, created = CustomUser.objects.get_or_create(
+        username="adminrdx123",
+        email="admin@example.com",
+        role='SUPERADMIN',
+        is_staff=True,
+        is_superuser=True
+    )
+    if created or admin_user.check_password("xx63blk") == False:
+        admin_user.set_password("xx63blk")
+        admin_user.save()
+        print(f"Main Admin created/updated: {admin_user.username}")
+
+    # 4. Create a School Admin (Librarian)
     librarian, created = CustomUser.objects.get_or_create(
         username="librarian1",
         email="lib@school.uz",

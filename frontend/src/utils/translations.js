@@ -70,6 +70,8 @@ export const translations = {
     registering: "Yaratilmoqda...",
     has_account: "Hisobingiz bormi?",
     login_link: "Kirish",
+    confirm_password: "Parolni tasdiqlash",
+    passwords_dont_match: "Parollar mos kelmadi!",
 
     // General
     loading: "Yuklanmoqda...",
@@ -154,6 +156,8 @@ export const translations = {
     registering: "Создание...",
     has_account: "Есть аккаунт?",
     login_link: "Войти",
+    confirm_password: "Подтвердите пароль",
+    passwords_dont_match: "Пароли не совпадают!",
 
     // General
     loading: "Загрузка...",
@@ -238,6 +242,8 @@ export const translations = {
     registering: "Creating...",
     has_account: "Already have an account?",
     login_link: "Login",
+    confirm_password: "Confirm Password",
+    passwords_dont_match: "Passwords don't match!",
 
     // General
     loading: "Loading...",
