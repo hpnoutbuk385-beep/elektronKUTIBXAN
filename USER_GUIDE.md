@@ -1,5 +1,5 @@
 # Foydalanish bo'yicha qo'llanma (User Guide)
-> **Versiya:** v1.2.0
+> **Versiya:** v1.4.0
 
 Ushbu qo'llanma "Raqamli Kutubxona" platformasidan foydalanuvchilarning turli rollari uchun mo'ljallangan. Tizim to'liq **3 ta tilda** (O'zbek, Rus, Ingliz) ishlaydi va har qanday sahifada tilni yuqoridagi menyudan almashtirish mumkin.
 

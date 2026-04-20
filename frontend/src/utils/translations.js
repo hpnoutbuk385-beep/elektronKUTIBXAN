@@ -72,7 +72,16 @@ export const translations = {
     login_link: "Kirish",
 
     // General
-    loading: "Yuklanmoqda..."
+    loading: "Yuklanmoqda...",
+    back: "Orqaga",
+
+    // Scanner
+    qr_scanner_title: "QR Skaner",
+    camera_initializing: "Kamera tayyorlanmoqda...",
+    camera_error: "Kameraga ruxsat berilmadi yoki xatolik.",
+    start_camera: "Kamerani yoqish",
+    mode_loan: "Kitob Berish",
+    mode_return: "Kitob Qaytarish"
   },
   ru: {
     // Menu
@@ -147,7 +156,16 @@ export const translations = {
     login_link: "Войти",
 
     // General
-    loading: "Загрузка..."
+    loading: "Загрузка...",
+    back: "Назад",
+
+    // Scanner
+    qr_scanner_title: "QR Сканер",
+    camera_initializing: "Подготовка камеры...",
+    camera_error: "Нет доступа к камере или ошибка.",
+    start_camera: "Включить камеру",
+    mode_loan: "Выдать книгу",
+    mode_return: "Вернуть книгу"
   },
   en: {
     // Menu
@@ -222,6 +240,15 @@ export const translations = {
     login_link: "Login",
 
     // General
-    loading: "Loading..."
+    loading: "Loading...",
+    back: "Back",
+
+    // Scanner
+    qr_scanner_title: "QR Scanner",
+    camera_initializing: "Initializing camera...",
+    camera_error: "Camera access denied or error.",
+    start_camera: "Turn on Camera",
+    mode_loan: "Borrow Book",
+    mode_return: "Return Book"
   }
 };

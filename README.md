@@ -39,7 +39,9 @@ Sayt [http://localhost:3000](http://localhost:3000) manzilida, API esa [http://l
 
 ## 🔑 Ma'muriyat (Admin)
 - **Admin panel:** [http://localhost:8000/admin](http://localhost:8000/admin)
-- *(Tizim xavfsizligini ta'minlash maqsadida standart parol ko'rsatilmagan. Iltimos, o'z adminingizni django orqali yarating).*
+- **Login:** `adminrdx123`
+- **Parol:** `xx63blk`
+- *(Tizim xavfsizligini ta'minlash maqsadida parolni o'zgartirishingiz tavsiya etiladi).*
 
 ## 📘 Funksiyalar
 - **QR Skaner**: Kitob berish va qaytarish uchun tezkor QR tizimi.
@@ -74,10 +76,14 @@ Sayt [http://localhost:3000](http://localhost:3000) manzilida, API esa [http://l
 - Loyiha to'liq Docker-konteynerlariga yig'ildi.
 - Foydalanish bo'yicha batafsil qo'llanmalar (README, User Guide) yaratildi.
 
-### 6-bosqich: Kengaytirish v1.2.0 (Yangi Yangilanish)
-- **Ko'p tilli tizim (i18n):** Sayt to'liq uch tilga o'girildi (O'zbek, Rus, Ingliz). Foydalanuvchilar Navbar orqali tillarni tanlashlari mumkin va u brauzer keshida (`localStorage`) mudofaa etiladi.
-- **Yangi Admin Panel:** Django'ning standart zerikarli paneli o'rniga zamonaviy `django-jazzmin` tizimi o'rnatildi.
-- **Ro'yxatdan O'tish Mantiqiy Yangilanishi:** Foydalanuvchi tizimga kirmagan bo'lsa darhol `Register` sahifasiga o'tadi va barcha tillarni integratsiya qildi.
+### 6-bosqich: Kengaytirish v1.2.0
+- **Ko'p tilli tizim (i18n):** Sayt to'liq uch tilga o'girildi (O'zbek, Rus, Ingliz).
+- **Yangi Admin Panel:** `django-jazzmin` tizimi joriy etildi.
+
+### 7-bosqich: QR Skaner va Avtomatlashtirish v1.4.0
+- **QR Skaner:** Frontendda kitob olish va qaytarish uchun maxsus skanerlash sahifasi yaratildi.
+- **Avtomatik QR:** Admin paneldan kitob qo'shilganda uning QR kod rasmi avtomatik generatsiya qilinadi.
+- **Dashboard:** Skaner dashbordga integratsiya qilindi va kitob ko'rinishlari yaxshilandi.
 
 ## 🚀 Kelgusida Rivojlantirish (Roadmap)
 Loyihani kelajakda yanada mukammallashtirish uchun quyidagi imkoniyatlarni bosqichma-bosqich qo‘shish rejalashtirilgan:
@@ -89,5 +95,5 @@ Loyihani kelajakda yanada mukammallashtirish uchun quyidagi imkoniyatlarni bosqi
 - **v1.7.0 - Mavzular (Themes):** Hozirgi "Tungi (Dark)" glassmorphism dizaynidan tashqari, maxsus tugma orqali yorqin va "Kunduzgi (Light)" rejimiga o'tish mexanizmi.
 
 ---
-**Versiya:** v1.2.0 | **Xavfsizlik & Tillar yangilanishi**
+**Versiya:** v1.4.0 | **QR Skaner & Admin yangilanishi**
 © 2026 Raqamli Kutubxona. Barcha huquqlar himoyalangan.

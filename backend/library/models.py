@@ -15,6 +15,7 @@ class Book(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='books')
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='books')
     qr_code = models.CharField(max_length=255, unique=True)
+    qr_code_image = models.ImageField(upload_to='qrcodes/', null=True, blank=True)
     total_copies = models.IntegerField(default=1)
     available_copies = models.IntegerField(default=1)
     page_count = models.IntegerField(default=0)
@@ -23,9 +24,15 @@ class Book(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.qr_code:
-            # Generate a temporary unique ID if no QR exists
             import uuid
             self.qr_code = f"BOOK-{uuid.uuid4().hex[:8]}"
+            
+        # Generate QR image if it doesn't exist
+        if not self.qr_code_image:
+            from .utils import generate_qr_code
+            qr_file = generate_qr_code(self.qr_code, f"{self.qr_code}.png")
+            self.qr_code_image.save(f"{self.qr_code}.png", qr_file, save=False)
+            
         super().save(*args, **kwargs)
 
     def __str__(self):

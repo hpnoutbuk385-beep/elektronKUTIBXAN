@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { fetchApi } from '@/lib/api';
 import { useLanguage } from '@/context/LanguageContext';
+import Link from 'next/link';
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -28,15 +29,21 @@ export default function Dashboard() {
         // Fetch user's transactions/books
         const transRes = await fetchApi('/transactions/');
         const transData = await transRes.json();
-        const activeBooks = transData.results
-          ?.filter(t => t.status === 'BORROWED')
-          .slice(0, 2)
+        
+        // Handle both paginated and non-paginated responses
+        const results = Array.isArray(transData) ? transData : transData.results || [];
+        
+        const activeBooks = results
+          .filter(t => t.status === 'BORROWED')
+          .slice(0, 3)
           .map(tx => ({
+            id: tx.id,
             title: tx.book_details.title,
             author: tx.book_details.author,
-            progress: 45, // Placeholder progress
-            cover: "📒"
-          })) || [];
+            progress: Math.floor(Math.random() * 60) + 10, // Randomized for demo, in real life would come from DB
+            cover: tx.book_details.image || "📒",
+            isImage: !!tx.book_details.image
+          }));
         
         setCurrentBooks(activeBooks);
       } catch (err) {
@@ -75,8 +82,10 @@ export default function Dashboard() {
           <h3 className="section-title">{t('reading_now')}</h3>
           <div className="book-list">
             {currentBooks.length > 0 ? currentBooks.map((book) => (
-              <div key={book.title} className="book-item glass-card">
-                <div className="book-cover">{book.cover}</div>
+              <div key={book.id || book.title} className="book-item glass-card">
+                <div className="book-cover">
+                  {book.isImage ? <img src={book.cover} alt={book.title} className="cover-img" /> : book.cover}
+                </div>
                 <div className="book-details">
                   <h4 className="book-title">{book.title}</h4>
                   <p className="book-author">{book.author}</p>
@@ -95,7 +104,7 @@ export default function Dashboard() {
             <div className="qr-icon-big">🔳</div>
             <h3>{t('book_action')}</h3>
             <p>{t('scan_qr')}</p>
-            <button className="btn-primary mt-20">{t('start_scan')}</button>
+            <Link href="/scanner" className="btn-primary-link mt-20">{t('start_scan')}</Link>
           </div>
           
           <div className="rank-card glass-panel mt-20">
@@ -130,7 +139,8 @@ export default function Dashboard() {
         .reading-list { padding: 30px; }
         .book-list { display: flex; flex-direction: column; gap: 15px; }
         .book-item { padding: 20px; display: flex; gap: 20px; }
-        .book-cover { font-size: 40px; background: rgba(255, 255, 255, 0.05); width: 70px; height: 90px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+        .book-cover { font-size: 40px; background: rgba(255, 255, 255, 0.05); width: 70px; height: 90px; display: flex; align-items: center; justify-content: center; border-radius: 8px; overflow: hidden; }
+        .cover-img { width: 100%; height: 100%; object-fit: cover; }
         .book-details { flex-grow: 1; }
         .book-author { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px; }
         .progress-container { height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; margin-bottom: 8px; }
