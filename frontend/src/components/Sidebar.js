@@ -114,6 +114,9 @@ export default function Sidebar({ isOpen, onClose }) {
               border-radius: 0 24px 24px 0;
               transform: translateX(-100%);
               width: 280px;
+              background: #0a0a0f !important; /* Solid dark background for mobile */
+              box-shadow: 10px 0 50px rgba(0, 0, 0, 0.8);
+              padding-top: 40px;
             }
             .sidebar.mobile-open {
               transform: translateX(0);
@@ -121,6 +124,7 @@ export default function Sidebar({ isOpen, onClose }) {
             .mobile-close-btn {
               display: block;
               margin-left: auto;
+              padding: 10px;
             }
           }
 
