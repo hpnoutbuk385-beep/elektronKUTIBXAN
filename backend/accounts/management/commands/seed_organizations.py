@@ -6,8 +6,14 @@ class Command(BaseCommand):
     help = "Seed initial organizations (schools) into the database"
 
     def handle(self, *args, **kwargs):
+        # Create Superuser if it doesn't exist
+        from accounts.models import CustomUser
+        if not CustomUser.objects.filter(username="Admin").exists():
+            CustomUser.objects.create_superuser("Admin", "admin@example.com", "xx63blk")
+            self.stdout.write(self.style.SUCCESS("✅ Superuser 'Admin' created successfully!"))
+
         if Organization.objects.exists():
-            self.stdout.write(self.style.WARNING("Organizations already exist. Skipping seed."))
+            self.stdout.write(self.style.WARNING("Organizations already exist. Skipping organization seed."))
             return
 
         # Create Ministry (root)
