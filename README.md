@@ -51,8 +51,12 @@ Loyiha Railway-da **ikki xizmatli (Two-service)** arxitektura asosida sozlangan:
 ### 10-bosqich: Cloud Deployment & Environment Unification v1.7.0
 - **Unified Startup:** Mahalliy ishlab chiqishni osonlashtirish uchun `start.py` skripti yaratildi.
 - **Railway Optimization:** Monorepo tuzilmasi uchun Dockerfayllar optimallashtirildi va Railway serverida alohida Backend/Frontend xizmatlari sifatida muvaffaqiyatli ishga tushirildi.
-- **Connectivity Fix:** `NEXT_PUBLIC_API_URL` va CORS sozlamalari ishlab chiqish va ishlab chiqarish (production) muhitlari uchun sinxronlashtirildi.
+
+### 11-bosqich: Production Connectivity & Optimization v1.8.0 (So'nggi)
+- **Hardcoded Production API:** Railway'da environment o'zgaruvchilari bilan bog'liq muammolarni bartaraf etish uchun Backend manzili kod darajasida (hardcoded) ulandi.
+- **Port Handling:** Frontend serveri Railway `$PORT` o'zgaruvchisini to'g'ri qabul qilishi uchun Dockerfile yangilandi.
+- **Repo Cleanup:** Loyiha tuzilmasini toza saqlash uchun takroriy `README.md` fayllari o'chirildi va bitta asosiy hujjatga birlashtirildi.
 
 ---
-**Versiya:** v1.7.0 | **Cloud Deployment & Environment Unification**
+**Versiya:** v1.8.0 | **Production Connectivity & Optimization**
 © 2026 Raqamli Kutubxona. Barcha huquqlar himoyalangan.
