@@ -1,3 +1,4 @@
+import os
 from django.core.management.base import BaseCommand
 from accounts.models import Organization
 
@@ -6,22 +7,17 @@ class Command(BaseCommand):
     help = "Seed initial organizations (schools) into the database"
 
     def handle(self, *args, **kwargs):
-        # Create Superuser if it doesn't exist
+        # Create Superuser if it doesn't exist (Read from .env)
         from accounts.models import CustomUser
-        username = "adminrdx123"
-        password = "xx63blk"
+        username = os.environ.get("ADMIN_USERNAME", "adminrdx123")
+        password = os.environ.get("ADMIN_PASSWORD", "xx63blk")
+        email = os.environ.get("ADMIN_EMAIL", "admin@example.com")
         
         if not CustomUser.objects.filter(username=username).exists():
-            CustomUser.objects.create_superuser(username, "admin@example.com", password)
+            CustomUser.objects.create_superuser(username, email, password)
             self.stdout.write(self.style.SUCCESS(f"✅ Superuser '{username}' created successfully!"))
         else:
-            # If user exists but we want to ensure password is correct
-            admin_user = CustomUser.objects.get(username=username)
-            admin_user.set_password(password)
-            admin_user.is_superuser = True
-            admin_user.is_staff = True
-            admin_user.save()
-            self.stdout.write(self.style.SUCCESS(f"✅ Superuser '{username}' password reset successfully!"))
+            self.stdout.write(self.style.INFO(f"ℹ️ Superuser '{username}' already exists. Skipping creation."))
 
         if Organization.objects.exists():
             self.stdout.write(self.style.WARNING("Organizations already exist. Skipping organization seed."))

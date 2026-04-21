@@ -40,8 +40,7 @@ Loyiha Railway-da **ikki xizmatli (Two-service)** arxitektura asosida sozlangan:
 
 ## 🔑 Ma'muriyat (Admin)
 - **Admin panel:** [https://elektronkutibxan-production.up.railway.app/admin](https://elektronkutibxan-production.up.railway.app/admin)
-- **Login:** `adminrdx123`
-- **Parol:** `xx63blk`
+- **Ma'lumot:** Admin login va paroli xavfsizlik yuzasidan GitHub'dan olib tashlandi. Uni loyiha egasidan so'rang.
 
 ## 📈 Amalga oshirilgan Stage-lar
 
