@@ -1,5 +1,4 @@
-export let API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
-API_URL = API_URL.replace(/\/$/, "");
+export const API_URL = 'https://elektronkutibxan-production.up.railway.app/api';
 
 export const fetchApi = async (endpoint, options = {}) => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
