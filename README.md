@@ -1,4 +1,3 @@
-
 # Raqamli Kutubxona - Milliy Platforma
 
 Ushbu loyiha O'zbekistondagi maktablar va oliy ta'lim muassasalari uchun mo'ljallangan, ierarxik boshqaruv va gamifikatsiya elementlariga ega bo'lgan raqamli kutubxona boshqaruv tizimidir.
@@ -13,91 +12,47 @@ Ushbu loyiha O'zbekistondagi maktablar va oliy ta'lim muassasalari uchun mo'ljal
 - `/backend`: Django API va ma'lumotlar bazasi logikasi.
 - `/frontend`: Next.js foydalanuvchi interfeysi.
 - `docker-compose.yml`: Loyihani bitta buyruq bilan ishga tushirish uchun sozlamalar.
+- `start.py`: Mahalliy ishga tushirish uchun yagona skript.
 
 ## ⚙️ O'rnatish va Ishga tushirish
 
-### Docker orqali (Tavsiya etiladi):
+### Mahalliy ishga tushirish (Tavsiya etiladi):
+Endi ikkita terminal ochish shart emas. Loyihaning ildiz (root) papkasida turib quyidagi buyruqni bering:
+```bash
+python start.py
+```
+Ushbu skript avtomatik ravishda:
+- Band bo'lgan portlarni tozalaydi (Windowsda 3000 va 8000 portlar band bo'lishi muammosini hal qiladi).
+- Backend (Django) va Frontend (Next.js) serverlarini parallel ishga tushiradi.
+
+### Docker orqali:
 ```bash
 docker-compose up --build
 ```
-Sayt [http://localhost:3000](http://localhost:3000) manzilida, API esa [http://localhost:8000](http://localhost:8000) manzilida ishlaydi.
+Sayt [http://localhost:3000](http://localhost:3000) manzilida ishlaydi.
 
-### Qo'lda ishga tushirish:
-1. **Backend:**
-   ```bash
-   cd backend
-   pip install -r requirements.txt
-   python manage.py migrate
-   python manage.py runserver
-   ```
-2. **Frontend:**
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
+## 🌍 Serverda (Railway) Ishga tushirish
+Loyiha Railway-da **ikki xizmatli (Two-service)** arxitektura asosida sozlangan:
+1. **Backend Service**: `backend/Dockerfile` orqali ishlaydi.
+2. **Frontend Service**: `frontend/Dockerfile` orqali ishlaydi.
+
+**Muhim!** Frontend ishlashi uchun Railway-dagi `Variables` bo'limida `NEXT_PUBLIC_API_URL` o'zgaruvchisini Backend-ning manzili (masalan: `https://.../api`) qilib sozlash va **Redeploy** qilish shart.
 
 ## 🔑 Ma'muriyat (Admin)
 - **Admin panel:** [http://localhost:8000/admin](http://localhost:8000/admin)
-- **Ism:** `Admin`
-- **Familiya:** `Kutubxona`
+- **Login:** `Admin`
 - **Parol:** `xx63blk`
-- *(Tizim xavfsizligini ta'minlash maqsadida parolni o'zgartirishingiz tavsiya etiladi).*
 
-## 📘 Funksiyalar
-- **QR Skaner**: Kitob berish va qaytarish uchun tezkor QR tizimi.
-- **Gamifikatsiya**: Testlar orqali bilim ballarini to'plash va mukofotlar do'koni.
-- **Analitika**: Maktab faoliyati bo'yicha avtomatlashtirilgan PDF hisobotlar.
-- **Ierarxiya**: Vazirlik, Viloyat, Tuman va Maktab darajasidagi nazorat panellari.
-- **Xavfsizlik**: `TenantSecurityMiddleware` orqali maktablararo ma'lumotlar isolate qilingan.
-- **Integratsiya**: HEMIS va eMaktab uchun Mock SSO autentifikatsiya tizimi.
+## 📈 Amalga oshirilgan Stage-lar
 
-## 📈 Amalga oshirilgan ishlar (Bosqichma-bosqich)
+### 1-9 Bosqichlar:
+- SRS, MVP, Gamifikatsiya, Analitika, Integratsiya, i18n, QR Skaner va UI barqarorligi (v1.6.1).
 
-### 1-bosqich: Rejalashtirish
-- SRS va loyiha arxitekturasi ishlab chiqildi.
-- Texnologik stack (Django + Next.js) tasdiqlandi.
-
-### 2-bosqich: MVP (Minimal Ishchi Mahsulot)
-- Ierarxik tashkilotlar va foydalanuvchilar bazasi yaratildi.
-- Kitoblar va tranzaksiyalar uchun QR tizimi joriy etildi.
-- Premium "Glassmorphism" dizayn tizimi frontendga integratsiya qilindi.
-
-### 3-bosqich: Kengaytirish
-- Testlar/Viktorinalar va bilim ballari tizimi qo'shildi.
-- Mukofotlar do'koni (Marketplace) interfeysi va logikasi yaratildi.
-- Avtomatlashtirilgan PDF hisobotlar tizimi ishga tushirildi.
-
-### 4-bosqich: Integratsiya va Testlar
-- HEMIS/eMaktab uchun Mock SSO autentifikatsiya moduli yaratildi.
-- Ma'lumotlar xavfsizligi uchun maxsus middleware yozildi.
-- Yuklama testi (Locust) skriptlari tayyorlandi.
-
-### 5-bosqich: Ishga tushirish qismi
-- Loyiha to'liq Docker-konteynerlariga yig'ildi.
-- Foydalanish bo'yicha batafsil qo'llanmalar (README, User Guide) yaratildi.
-
-### 6-bosqich: Kengaytirish v1.2.0
-- **Ko'p tilli tizim (i18n):** Sayt to'liq uch tilga o'girildi (O'zbek, Rus, Ingliz).
-- **Yangi Admin Panel:** `django-jazzmin` tizimi joriy etildi.
-
-### 7-bosqich: QR Skaner va Avtomatlashtirish v1.4.0
-- **QR Skaner:** Frontendda kitob olish va qaytarish uchun maxsus skanerlash sahifasi yaratildi.
-- **Avtomatik QR:** Admin paneldan kitob qo'shilganda uning QR kod rasmi avtomatik generatsiya qilinadi.
-- **Dashboard:** Skaner dashbordga integratsiya qilindi va kitob ko'rinishlari yaxshilandi.
-
-### 9-bosqich: Security, Localization & UI Stability Update v1.6.1
-- **Roli bo'yicha kirish nazorati (RBAC):** "Ma'muriyat Paneli" faqat tegishli vakolatga ega foydalanuvchilar (Librarian/Admin) uchun ko'rinadigan qilindi.
-- **Admin Panel Multilingual:** Maktab darajasidagi statistikalar va boshqaruv sahifasi to'liq 3 tilda (UZ, RU, EN) ishlaydigan bo'ldi.
-- **Cinematic UX & Stability:** Fon animatsiyalari tayyorlandi va frontend Hydration xatolari (Next.js App Router render mojarolari) bartaraf etildi. QR Skaner ishlashidagi kutilmagan nosozliklar tuzatilib, brauzer bilan barqaror ishlaydigan zamonaviy holatga keltirildi. Backend portiga indeks yo'naltiruvchisi qo'shildi (404 xato o'rniga admin panelga redirect).
-
-## 🚀 Kelgusida Rivojlantirish (Roadmap)
-Loyihani kelajakda yanada mukammallashtirish uchun quyidagi imkoniyatlarni bosqichma-bosqich qo‘shish rejalashtirilgan:
-
-- **v1.7.0 - QR shtrix-kod Generatsiyasi:** Adminlar uchun minglab kitoblarga printerda chiqarishga moslashtirilgan PDF formatidagi stiker-kodlarni bir paytning o'zida generatsiya qilish moduli.
-- **v1.8.0 - Shaxsiy Avatarlar:** Foydalanuvchilarga o'z profil rasmlarini (avatar) yuklash va tahrirlash imkoniyatini taqdim etuvchi tizim.
-- **v1.9.0 - Mavzular (Themes):** Maxsus tugma orqali "Dark/Light" rejimlariga o'tish mexanizmi.
+### 10-bosqich: Cloud Deployment & Environment Unification v1.7.0
+- **Unified Startup:** Mahalliy ishlab chiqishni osonlashtirish uchun `start.py` skripti yaratildi.
+- **Railway Optimization:** Monorepo tuzilmasi uchun Dockerfayllar optimallashtirildi va Railway serverida alohida Backend/Frontend xizmatlari sifatida muvaffaqiyatli ishga tushirildi.
+- **Connectivity Fix:** `NEXT_PUBLIC_API_URL` va CORS sozlamalari ishlab chiqish va ishlab chiqarish (production) muhitlari uchun sinxronlashtirildi.
 
 ---
-**Versiya:** v1.6.1 | **Security, UI & Stability Update**
+**Versiya:** v1.7.0 | **Cloud Deployment & Environment Unification**
 © 2026 Raqamli Kutubxona. Barcha huquqlar himoyalangan.
