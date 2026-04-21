@@ -11,6 +11,14 @@ class Command(BaseCommand):
         if not CustomUser.objects.filter(username="Admin").exists():
             CustomUser.objects.create_superuser("Admin", "admin@example.com", "xx63blk")
             self.stdout.write(self.style.SUCCESS("✅ Superuser 'Admin' created successfully!"))
+        else:
+            # If user exists but we want to ensure password is correct
+            admin_user = CustomUser.objects.get(username="Admin")
+            admin_user.set_password("xx63blk")
+            admin_user.is_superuser = True
+            admin_user.is_staff = True
+            admin_user.save()
+            self.stdout.write(self.style.SUCCESS("✅ Superuser 'Admin' password reset successfully!"))
 
         if Organization.objects.exists():
             self.stdout.write(self.style.WARNING("Organizations already exist. Skipping organization seed."))
