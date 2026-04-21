@@ -104,6 +104,9 @@ export const translations = {
     login_failed: "Kirishda xatolik yuz berdi",
     registration_failed: "Ro'yxatdan o'tishda xatolik yuz berdi",
     server_error: "Server bilan bog'lanishda xatolik",
+    register: "Ro'yxatdan O'tish",
+    select_org: "Tashkilotni tanlang...",
+    password_mismatch: "Parollar mos kelmadi!",
 
     // General
     loading: "Yuklanmoqda...",
@@ -232,6 +235,9 @@ export const translations = {
     login_failed: "Ошибка при входе",
     registration_failed: "Ошибка при регистрации",
     server_error: "Ошибка связи с сервером",
+    register: "Регистрация",
+    select_org: "Выберите организацию...",
+    password_mismatch: "Пароли не совпадают!",
 
     // General
     loading: "Загрузка...",
@@ -361,6 +367,9 @@ export const translations = {
     login_failed: "Login failed",
     registration_failed: "Registration failed",
     server_error: "Server connection error",
+    register: "Registration",
+    select_org: "Select Organization...",
+    password_mismatch: "Passwords don't match!",
 
     // General
     loading: "Loading...",
