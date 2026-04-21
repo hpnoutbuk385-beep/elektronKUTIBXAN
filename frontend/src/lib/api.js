@@ -1,6 +1,4 @@
-let API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
-
-// Remove trailing slash if exists
+export let API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 API_URL = API_URL.replace(/\/$/, "");
 
 export const fetchApi = async (endpoint, options = {}) => {

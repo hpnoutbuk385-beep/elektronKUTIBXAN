@@ -24,16 +24,23 @@ export default function RegisterPage() {
   useEffect(() => {
     async function getOrgs() {
       try {
-        console.log("Register page: Fetching organizations...");
+        const { API_URL } = await import("@/lib/api");
+        console.log("🛠 DIAGNOSTIC: Current API_URL is:", API_URL);
+        console.log("🛠 DIAGNOSTIC: Fetching from:", `${API_URL}/organizations/`);
+        
         const res = await fetchApi('/organizations/', { cache: 'no-store' });
+        console.log("🛠 DIAGNOSTIC: Response status:", res.status);
+        
         if (res.ok) {
           const data = await res.json();
+          console.log("🛠 DIAGNOSTIC: Organizations received:", data);
           setOrganizations(data.results || data);
         } else {
-          console.error("Failed to fetch organizations: Status", res.status);
+          const errorText = await res.text();
+          console.error("🛠 DIAGNOSTIC ERROR: Failed status", res.status, errorText);
         }
       } catch (err) {
-        console.error("Failed to load organizations", err);
+        console.error("🛠 DIAGNOSTIC CRITICAL ERROR:", err);
       }
     }
     getOrgs();
