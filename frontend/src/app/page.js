@@ -83,11 +83,11 @@ function DashboardContent() {
       {query ? (
           <div className="search-results-section glass-panel">
               <div className="flex-between">
-                <h3 className="section-title">🔍 "{query}" qidiruv natijalari</h3>
-                <Link href="/" className="link text-small">X tozalash</Link>
+                <h3 className="section-title">🔍 "{query}" {t('search_results')}</h3>
+                <Link href="/" className="link text-small">X {t('clear')}</Link>
               </div>
               {searching ? (
-                  <p>Qidirilmoqda...</p>
+                  <p>{t('searching')}</p>
               ) : (
                   <div className="books-grid-mini">
                       {searchResults.length > 0 ? searchResults.map(book => (
@@ -97,18 +97,18 @@ function DashboardContent() {
                                   <h4>{book.title}</h4>
                                   <p>{book.author}</p>
                                   <span className={`status-pill ${book.available_copies > 0 ? 'success' : 'danger'}`}>
-                                      {book.available_copies > 0 ? 'Mavjud' : 'Band'}
+                                      {book.available_copies > 0 ? t('available_status') : t('unavailable_status')}
                                   </span>
                               </div>
                           </div>
-                      )) : <p className="text-muted">Hech narsa topilmadi.</p>}
+                      )) : <p className="text-muted">{t('no_results')}</p>}
                   </div>
               )}
           </div>
       ) : (
         <>
             <div className="welcome-section">
-                <h1 className="welcome-title">{t('welcome')}, <span className="gradient-text">{user?.username || 'Talaba'}!</span> 👋</h1>
+                <h1 className="welcome-title">{t('welcome')}, <span className="gradient-text">{user?.username || t('student_role')}!</span> 👋</h1>
                 <p className="welcome-subtitle">{t('welcome_subtitle')}</p>
             </div>
 
@@ -225,8 +225,9 @@ function DashboardContent() {
 }
 
 export default function Dashboard() {
+  const { t } = useLanguage();
   return (
-    <Suspense fallback={<div>Yuklanmoqda...</div>}>
+    <Suspense fallback={<div>{t('loading')}</div>}>
       <DashboardContent />
     </Suspense>
   );

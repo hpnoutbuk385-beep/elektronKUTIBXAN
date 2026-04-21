@@ -19,7 +19,16 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.utils.translation import gettext_lazy as _
+
+admin.site.site_header = _("Raqamli Kutubxona Admin Paneli")
+admin.site.site_title = _("Kutubxona Admin")
+admin.site.index_title = _("Boshqaruv")
+
+from django.http import HttpResponseRedirect
+
 urlpatterns = [
+    path('', lambda request: HttpResponseRedirect('/admin/')),
     path('admin/', admin.site.urls),
     path('api/', include('core_api.urls')),
 ]

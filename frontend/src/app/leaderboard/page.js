@@ -37,21 +37,21 @@ export default function Leaderboard() {
       try {
           const res = await fetchApi(`/competitions/${compId}/register/`, { method: 'POST' });
           if (res.ok) {
-              alert("Muobaqaga muvaffaqiyatli daxil bo'ldingiz!");
+              alert(t('comp_success'));
           } else {
               const data = await res.json();
-              alert(data.message || "Xatolik yuz berdi");
+              alert(data.message || t('comp_error'));
           }
       } catch (err) {
-          alert("Server xatosi");
+          alert(t('server_error'));
       }
   };
 
   return (
     <div className="leaderboard-page animate-fade">
       <div className="page-header">
-        <h1 className="gradient-text">{t('leaderboard')} va Musobaqalar</h1>
-        <p className="subtitle">Eng kuchli kitobxonlar safida bo'ling</p>
+        <h1 className="gradient-text">{t('leaderboard')} {t('competitions')}</h1>
+        <p className="subtitle">{t('leaderboard_subtitle')}</p>
       </div>
 
       <div className="main-layout">
@@ -62,37 +62,37 @@ export default function Leaderboard() {
                 className={`scope-btn ${activeScope === "school" ? "active" : ""}`}
                 onClick={() => setActiveScope("school")}
               >
-                Mening Maktabim
+                {t('my_school')}
               </button>
               <button 
                 className={`scope-btn ${activeScope === "district" ? "active" : ""}`}
                 onClick={() => setActiveScope("district")}
               >
-                Tuman
+                {t('district')}
               </button>
             </div>
           </div>
 
           <div className="rank-table glass-panel">
-            {loading ? <p className="p-20">Yuklanmoqda...</p> : (
+            {loading ? <p className="p-20">{t('loading')}</p> : (
                 leaders.length > 0 ? leaders.map((leader, index) => (
                     <div key={leader.id} className={`rank-row ${index < 3 ? 'top-rank' : ''}`}>
                         <div className="rank-num">{index + 1}</div>
-                        <div className="rank-avatar">{leader.username[0].toUpperCase()}</div>
+                        <div className="rank-avatar">{leader.username?.[0]?.toUpperCase() || 'U'}</div>
                         <div className="rank-info">
                         <span className="rank-name">{leader.username}</span>
                         <span className="rank-school">{leader.organization_name}</span>
                         </div>
                         <div className="rank-score">🌟 {leader.points}</div>
                     </div>
-                )) : <p className="p-20 text-muted">Hozircha natijalar yo'q.</p>
+                )) : <p className="p-20 text-muted">{t('no_rankings')}</p>
             )}
           </div>
         </div>
 
         <div className="side-section">
           <div className="active-competitions glass-panel">
-            <h3 className="section-title">Faol Musobaqalar</h3>
+            <h3 className="section-title">{t('active_comps')}</h3>
             <div className="comp-list">
               {competitions.length > 0 ? competitions.map((comp) => (
                 <div key={comp.id} className="comp-card glass-card">
@@ -100,10 +100,10 @@ export default function Leaderboard() {
                   <h4>{comp.title}</h4>
                   <div className="comp-footer">
                     <span>⏳ {new Date(comp.end_date).toLocaleDateString()}</span>
-                    <button className="btn-join" onClick={() => handleJoin(comp.id)}>Qatnashish</button>
+                    <button className="btn-join" onClick={() => handleJoin(comp.id)}>{t('join')}</button>
                   </div>
                 </div>
-              )) : <p className="text-muted">Hozircha faol musobaqalar yo'q.</p>}
+              )) : <p className="text-muted">{t('no_comps')}</p>}
             </div>
           </div>
         </div>

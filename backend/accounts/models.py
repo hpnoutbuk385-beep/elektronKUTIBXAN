@@ -18,6 +18,10 @@ class Organization(models.Model):
     def __str__(self):
         return f"{self.name} ({self.get_org_type_display()})"
 
+    class Meta:
+        verbose_name = _('Tashkilot')
+        verbose_name_plural = _('Tashkilotlar')
+
 class CustomUser(AbstractUser):
     ROLES = (
         ('SUPERADMIN', 'Ministry Admin'),
@@ -48,8 +52,8 @@ class CustomUser(AbstractUser):
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name = _('User')
-        verbose_name_plural = _('Users')
+        verbose_name = _('Foydalanuvchi')
+        verbose_name_plural = _('Foydalanuvchilar')
 
     def __str__(self):
         return f"{self.username} - {self.get_role_display()}"

@@ -1,17 +1,28 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { fetchApi } from '@/lib/api';
+import { useLanguage } from '@/context/LanguageContext';
+import { useRouter } from 'next/navigation';
 
 export default function AdminDashboard() {
+  const { t } = useLanguage();
+  const router = useRouter();
   const [stats, setStats] = useState([
-    { label: "Jami o'quvchilar", value: "0", trend: "..." },
-    { label: "Kitob fondi", value: "0", trend: "..." },
-    { label: "Oylik o'qish faolligi", value: "0", trend: "..." },
-    { label: "O'rtacha ball", value: "0", trend: "..." },
+    { label: t('total_students'), value: "0", trend: "..." },
+    { label: t('book_fund'), value: "0", trend: "..." },
+    { label: t('monthly_activity'), value: "0", trend: "..." },
+    { label: t('average_points'), value: "0", trend: "..." },
   ]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    const adminRoles = ['SUPERADMIN', 'REGION_ADMIN', 'DISTRICT_ADMIN', 'SCHOOL_ADMIN'];
+    
+    if (!adminRoles.includes(userData.role)) {
+      router.push('/');
+      return;
+    }
     async function loadStats() {
       try {
         const orgRes = await fetchApi('/organizations/');
@@ -23,10 +34,10 @@ export default function AdminDashboard() {
         const booksData = await booksRes.json();
 
         setStats([
-          { label: "Jami o'quvchilar", value: "850", trend: "+12%" },
-          { label: "Kitob fondi", value: booksData.count || "0", trend: "+50 yangi" },
-          { label: "Oylik o'qish faolligi", value: "485", trend: "+24%" },
-          { label: "O'rtacha ball", value: "420", trend: "+15" },
+          { label: t('total_students'), value: "850", trend: "+12%" },
+          { label: t('book_fund'), value: booksData.count || "0", trend: `+50 ${t('new_suffix')}` },
+          { label: t('monthly_activity'), value: "485", trend: "+24%" },
+          { label: t('average_points'), value: "420", trend: "+15" },
         ]);
       } catch (err) {
         console.error("Admin stats error:", err);
@@ -38,21 +49,21 @@ export default function AdminDashboard() {
   }, []);
 
   const handleDownloadReport = () => {
-    alert("Xisobot PDF formatida tayyorlanmoqda... Bir necha soniyadan so'ng yuklab olish boshlanadi.");
+    alert(t('generating_report'));
     window.open('http://localhost:8000/api/reports/school-pdf/', '_blank');
   };
 
-  if (loading) return <div className="flex-center h-full">Yuklanmoqda...</div>;
+  if (loading) return <div className="flex-center h-full">{t('loading')}</div>;
 
   return (
     <div className="admin-dashboard animate-fade">
       <div className="page-header flex-center-between">
         <div>
-          <h1 className="gradient-text">Ma'muriyat Paneli</h1>
-          <p className="subtitle">Maktab kutubxonasi faoliyati va statistikasi</p>
+          <h1 className="gradient-text">{t('admin_panel')}</h1>
+          <p className="subtitle">{t('admin_subtitle')}</p>
         </div>
         <button className="btn-primary" onClick={handleDownloadReport}>
-          📥 Oylik Hisobotni Yuklash (PDF)
+          📥 {t('download_report')}
         </button>
       </div>
 
@@ -76,7 +87,7 @@ export default function AdminDashboard() {
           <div className="chart-bar" style={{ height: '90%' }}></div>
           <div className="chart-bar" style={{ height: '65%' }}></div>
         </div>
-        <p className="mt-20">Haftalik faollik grafigi</p>
+        <p className="mt-20">{t('weekly_activity')}</p>
       </div>
 
       <style jsx>{`

@@ -1,5 +1,6 @@
 from django.db import models
 from accounts.models import Organization, CustomUser
+from django.utils.translation import gettext_lazy as _
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -7,6 +8,10 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = _('Kategoriya')
+        verbose_name_plural = _('Kategoriyalar')
 
 class Book(models.Model):
     title = models.CharField(max_length=255)
@@ -38,6 +43,10 @@ class Book(models.Model):
     def __str__(self):
         return f"{self.title} - {self.organization.name}"
 
+    class Meta:
+        verbose_name = _('Kitob')
+        verbose_name_plural = _('Kitoblar')
+
 class Transaction(models.Model):
     STATUS_CHOICES = (
         ('BORROWED', 'Borrowed'),
@@ -54,3 +63,7 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.user.username} borrowed {self.book.title}"
+
+    class Meta:
+        verbose_name = _('Kitob o\'lish/qaytarish')
+        verbose_name_plural = _('Kitob o\'lish/qaytarishlar')

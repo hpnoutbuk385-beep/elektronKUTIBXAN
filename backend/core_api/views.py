@@ -270,6 +270,35 @@ class RegisterView(APIView):
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class NameLoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        first_name = request.data.get('first_name', '').strip()
+        last_name = request.data.get('last_name', '').strip()
+        password = request.data.get('password')
+
+        if not first_name or not last_name or not password:
+            return Response({"error": "Ism, Familya va Parol majburiy"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Case insensitive search
+            user = CustomUser.objects.get(first_name__iexact=first_name, last_name__iexact=last_name)
+            if user.check_password(password):
+                from rest_framework_simplejwt.tokens import RefreshToken
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    'user': UserSerializer(user).data
+                })
+            else:
+                return Response({"error": "Parol noto'g'ri"}, status=status.HTTP_401_UNAUTHORIZED)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "Bunday foydalanuvchi topilmadi"}, status=status.HTTP_404_NOT_FOUND)
+        except CustomUser.MultipleObjectsReturned:
+            return Response({"error": "Bir xil ismli bir nechta foydalanuvchi topildi. Iltimos, ma'muriyatga murojaat qiling."}, status=status.HTTP_400_BAD_REQUEST)
+
 class ProfileView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 

@@ -22,11 +22,30 @@ class RegistrationSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'password', 'role', 'organization', 'phone']
+        fields = ['first_name', 'last_name', 'email', 'password', 'role', 'organization', 'phone']
 
     def create(self, validated_data):
+        # Auto-generate username from Name + Familya or Email prefix
+        import uuid
+        first_name = validated_data.get('first_name', '')
+        last_name = validated_data.get('last_name', '')
+        
+        # Create a URL-friendly username
+        base_username = f"{first_name.lower()}_{last_name.lower()}"
+        if not base_username.strip('_'):
+            base_username = validated_data['email'].split('@')[0]
+            
+        username = base_username
+        # Ensure uniqueness
+        counter = 1
+        while CustomUser.objects.filter(username=username).exists():
+            username = f"{base_username}_{counter}"
+            counter += 1
+
         user = CustomUser.objects.create_user(
-            username=validated_data['username'],
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
             email=validated_data['email'],
             password=validated_data['password'],
             role=validated_data.get('role', 'STUDENT'),

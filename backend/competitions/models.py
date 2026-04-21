@@ -1,6 +1,7 @@
 from django.db import models
 from accounts.models import CustomUser, Organization
 from exams.models import Quiz
+from django.utils.translation import gettext_lazy as _
 
 class Competition(models.Model):
     LEVEL_CHOICES = (
@@ -21,6 +22,10 @@ class Competition(models.Model):
     def __str__(self):
         return f"{self.title} ({self.get_level_display()})"
 
+    class Meta:
+        verbose_name = _('Musobaqa')
+        verbose_name_plural = _('Musobaqalar')
+
 class Participant(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='competition_participations')
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE, related_name='participants')
@@ -30,6 +35,8 @@ class Participant(models.Model):
 
     class Meta:
         unique_together = ('user', 'competition')
+        verbose_name = _('Ishtirokchi')
+        verbose_name_plural = _('Ishtirokchilar')
 
     def __str__(self):
         return f"{self.user.username} in {self.competition.title}"

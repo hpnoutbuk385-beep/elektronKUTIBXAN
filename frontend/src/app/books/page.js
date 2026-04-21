@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { fetchApi } from "@/lib/api";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function MyBooks() {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState("current");
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,13 +28,13 @@ export default function MyBooks() {
     activeTab === "current" ? b.status === "BORROWED" : b.status === "RETURNED"
   );
 
-  if (loading) return <div className="flex-center h-full">Yuklanmoqda...</div>;
+  if (loading) return <div className="flex-center h-full">{t('loading')}</div>;
 
   return (
     <div className="books-page animate-fade">
       <div className="page-header">
-        <h1 className="gradient-text">Mening Kitoblarim</h1>
-        <p className="subtitle">Sizning mutolaa tarixingiz va faol qarzlaringiz</p>
+        <h1 className="gradient-text">{t('books_title')}</h1>
+        <p className="subtitle">{t('books_subtitle')}</p>
       </div>
 
       <div className="tabs glass-panel">
@@ -40,13 +42,13 @@ export default function MyBooks() {
           className={`tab-btn ${activeTab === "current" ? "active" : ""}`}
           onClick={() => setActiveTab("current")}
         >
-          Hozir o'qilmoqda
+          {t('tab_current')}
         </button>
         <button 
           className={`tab-btn ${activeTab === "history" ? "active" : ""}`}
           onClick={() => setActiveTab("history")}
         >
-          Tarix
+          {t('tab_history')}
         </button>
       </div>
 
@@ -61,27 +63,27 @@ export default function MyBooks() {
               </div>
               <div className="book-meta">
                 <div className="meta-item">
-                  <span>📅 Olingan:</span>
+                  <span>📅 {t('borrowed_at')}</span>
                   <span>{new Date(trans.borrow_date).toLocaleDateString()}</span>
                 </div>
                 {trans.status === "BORROWED" ? (
                   <div className="meta-item warning">
-                    <span>⏳ Qaytarish:</span>
+                    <span>⏳ {t('due_at')}</span>
                     <span>{new Date(trans.due_date).toLocaleDateString()}</span>
                   </div>
                 ) : (
                   <div className="meta-item success">
-                    <span>✅ Qaytarilgan:</span>
-                    <span>{trans.return_date ? new Date(trans.return_date).toLocaleDateString() : 'Noma\'lum'}</span>
+                    <span>✅ {t('returned_at')}</span>
+                    <span>{trans.return_date ? new Date(trans.return_date).toLocaleDateString() : t('unknown')}</span>
                   </div>
                 )}
               </div>
               {trans.points_earned > 0 && (
-                <div className="points-badge">+{trans.points_earned} Ball</div>
+                <div className="points-badge">+{trans.points_earned} {t('points_earned')}</div>
               )}
             </div>
           </div>
-        )) : <p className="text-muted">Bu bo'limda hali kitoblar yo'q.</p>}
+        )) : <p className="text-muted">{t('no_books')}</p>}
       </div>
 
       <style jsx>{`

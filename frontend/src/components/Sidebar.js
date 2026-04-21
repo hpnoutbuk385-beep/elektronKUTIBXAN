@@ -27,14 +27,19 @@ export default function Sidebar() {
     { name: t('profile'), href: "/profile", icon: "👤" },
     { name: t('leaderboard'), href: "/leaderboard", icon: "🏆" },
     { name: t('rewards'), href: "/rewards", icon: "🎁" },
-    { name: t('admin_panel'), href: "/admin", icon: "🛡️" },
   ];
+
+  // Only show Admin Panel to authorized roles
+  const adminRoles = ['SUPERADMIN', 'REGION_ADMIN', 'DISTRICT_ADMIN', 'SCHOOL_ADMIN'];
+  if (user && adminRoles.includes(user.role)) {
+    menuItems.push({ name: t('admin_panel'), href: "/admin", icon: "🛡️" });
+  }
 
   return (
     <aside className="sidebar glass-panel animate-fade">
       <div className="logo-section">
         <span className="logo-icon">📖</span>
-        <h2 className="logo-text">Raqamli <span className="gradient-text">Kutubxona</span></h2>
+        <h2 className="logo-text">{t('digital_library')}</h2>
       </div>
       
       <nav className="menu-nav">
@@ -57,7 +62,7 @@ export default function Sidebar() {
 
       <div className="user-card-mini glass-card">
         <div className="mini-info">
-          <p className="mini-name">{user?.username || 'Foydalanuvchi'}</p>
+          <p className="mini-name">{user?.username || t('user_label')}</p>
           <p className="mini-points">🌟 {user?.points || 0} PTS</p>
         </div>
       </div>

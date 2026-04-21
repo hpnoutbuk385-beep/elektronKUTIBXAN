@@ -1,5 +1,6 @@
 from django.db import models
 from accounts.models import CustomUser
+from django.utils.translation import gettext_lazy as _
 
 class Question(models.Model):
     QUESTION_TYPES = (
@@ -18,6 +19,10 @@ class Question(models.Model):
     def __str__(self):
         return self.text[:50]
 
+    class Meta:
+        verbose_name = _('Savol')
+        verbose_name_plural = _('Savollar')
+
 class Quiz(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -28,6 +33,10 @@ class Quiz(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name = _('Test/Viktorina')
+        verbose_name_plural = _('Test/Viktorinalar')
+
 class Attempt(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='quiz_attempts')
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='attempts')
@@ -37,3 +46,7 @@ class Attempt(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.quiz.title} ({self.score}%)"
+
+    class Meta:
+        verbose_name = _('Urinish')
+        verbose_name_plural = _('Urinishlar')

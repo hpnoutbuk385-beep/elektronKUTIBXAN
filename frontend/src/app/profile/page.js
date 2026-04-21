@@ -35,7 +35,7 @@ export default function ProfilePage() {
               <div className="profile-info">
                   <h1 className="gradient-text">{user?.username}</h1>
                   <p className="role-tag">{user?.role}</p>
-                  <p className="org-name">🏫 {user?.organization_name || 'Noma\'lum maktab'}</p>
+                  <p className="org-name">🏫 {user?.organization_name || t('unknown_school')}</p>
               </div>
           </div>
           <div className="profile-stats">
@@ -48,8 +48,8 @@ export default function ProfilePage() {
 
       <div className="profile-content-grid mt-30">
           <div className="qr-section glass-panel">
-              <h3 className="section-title">👤 Shaxsiy QR-Kod</h3>
-              <p className="text-muted mb-20">Kitob olish yoki qaytarishda ushbu kodni kutubxonachiga ko'rsating.</p>
+              <h3 className="section-title">👤 {t('personal_qr')}</h3>
+              <p className="text-muted mb-20">{t('qr_hint')}</p>
               <div className="qr-image-wrapper">
                   {user?.qr_code_image ? (
                       <img src={`http://localhost:8000${user.qr_code_image}`} alt="My QR Code" className="qr-img" />
@@ -61,23 +61,23 @@ export default function ProfilePage() {
           </div>
 
           <div className="details-section glass-panel">
-              <h3 className="section-title">⚙️ Hisob Ma'lumotlari</h3>
+              <h3 className="section-title">⚙️ {t('account_details')}</h3>
               <div className="details-list">
                   <div className="detail-item">
                       <span>Email:</span>
-                      <span>{user?.email || 'Kiritilmagan'}</span>
+                      <span>{user?.email || t('not_provided')}</span>
                   </div>
                   <div className="detail-item">
-                      <span>Telefon:</span>
-                      <span>{user?.phone || 'Kiritilmagan'}</span>
+                      <span>{t('phone')}:</span>
+                      <span>{user?.phone || t('not_provided')}</span>
                   </div>
                   <div className="detail-item">
                       <span>ID:</span>
                       <span>#{user?.id}</span>
                   </div>
               </div>
-              <button className="btn-secondary w-full mt-30" onClick={() => alert('Profilni tahrirlash funksiyasi yaqin kunlarda qo\'shiladi.')}>
-                  Profilingizni tahrirlash
+              <button className="btn-secondary w-full mt-30" onClick={() => alert(t('edit_profile') + ' funksiyasi yaqin kunlarda qo\'shiladi.')}>
+                  {t('edit_profile')}
               </button>
           </div>
       </div>

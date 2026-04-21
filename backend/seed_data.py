@@ -47,15 +47,26 @@ def seed_data():
     # 3. Create the Main Admin (Superuser)
     admin_user, created = CustomUser.objects.get_or_create(
         username="adminrdx123",
-        email="admin@example.com",
-        role='SUPERADMIN',
-        is_staff=True,
-        is_superuser=True
+        defaults={
+            'email': "admin@example.com",
+            'first_name': "Admin",
+            'last_name': "Kutubxona",
+            'role': 'SUPERADMIN',
+            'is_staff': True,
+            'is_superuser': True
+        }
     )
+    if not created:
+        admin_user.first_name = "Admin"
+        admin_user.last_name = "Kutubxona"
+        admin_user.is_superuser = True
+        admin_user.is_staff = True
+        admin_user.save()
+
     if created or admin_user.check_password("xx63blk") == False:
         admin_user.set_password("xx63blk")
         admin_user.save()
-        print(f"Main Admin created/updated: {admin_user.username}")
+        print(f"Main Admin created/updated: {admin_user.username} (Admin Kutubxona)")
 
     # 4. Create a School Admin (Librarian)
     librarian, created = CustomUser.objects.get_or_create(

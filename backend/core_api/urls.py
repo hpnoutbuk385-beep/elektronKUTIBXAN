@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     OrganizationViewSet, BookViewSet, TransactionViewSet, LeaderboardViewSet,
     QuizViewSet, CompetitionViewSet, RewardViewSet, PurchaseViewSet,
-    RegisterView, ProfileView
+    RegisterView, ProfileView, NameLoginView
 )
 from .reports import SchoolReportPDFView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -20,7 +20,8 @@ router.register(r'purchases', PurchaseViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('auth/login/', NameLoginView.as_view(), name='token_obtain_pair'), # Override with NameLogin
+    path('auth/login-username/', TokenObtainPairView.as_view(), name='token_obtain_pair_original'),
     path('auth/register/', RegisterView.as_view(), name='token_register'),
     path('auth/profile/', ProfileView.as_view(), name='token_profile'),
     path('auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

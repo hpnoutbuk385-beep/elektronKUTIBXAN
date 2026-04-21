@@ -1,5 +1,6 @@
 from django.db import models
 from accounts.models import CustomUser, Organization
+from django.utils.translation import gettext_lazy as _
 
 class Reward(models.Model):
     name = models.CharField(max_length=255)
@@ -12,6 +13,10 @@ class Reward(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.points_cost} PTS)"
+
+    class Meta:
+        verbose_name = _('Mukofot')
+        verbose_name_plural = _('Mukofotlar')
 
 class Purchase(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='purchases')
@@ -28,3 +33,7 @@ class Purchase(models.Model):
 
     def __str__(self):
         return f"{self.user.username} bought {self.reward.name}"
+
+    class Meta:
+        verbose_name = _('Xarid')
+        verbose_name_plural = _('Xaridlar')

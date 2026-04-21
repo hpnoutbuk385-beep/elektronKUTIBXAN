@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { fetchApi } from "@/lib/api";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function RewardsStore() {
+  const { t } = useLanguage();
   const [user, setUser] = useState(null);
   const [rewards, setRewards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +31,7 @@ export default function RewardsStore() {
 
   const handleBuy = async (reward) => {
     if (user.points >= reward.points_cost) {
-      if (confirm(`${reward.name}ni ${reward.points_cost} ballga sotib olasizmi?`)) {
+      if (confirm(`${reward.name}ni ${reward.points_cost} ${t('buy_confirm')}`)) {
         try {
           const res = await fetchApi('/purchases/', {
             method: 'POST',
@@ -38,31 +40,31 @@ export default function RewardsStore() {
           if (res.ok) {
             const newPurchase = await res.json();
             setUser({ ...user, points: user.points - reward.points_cost });
-            alert(`Xarid muvaffaqiyatli! Kvitansiya kodi: ${newPurchase.claim_code}`);
+            alert(`${t('buy_success')} ${newPurchase.claim_code}`);
           } else {
             const err = await res.json();
-            alert(err.error || "Xatolik yuz berdi");
+            alert(err.error || t('buy_error'));
           }
         } catch (err) {
-          alert("Server xatosi");
+          alert(t('server_error'));
         }
       }
     } else {
-      alert("Mablag' yetarli emas!");
+      alert(t('not_enough_points'));
     }
   };
 
-  if (loading) return <div className="flex-center h-full">Yuklanmoqda...</div>;
+  if (loading) return <div className="flex-center h-full">{t('loading')}</div>;
 
   return (
     <div className="rewards-page animate-fade">
       <div className="page-header flex-center-between">
         <div>
-          <h1 className="gradient-text">Mukofotlar Do'koni</h1>
-          <p className="subtitle">To'plagan ballaringizni foydali narsalarga almashtiring</p>
+          <h1 className="gradient-text">{t('rewards_title')}</h1>
+          <p className="subtitle">{t('rewards_subtitle')}</p>
         </div>
         <div className="points-display glass-panel">
-          <span className="pts-label">Sizning balansingiz:</span>
+          <span className="pts-label">{t('your_balance')}</span>
           <span className="pts-value">🌟 {user?.points?.toLocaleString() || 0} PTS</span>
         </div>
       </div>
@@ -71,9 +73,9 @@ export default function RewardsStore() {
         {rewards.length > 0 ? rewards.map((reward) => (
           <div key={reward.id} className="reward-card glass-panel">
             <div className="reward-icon">🎁</div>
-            <div className="reward-type-tag">{reward.stock > 0 ? 'Mavjud' : 'Tugagan'}</div>
+            <div className="reward-type-tag">{reward.stock > 0 ? t('available') : t('out_of_stock')}</div>
             <h3 className="reward-title">{reward.name}</h3>
-            <p className="reward-stock">Omborda: {reward.stock}</p>
+            <p className="reward-stock">{t('in_stock')} {reward.stock}</p>
             
             <div className="reward-footer">
               <div className="reward-cost">{reward.points_cost} PTS</div>
@@ -82,11 +84,11 @@ export default function RewardsStore() {
                 onClick={() => handleBuy(reward)}
                 disabled={user.points < reward.points_cost || reward.stock <= 0}
               >
-                Sotib olish
+                {t('buy')}
               </button>
             </div>
           </div>
-        )) : <p className="text-muted">Hozircha do'konda mahsulotlar yo'q.</p>}
+        )) : <p className="text-muted">{t('no_rewards')}</p>}
       </div>
 
       <style jsx>{`

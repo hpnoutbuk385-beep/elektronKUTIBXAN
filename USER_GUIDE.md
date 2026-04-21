@@ -1,5 +1,5 @@
 # Foydalanish bo'yicha qo'llanma (User Guide)
-> **Versiya:** v1.4.0
+> **Versiya:** v1.5.0 (Golden Release)
 
 Ushbu qo'llanma "Raqamli Kutubxona" platformasidan foydalanuvchilarning turli rollari uchun mo'ljallangan. Tizim to'liq **3 ta tilda** (O'zbek, Rus, Ingliz) ishlaydi va har qanday sahifada tilni yuqoridagi menyudan almashtirish mumkin.
 
@@ -7,8 +7,9 @@ Ushbu qo'llanma "Raqamli Kutubxona" platformasidan foydalanuvchilarning turli ro
 
 ## 👨‍🎓 O'quvchilar uchun
 
-### 1. Kirish
-Profilga kirish uchun username va parolingizdan foydalaning. Agar maktabingiz HEMIS tizimiga ulangan bo'lsa, "HEMIS orqali kirish" tugmasini bosing.
+### 1. Kirish va Ro'yxatdan o'tish
+- **Kirish:** Profilga kirish uchun endi Ism, Familiya va parolingizdan foydalanasiz. Username eslab qolish shart emas.
+- **Ro'yxatdan o'tish:** Yangi foydalanuvchilar o'z Ismi, Familiyasi va telefon raqami orqali oson ro'yxatdan o'tishlari mumkin.
 
 ### 2. Kitob olish va qaytarish
 - Kutubxonaga boring va tanlagan kitobingizdagi QR-kodni kutubxonachiga ko'rsating.
