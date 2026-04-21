@@ -8,17 +8,20 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # Create Superuser if it doesn't exist
         from accounts.models import CustomUser
-        if not CustomUser.objects.filter(username="Admin").exists():
-            CustomUser.objects.create_superuser("Admin", "admin@example.com", "xx63blk")
-            self.stdout.write(self.style.SUCCESS("✅ Superuser 'Admin' created successfully!"))
+        username = "adminrdx123"
+        password = "xx63blk"
+        
+        if not CustomUser.objects.filter(username=username).exists():
+            CustomUser.objects.create_superuser(username, "admin@example.com", password)
+            self.stdout.write(self.style.SUCCESS(f"✅ Superuser '{username}' created successfully!"))
         else:
             # If user exists but we want to ensure password is correct
-            admin_user = CustomUser.objects.get(username="Admin")
-            admin_user.set_password("xx63blk")
+            admin_user = CustomUser.objects.get(username=username)
+            admin_user.set_password(password)
             admin_user.is_superuser = True
             admin_user.is_staff = True
             admin_user.save()
-            self.stdout.write(self.style.SUCCESS("✅ Superuser 'Admin' password reset successfully!"))
+            self.stdout.write(self.style.SUCCESS(f"✅ Superuser '{username}' password reset successfully!"))
 
         if Organization.objects.exists():
             self.stdout.write(self.style.WARNING("Organizations already exist. Skipping organization seed."))
