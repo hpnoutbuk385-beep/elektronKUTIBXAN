@@ -9,11 +9,11 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # Install dependencies
-COPY backend/requirements.txt /app/
+COPY requirements.txt /app/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Copy project
-COPY backend/ /app/
+COPY . /app/
 
 # Expose port
 EXPOSE 8080

@@ -5,11 +5,11 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Install dependencies
-COPY frontend/package*.json ./
+COPY package*.json ./
 RUN npm install
 
 # Copy project
-COPY frontend/ ./
+COPY ./ ./
 
 # Build the project
 RUN npm run build
