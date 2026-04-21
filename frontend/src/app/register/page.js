@@ -216,6 +216,7 @@ export default function RegisterPage() {
           <span>Hisobingiz bormi? </span>
           <Link href="/login" className="link-text">Kirish</Link>
         </div>
+      </div>
     </div>
   );
 }
