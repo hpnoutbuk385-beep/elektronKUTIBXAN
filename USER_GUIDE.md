@@ -1,7 +1,7 @@
 # Foydalanish bo'yicha qo'llanma (User Guide)
-> **Versiya:** v1.5.0 (Golden Release)
+> **Versiya:** v1.6.1 (Security, UI & Stability Update)
 
-Ushbu qo'llanma "Raqamli Kutubxona" platformasidan foydalanuvchilarning turli rollari uchun mo'ljallangan. Tizim to'liq **3 ta tilda** (O'zbek, Rus, Ingliz) ishlaydi va har qanday sahifada tilni yuqoridagi menyudan almashtirish mumkin.
+Ushbu qo'llanma "Raqamli Kutubxona" platformasidan foydalanuvchilarning turli rollari uchun mo'ljallangan. Tizim to'liq **3 ta tilda** (O'zbek, Rus, Ingliz) ishlaydi va har qanday sahifada tilni yuqoridagi menyudan almashtirish mumkin. Endilikda barcha animatsiyalar yanada barqarorlashtirilgan.
 
 ---
 
