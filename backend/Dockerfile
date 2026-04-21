@@ -18,5 +18,5 @@ COPY backend/ /app/
 # Expose port
 EXPOSE 8000
 
-# Run server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Startup: migrate, seed orgs, then run server
+CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py seed_organizations && python manage.py runserver 0.0.0.0:8000"]
