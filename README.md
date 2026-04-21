@@ -39,8 +39,8 @@ Loyiha Railway-da **ikki xizmatli (Two-service)** arxitektura asosida sozlangan:
 **Muhim!** Frontend ishlashi uchun Railway-dagi `Variables` bo'limida `NEXT_PUBLIC_API_URL` o'zgaruvchisini Backend-ning manzili (masalan: `https://.../api`) qilib sozlash va **Redeploy** qilish shart.
 
 ## 🔑 Ma'muriyat (Admin)
-- **Admin panel:** [http://localhost:8000/admin](http://localhost:8000/admin)
-- **Login:** `Admin`
+- **Admin panel:** [https://elektronkutibxan-production.up.railway.app/admin](https://elektronkutibxan-production.up.railway.app/admin)
+- **Login:** `adminrdx123`
 - **Parol:** `xx63blk`
 
 ## 📈 Amalga oshirilgan Stage-lar
@@ -52,11 +52,11 @@ Loyiha Railway-da **ikki xizmatli (Two-service)** arxitektura asosida sozlangan:
 - **Unified Startup:** Mahalliy ishlab chiqishni osonlashtirish uchun `start.py` skripti yaratildi.
 - **Railway Optimization:** Monorepo tuzilmasi uchun Dockerfayllar optimallashtirildi va Railway serverida alohida Backend/Frontend xizmatlari sifatida muvaffaqiyatli ishga tushirildi.
 
-### 11-bosqich: Production Connectivity & Optimization v1.8.0 (So'nggi)
-- **Hardcoded Production API:** Railway'da environment o'zgaruvchilari bilan bog'liq muammolarni bartaraf etish uchun Backend manzili kod darajasida (hardcoded) ulandi.
-- **Port Handling:** Frontend serveri Railway `$PORT` o'zgaruvchisini to'g'ri qabul qilishi uchun Dockerfile yangilandi.
-- **Repo Cleanup:** Loyiha tuzilmasini toza saqlash uchun takroriy `README.md` fayllari o'chirildi va bitta asosiy hujjatga birlashtirildi.
+### 11-bosqich: Production Connectivity & Optimization v1.8.1 (So'nggi)
+- **Hardcoded Production API:** Railway'da environment o'zgaruvchilari muammosini hal qilish uchun Backend manzilini kodga biriktirildi.
+- **Mobile Responsive UI:** Telefon va planshetlar uchun interfeys to'liq moslashtirildi (Sidebar toggle va Layout fix).
+- **Admin Access:** `adminrdx123` logini bilan avtomatik superuser yaratish va CSRF xavfsizlik sozlamalari yakunlandi.
 
 ---
-**Versiya:** v1.8.0 | **Production Connectivity & Optimization**
+**Versiya:** v1.8.1 | **Mobile UI & Admin Optimization**
 © 2026 Raqamli Kutubxona. Barcha huquqlar himoyalangan.
