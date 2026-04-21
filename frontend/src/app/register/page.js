@@ -24,8 +24,8 @@ export default function RegisterPage() {
   useEffect(() => {
     async function getOrgs() {
       try {
-        const res = await fetchApi('/organizations/');
-        const data = await res.json();
+        console.log("Register page: Fetching organizations...");
+        const data = await fetchApi('/organizations/', { cache: 'no-store' });
         setOrganizations(data.results || data);
       } catch (err) {
         console.error("Failed to load organizations", err);
