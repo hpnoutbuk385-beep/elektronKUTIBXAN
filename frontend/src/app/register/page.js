@@ -25,8 +25,13 @@ export default function RegisterPage() {
     async function getOrgs() {
       try {
         console.log("Register page: Fetching organizations...");
-        const data = await fetchApi('/organizations/', { cache: 'no-store' });
-        setOrganizations(data.results || data);
+        const res = await fetchApi('/organizations/', { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          setOrganizations(data.results || data);
+        } else {
+          console.error("Failed to fetch organizations: Status", res.status);
+        }
       } catch (err) {
         console.error("Failed to load organizations", err);
       }

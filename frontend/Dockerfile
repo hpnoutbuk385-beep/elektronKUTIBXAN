@@ -17,5 +17,5 @@ RUN npm run build
 # Expose port
 EXPOSE 3000
 
-# Start application
-CMD ["npm", "start"]
+# Start application with dynamic port for Railway
+CMD ["sh", "-c", "npm start -- -p ${PORT:-3000}"]
