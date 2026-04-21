@@ -54,7 +54,7 @@ Loyiha Railway-da **ikki xizmatli (Two-service)** arxitektura asosida sozlangan:
 ### 11-bosqich: Production Connectivity & Optimization v1.8.1 (So'nggi)
 - **Hardcoded Production API:** Railway'da environment o'zgaruvchilari muammosini hal qilish uchun Backend manzilini kodga biriktirildi.
 - **Mobile Responsive UI:** Telefon va planshetlar uchun interfeys to'liq moslashtirildi (Sidebar toggle va Layout fix).
-- **Admin Access:** `adminrdx123` logini bilan avtomatik superuser yaratish va CSRF xavfsizlik sozlamalari yakunlandi.
+- **Admin Access:** CSRF xavfsizlik sozlamalari yakunlandi va xavfsiz muhit parametrlari (env) o'rnatildi.
 
 ---
 **Versiya:** v1.8.1 | **Mobile UI & Admin Optimization**

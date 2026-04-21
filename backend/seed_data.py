@@ -45,10 +45,13 @@ def seed_data():
         Category.objects.get_or_create(name=cat_name)
     
     # 3. Create the Main Admin (Superuser)
+    admin_username = os.environ.get("ADMIN_USERNAME", "admin_demo")
+    admin_password = os.environ.get("ADMIN_PASSWORD", "demo_pass")
+    
     admin_user, created = CustomUser.objects.get_or_create(
-        username="adminrdx123",
+        username=admin_username,
         defaults={
-            'email': "admin@example.com",
+            'email': os.environ.get("ADMIN_EMAIL", "admin@example.com"),
             'first_name': "Admin",
             'last_name': "Kutubxona",
             'role': 'SUPERADMIN',
@@ -56,17 +59,13 @@ def seed_data():
             'is_superuser': True
         }
     )
-    if not created:
-        admin_user.first_name = "Admin"
-        admin_user.last_name = "Kutubxona"
-        admin_user.is_superuser = True
-        admin_user.is_staff = True
-        admin_user.save()
 
-    if created or admin_user.check_password("xx63blk") == False:
-        admin_user.set_password("xx63blk")
+    if created:
+        admin_user.set_password(admin_password)
         admin_user.save()
-        print(f"Main Admin created/updated: {admin_user.username} (Admin Kutubxona)")
+        print(f"Main Admin created: {admin_user.username} (Admin Kutubxona)")
+    else:
+        print(f"Main Admin already exists: {admin_user.username}. Skipping password setup.")
 
     # 4. Create a School Admin (Librarian)
     librarian, created = CustomUser.objects.get_or_create(
