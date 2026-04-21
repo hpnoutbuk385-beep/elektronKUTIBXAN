@@ -129,17 +129,21 @@ export default function ScannerPage() {
         </button>
       </div>
 
-      <div className="scan-area mt-30">
-        <div id="reader" className="scanner-window glass-panel">
-            {!isScanning && (
-                <div className="scanner-placeholder flex-center flex-col">
-                    <div className="scan-icon-large">📷</div>
-                    <button className="btn-primary" onClick={startScanner}>
-                        {t('start_camera') || 'Kamerani yoqish'}
-                    </button>
-                </div>
-            )}
-        </div>
+      <div className="scan-area mt-30" style={{ position: 'relative' }}>
+        <div 
+            id="reader" 
+            className="scanner-window glass-panel"
+            style={{ display: isScanning ? 'block' : 'none' }}
+        ></div>
+        
+        {!isScanning && (
+            <div className="scanner-window glass-panel flex-center flex-col">
+                <div className="scan-icon-large">📷</div>
+                <button className="btn-primary" onClick={startScanner}>
+                    {t('start_camera') || 'Kamerani yoqish'}
+                </button>
+            </div>
+        )}
       </div>
 
       {status.message && (
