@@ -1,8 +1,19 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+let API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+
+// Remove trailing slash if exists
+API_URL = API_URL.replace(/\/$/, "");
 
 export const fetchApi = async (endpoint, options = {}) => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
   
+  // Ensure endpoint starts with a slash
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const fullUrl = `${API_URL}${cleanEndpoint}`;
+  
+  if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
+    console.log(`fetching from: ${fullUrl}`);
+  }
+
   const headers = {
     'Content-Type': 'application/json',
     ...options.headers,
@@ -12,7 +23,7 @@ export const fetchApi = async (endpoint, options = {}) => {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
+  const response = await fetch(fullUrl, {
     ...options,
     headers,
   });
