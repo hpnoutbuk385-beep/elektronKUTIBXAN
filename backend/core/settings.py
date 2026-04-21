@@ -28,6 +28,14 @@ DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = ['*'] 
 
+# Security settings for Production (Railway)
+CSRF_TRUSTED_ORIGINS = [
+    'https://elektronkutibxan-production.up.railway.app',
+    'https://elektronkutibxan-production-7949.up.railway.app',
+]
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
 
 # Application definition
 
