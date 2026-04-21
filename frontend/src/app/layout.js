@@ -29,7 +29,14 @@ export default function RootLayout({ children }) {
     setLoading(false);
   }, [pathname, router]);
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const isPublicPage = ["/login", "/register"].includes(pathname);
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+  useEffect(() => {
+    setIsSidebarOpen(false); // Close sidebar on route change
+  }, [pathname]);
 
   if (loading && pathname === "/") {
     return (
@@ -46,10 +53,10 @@ export default function RootLayout({ children }) {
       <body>
         <LanguageProvider>
           {!isPublicPage ? (
-            <div className="layout-wrapper">
-              <Sidebar />
+            <div className={`layout-wrapper ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+              <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
               <div className="main-content">
-                <Navbar />
+                <Navbar onMenuClick={toggleSidebar} />
                 <main className="page-container">
                   {children}
                 </main>

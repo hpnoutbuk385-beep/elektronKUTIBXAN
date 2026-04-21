@@ -184,6 +184,16 @@ function DashboardContent() {
         .stat-label { color: var(--text-muted); font-size: 0.9rem; }
         .stat-value { font-size: 1.5rem; margin-top: 2px; }
         .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .main-grid { grid-template-columns: 1fr; }
+            .welcome-title { font-size: 1.6rem; }
+            .stat-card { padding: 15px; }
+            .reading-list { padding: 20px; }
+            .book-item { padding: 15px; gap: 15px; }
+        }
+
         .section-title { margin-bottom: 20px; font-size: 1.2rem; }
         .reading-list { padding: 30px; }
         .book-list { display: flex; flex-direction: column; gap: 15px; }

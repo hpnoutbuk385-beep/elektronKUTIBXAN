@@ -4,7 +4,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function Navbar() {
+export default function Navbar({ onMenuClick }) {
   const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const { language, changeLanguage, t } = useLanguage();
@@ -35,16 +35,19 @@ export default function Navbar() {
 
   return (
     <header className="navbar glass-panel animate-fade">
-      <div className="search-bar">
-        <span className="search-icon">🔍</span>
-        <input 
-            type="text" 
-            placeholder={t('search_placeholder')} 
-            className="search-input" 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyUp={handleSearch}
-        />
+      <div className="nav-left">
+        <button className="menu-toggle-btn" onClick={onMenuClick}>☰</button>
+        <div className="search-bar">
+          <span className="search-icon">🔍</span>
+          <input 
+              type="text" 
+              placeholder={t('search_placeholder')} 
+              className="search-input" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyUp={handleSearch}
+          />
+        </div>
       </div>
 
       <div className="nav-actions">
@@ -73,6 +76,39 @@ export default function Navbar() {
           justify-content: space-between;
           padding: 0 30px;
           border-radius: 16px;
+          gap: 15px;
+        }
+
+        .nav-left {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          flex-grow: 1;
+        }
+
+        .menu-toggle-btn {
+          display: none;
+          background: none;
+          border: 1px solid var(--border);
+          color: white;
+          font-size: 20px;
+          padding: 8px 12px;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: 0.3s;
+        }
+
+        @media (max-width: 1024px) {
+          .navbar {
+            margin: 15px;
+            padding: 0 15px;
+          }
+          .menu-toggle-btn {
+            display: block;
+          }
+          .search-bar {
+            width: 100% !important;
+          }
         }
 
         .search-bar {
