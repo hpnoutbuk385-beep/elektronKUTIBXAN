@@ -16,7 +16,7 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 COPY backend/ /app/
 
 # Expose port
-EXPOSE 8000
+EXPOSE 8080
 
-# Startup: migrate, seed orgs, then run server
-CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py seed_organizations && python manage.py runserver 0.0.0.0:8000"]
+# Startup: migrate, seed orgs, then run server on Railway's $PORT
+CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py seed_organizations && python manage.py runserver 0.0.0.0:${PORT:-8000}"]
