@@ -133,11 +133,13 @@ export default function ScannerPage() {
         <div 
             id="reader" 
             className="scanner-window glass-panel"
-            style={{ display: isScanning ? 'block' : 'none' }}
         ></div>
         
         {!isScanning && (
-            <div className="scanner-window glass-panel flex-center flex-col">
+            <div 
+              className="scanner-window glass-panel flex-center flex-col" 
+              style={{ position: 'absolute', top: 0, left: 0, zIndex: 10, background: 'var(--bg-dark)' }}
+            >
                 <div className="scan-icon-large">📷</div>
                 <button className="btn-primary" onClick={startScanner}>
                     {t('start_camera') || 'Kamerani yoqish'}
