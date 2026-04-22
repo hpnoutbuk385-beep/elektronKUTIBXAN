@@ -38,74 +38,49 @@ class OrganizationViewSet(viewsets.ModelViewSet):
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    search_fields = ['title', 'author', 'isbn']
-    filterset_fields = ['category', 'available_copies']
-
-    def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
-            return [permissions.AllowAny()]
-        return [permissions.IsAuthenticated()]
+    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        user = self.request.user
-        # Public users see all books
-        if not user.is_authenticated:
-            return Book.objects.all()
-        # ?show_all=1 → return all books (for library browse page)
-        if self.request.query_params.get('show_all') == '1':
-            return Book.objects.all()
-        # Filter books by user's school if they are school-level
-        if user.role in ['SCHOOL_ADMIN', 'TEACHER', 'STUDENT']:
-            return Book.objects.filter(organization=user.organization)
+        # HAMMA KITOBNI HAMMAGA KO'RSATAMIZ
         return Book.objects.all()
 
-    @action(detail=False, methods=['get', 'post'], url_path='force-seed', permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=['get', 'post'], url_path='force-seed')
     def force_seed(self, request):
-        """Production bazasini kitoblar bilan to'ldirish uchun maxsus endpoint"""
-        from library.models import Category, Book
-        from accounts.models import Organization
+        """Bazani kitoblar bilan majburiy to'ldirish"""
+        # Avvalgi kitoblarni tozalaymiz (dublikat bo'lmasligi uchun)
+        Book.objects.all().delete()
         
-        qoraqalpoq_reg, _ = Organization.objects.get_or_create(
-            name="Qoraqalpog'iston Respublikasi",
-            defaults={'org_type': 'REGION'}
-        )
-        
-        cats = ["Badiiy adabiyot", "Tarixiy", "Bolalar adabiyoti", "Psixologiya", "Moliya", "Shaxsiy rivojlanish", "Darsliklar"]
-        for c_name in cats:
-            Category.objects.get_or_create(name=c_name)
+        # Tashkilotni topamiz
+        org = Organization.objects.first() 
+        if not org:
+            org = Organization.objects.create(name="Asosiy Kutubxona", org_type="REGION")
 
         books_data = [
-            {"title": "O'tkan kunlar", "author": "Abdulla Qodiriy", "cat": "Badiiy adabiyot", "desc": "O'zbek adabiyotining durdonasi.", "img": "https://images.uzum.uz/cl9v365ennt1543387mg/original.jpg"},
+            {"title": "O'tkan kunlar", "author": "Abdulla Qodiriy", "desc": "O'zbek adabiyoti durdonasi.", "img": "https://images.uzum.uz/cl9v365ennt1543387mg/original.jpg"},
             {"title": "Mehrobdan chayon", "author": "Abdulla Qodiriy", "cat": "Badiiy adabiyot", "desc": "Tarixiy roman.", "img": "https://images.uzum.uz/cl9v5klennt1543387sg/original.jpg"},
-            {"title": "Kecha va kunduz", "author": "Cho'lpon", "cat": "Badiiy adabiyot", "desc": "Milliy uyg'onish davri asari.", "img": "https://images.uzum.uz/cl9v765ennt1543387ug/original.jpg"},
-            {"title": "Yulduzli tunlar", "author": "Pirimqul Qodirov", "cat": "Tarixiy", "desc": "Bobur Mirzo hayoti haqida.", "img": "https://images.uzum.uz/cl9v955ennt15433880g/original.jpg"},
-            {"title": "Dunyoning ishlari", "author": "O'tkir Hoshimov", "cat": "Badiiy adabiyot", "desc": "Mehr-oqibat haqida.", "img": "https://images.uzum.uz/cl9vbclennt15433882g/original.jpg"},
+            {"title": "Kecha va kunduz", "author": "Cho'lpon", "cat": "Badiiy adabiyot", "desc": "Milliy uyg'onish.", "img": "https://images.uzum.uz/cl9v765ennt1543387ug/original.jpg"},
+            {"title": "Yulduzli tunlar", "author": "Pirimqul Qodirov", "cat": "Tarixiy", "desc": "Bobur Mirzo hayoti.", "img": "https://images.uzum.uz/cl9v955ennt15433880g/original.jpg"},
+            {"title": "Dunyoning ishlari", "author": "O'tkir Hoshimov", "cat": "Badiiy adabiyot", "desc": "Mehr-oqibat.", "img": "https://images.uzum.uz/cl9vbclennt15433882g/original.jpg"},
             {"title": "Sariq devni minib", "author": "Xudoyberdi To'xtaboyev", "cat": "Bolalar adabiyoti", "desc": "Sarguzasht asar.", "img": "https://images.uzum.uz/cl9vd55ennt15433884g/original.jpg"},
-            {"title": "Atom odatlar", "author": "James Clear", "cat": "Psixologiya", "desc": "Yaxshi odatlar haqida.", "img": "https://images.uzum.uz/cl9vf5lennt15433886g/original.jpg"},
+            {"title": "Atom odatlar", "author": "James Clear", "cat": "Psixologiya", "desc": "Yaxshi odatlar.", "img": "https://images.uzum.uz/cl9vf5lennt15433886g/original.jpg"},
             {"title": "Boy ota, kambag'al ota", "author": "Robert Kiyosaki", "cat": "Moliya", "desc": "Moliya sirlari.", "img": "https://images.uzum.uz/cl9vh55ennt15433888g/original.jpg"},
-            {"title": "Diqqat", "author": "Cal Newport", "cat": "Shaxsiy rivojlanish", "desc": "Diqqatni jamlash haqida.", "img": "https://images.uzum.uz/cl9vj55ennt1543388ag/original.jpg"},
+            {"title": "Diqqat", "author": "Cal Newport", "cat": "Shaxsiy rivojlanish", "desc": "Diqqatni jamlash.", "img": "https://images.uzum.uz/cl9vj55ennt1543388ag/original.jpg"},
             {"title": "Psixologiya", "author": "Sh. Do'stmuhamedova", "cat": "Darsliklar", "desc": "Darslik.", "img": "https://images.uzum.uz/cl9vl55ennt1543388cg/original.jpg"}
         ]
 
-        count = 0
-        for b in books_data:
-            cat = Category.objects.get(name=b["cat"])
-            book, created = Book.objects.update_or_create(
+        for i, b in enumerate(books_data):
+            Book.objects.create(
                 title=b["title"],
-                organization=qoraqalpoq_reg,
-                defaults={
-                    "author": b["author"],
-                    "category": cat,
-                    "description": b["desc"],
-                    "image": b["img"],
-                    "total_copies": 10,
-                    "available_copies": 10,
-                    "qr_code": f"BOOK-{b['title'][:5].upper()}-{count}"
-                }
+                author=b["author"],
+                description=b.get("desc", ""),
+                image=b.get("img", ""),
+                organization=org,
+                total_copies=10,
+                available_copies=10,
+                qr_code=f"BK-{i}-{timezone.now().timestamp()}"
             )
-            if created: count += 1
 
-        return Response({"message": f"{count} ta kitob qo'shildi!"})
+        return Response({"message": "10 ta kitob muvaffaqiyatli qo'shildi!"})
 
     @action(detail=False, methods=['post'], url_path='scan-qr')
     def scan_qr(self, request):
