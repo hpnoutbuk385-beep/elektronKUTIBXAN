@@ -31,10 +31,7 @@ export default function RootLayout({ children }) {
         <LanguageProvider>
           <div className="app-container">
             {/* Cinematic Background hamma joyda bir xil */}
-            <div className="fixed-bg">
-              <div className="glow-1"></div>
-              <div className="glow-2"></div>
-            </div>
+            <div className="fixed-bg"></div>
 
             {!isAuthPage ? (
               <div className="main-layout">
@@ -79,26 +76,6 @@ export default function RootLayout({ children }) {
             background: #020617;
             z-index: -1;
             overflow: hidden;
-          }
-
-          .glow-1 {
-            position: absolute;
-            top: -10%;
-            right: -10%;
-            width: 60%;
-            height: 60%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
-            filter: blur(80px);
-          }
-
-          .glow-2 {
-            position: absolute;
-            bottom: -10%;
-            left: -10%;
-            width: 50%;
-            height: 50%;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
-            filter: blur(80px);
           }
 
           .main-layout {
