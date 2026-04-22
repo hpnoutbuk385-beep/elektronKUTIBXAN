@@ -5,7 +5,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 django.setup()
 
 from accounts.models import Organization, CustomUser
-from library.models import Book
+from library.models import Book, Category
 
 def seed_custom_schools():
     print("Mavhum maktablarni tozalash boshlandi...")
@@ -106,7 +106,46 @@ def seed_custom_schools():
     else:
         admin_user.set_password(admin_password)
         admin_user.save()
-        print(f"[OK] Admin paroli yangilandi: {admin_user.username}")
+    print(f"[OK] Admin paroli yangilandi: {admin_user.username}")
+        
+    # 10 ta kitob qo'shish (1-maktab — Nukus uchun)
+    nukus_1_maktab = Organization.objects.filter(name="1-maktab — Nukus").first()
+    if nukus_1_maktab:
+        print("Kitoblarni qo'shish boshlandi...")
+        badiiy, _ = Category.objects.get_or_create(name="Badiiy adabiyot")
+        darslik, _ = Category.objects.get_or_create(name="Darsliklar")
+        
+        books_data = [
+            {"title": "O'tkan kunlar", "author": "Abdulla Qodiriy", "isbn": "978-9943-00-123-4", "category": badiiy, "quantity": 5},
+            {"title": "Mehrobdan chayon", "author": "Abdulla Qodiriy", "isbn": "978-9943-00-124-1", "category": badiiy, "quantity": 3},
+            {"title": "Shum bola", "author": "G'afur G'ulom", "isbn": "978-9943-00-125-8", "category": badiiy, "quantity": 7},
+            {"title": "Sariq devni minib", "author": "Xudoyberdi To'xtaboyev", "isbn": "978-9943-00-126-5", "category": badiiy, "quantity": 4},
+            {"title": "Yulduzli tunlar", "author": "Pirimqul Qodirov", "isbn": "978-9943-00-127-2", "category": badiiy, "quantity": 6},
+            {"title": "Matematika 5-sinf", "author": "M. Mirzaahmedov", "isbn": "978-9943-00-201-9", "category": darslik, "quantity": 20},
+            {"title": "Ona tili 5-sinf", "author": "N. Mahmudov", "isbn": "978-9943-00-202-6", "category": darslik, "quantity": 25},
+            {"title": "Tarix 5-sinf", "author": "A. Muhammadjonov", "isbn": "978-9943-00-203-3", "category": darslik, "quantity": 15},
+            {"title": "Fizika 7-sinf", "author": "P. Habibullayev", "isbn": "978-9943-00-204-0", "category": darslik, "quantity": 10},
+            {"title": "Informatika 7-sinf", "author": "T. Tayloqov", "isbn": "978-9943-00-205-7", "category": darslik, "quantity": 12},
+        ]
+        
+        books_created = 0
+        for b in books_data:
+            book, created = Book.objects.get_or_create(
+                title=b["title"],
+                organization=nukus_1_maktab,
+                defaults={
+                    "author": b["author"],
+                    "isbn": b["isbn"],
+                    "category": b["category"],
+                    "total_quantity": b["quantity"],
+                    "available_quantity": b["quantity"],
+                    "description": f"{b['title']} kitobi"
+                }
+            )
+            if created:
+                books_created += 1
+                
+        print(f"[OK] {books_created} ta kitob 1-maktab — Nukus kutubxonasiga qo'shildi.")
     
     print(f"\nBarcha ishlar bajarildi! Jami yangi qo'shilgan maktablar: {created_count}")
 
