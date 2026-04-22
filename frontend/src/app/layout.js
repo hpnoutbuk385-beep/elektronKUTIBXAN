@@ -89,7 +89,7 @@ export default function RootLayout({ children }) {
             display: flex;
             flex-direction: column;
             padding: 0 40px 40px 20px;
-            max-width: calc(100vw - var(--sidebar-width) - 40px);
+            overflow-x: hidden;
           }
 
           .page-content {
