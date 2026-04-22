@@ -37,7 +37,7 @@ export default function LibraryPage() {
                 src={getImageUrl(book.image)} 
                 alt={book.title} 
                 className="book-image"
-                loading="lazy"
+                onError={(e) => { e.target.src = 'https://via.placeholder.com/300x450?text=Kitob'; }}
               />
               <div className="book-overlay"><span>👁️ O'qish</span></div>
             </div>
@@ -56,19 +56,37 @@ export default function LibraryPage() {
         .dashboard-content { padding: 20px; }
         .welcome-title { font-size: 2.2rem; color: white; margin-bottom: 8px; font-weight: 800; }
         .welcome-subtitle { color: rgba(255,255,255,0.5); margin-bottom: 35px; }
-        .books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
-        .book-card { padding: 12px; border-radius: 20px; cursor: pointer; transition: 0.3s; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); }
+        .books-grid { 
+          display: grid; 
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+          gap: 25px; 
+        }
+        .book-card { 
+          padding: 10px; border-radius: 20px; cursor: pointer; transition: 0.3s; 
+          background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); 
+          display: flex; flex-direction: column; height: 100%;
+        }
         .book-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.08); }
-        .book-image-wrap { position: relative; border-radius: 12px; overflow: hidden; height: 300px; background: #1e293b; }
+        .book-image-wrap { position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 2/3; background: #1e293b; }
         .book-image { width: 100%; height: 100%; object-fit: cover; }
         .book-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s; }
         .book-card:hover .book-overlay { opacity: 1; }
-        .book-overlay span { background: white; color: black; padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
-        .book-card-info { text-align: center; margin-top: 12px; }
-        .book-title { color: white; font-size: 1rem; margin-bottom: 4px; font-weight: 700; height: 2.4rem; overflow: hidden; }
-        .book-author { color: #818cf8; font-size: 0.8rem; margin-bottom: 12px; }
-        .btn-borrow-mini { width: 100%; background: #818cf8; color: white; border: none; padding: 8px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
-        @media (max-width: 600px) { .books-grid { grid-template-columns: 1fr 1fr; gap: 15px; } }
+        .book-overlay span { background: white; color: black; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.75rem; }
+        .book-card-info { text-align: center; margin-top: 10px; display: flex; flex-direction: column; flex-grow: 1; }
+        .book-title { color: white; font-size: 0.95rem; margin-bottom: 4px; font-weight: 700; height: 2.5rem; overflow: hidden; line-height: 1.2; }
+        .book-author { color: #818cf8; font-size: 0.8rem; margin-bottom: 10px; }
+        .btn-borrow-mini { margin-top: auto; width: 100%; background: #818cf8; color: white; border: none; padding: 8px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
+        
+        @media (max-width: 600px) { 
+          .books-grid { 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 12px; 
+          }
+          .book-card { padding: 8px; border-radius: 16px; }
+          .book-title { font-size: 0.85rem; height: 2.2rem; }
+          .book-author { font-size: 0.75rem; }
+          .btn-borrow-mini { font-size: 0.75rem; padding: 6px; }
+        }
       `}</style>
     </div>
   );

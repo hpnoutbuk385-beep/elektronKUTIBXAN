@@ -123,37 +123,64 @@ export default function PreviewPage() {
       </div>
 
       <style jsx>{`
-        .preview-page { background: #0f172a; min-height: 100vh; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-        .top-nav { display: flex; align-items: center; gap: 20px; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .btn-back { background: rgba(255,255,255,0.05); color: white; padding: 10px 20px; border-radius: 12px; cursor: pointer; }
-        .preview-container { display: grid; grid-template-columns: 1fr 380px; gap: 30px; max-width: 1400px; margin: 0 auto; width: 100%; flex-grow: 1; height: calc(100vh - 120px); }
-        .page-viewer { display: flex; flex-direction: column; background: #1e293b; border-radius: 20px; overflow: hidden; }
-        .text-page-wrapper { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 20px; position: relative; }
-        .page-stack { position: relative; width: 100%; max-width: 550px; aspect-ratio: 3/4.2; }
+        .preview-page { background: #0f172a; min-height: 100vh; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .top-nav { display: flex; align-items: center; gap: 15px; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .btn-back { background: rgba(255,255,255,0.05); color: white; padding: 8px 16px; border-radius: 12px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); font-size: 0.9rem; }
+        .book-top-info h3 { font-size: 1.1rem; margin: 0; color: white; }
+        .book-top-info span { font-size: 0.8rem; color: #818cf8; }
+
+        .preview-container { display: grid; grid-template-columns: 1fr 380px; gap: 25px; max-width: 1400px; margin: 0 auto; width: 100%; flex-grow: 1; min-height: 0; }
+        .page-viewer { display: flex; flex-direction: column; background: #1e293b; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .text-page-wrapper { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 25px; position: relative; overflow: hidden; }
+        
+        .page-stack { position: relative; width: 100%; max-width: 500px; aspect-ratio: 3/4.2; }
         .stack-layer { position: absolute; inset: 0; background: #fdf6e3; border-radius: 4px; border: 1px solid rgba(0,0,0,0.1); }
         .layer-3 { transform: translate(6px, 6px); }
         .layer-2 { transform: translate(3px, 3px); }
-        .page-paper-real { position: absolute; inset: 0; background: #fdf6e3; padding: 60px 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-radius: 4px; display: flex; flex-direction: column; }
-        .paper-header { display: flex; justify-content: space-between; margin-bottom: 30px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 10px; opacity: 0.5; }
-        .book-name-mini { font-size: 0.75rem; font-family: serif; color: #2c3e50; }
-        .page-count-mini { font-size: 0.8rem; font-family: serif; color: #2c3e50; }
-        .paper-content { flex-grow: 1; position: relative; }
+        
+        .page-paper-real { position: absolute; inset: 0; background: #fdf6e3; padding: 50px 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-radius: 4px; display: flex; flex-direction: column; }
+        .paper-header { display: flex; justify-content: space-between; margin-bottom: 25px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px; opacity: 0.5; }
+        .book-name-mini { font-size: 0.7rem; font-family: serif; color: #2c3e50; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; }
+        .page-count-mini { font-size: 0.75rem; font-family: serif; color: #2c3e50; }
+        
+        .paper-content { flex-grow: 1; position: relative; overflow-y: auto; }
         .paper-texture { position: absolute; inset: 0; opacity: 0.08; background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png'); pointer-events: none; }
-        .page-text-real { color: #1a202c; font-size: 1.25rem; line-height: 1.9; font-family: 'Lora', serif; text-align: justify; z-index: 1; margin: 0; }
-        .paper-footer { margin-top: 30px; text-align: center; opacity: 0.4; }
-        .footer-line { height: 1px; background: rgba(0,0,0,0.05); margin-bottom: 10px; }
-        .author-name-mini { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: #2c3e50; }
-        .viewer-controls { display: flex; align-items: center; justify-content: center; gap: 40px; padding: 15px; background: rgba(0,0,0,0.3); }
-        .nav-btn-modern { background: #818cf8; border: none; color: white; padding: 10px 25px; border-radius: 12px; cursor: pointer; font-weight: 700; transition: 0.3s; }
-        .side-panel-modern { padding: 30px; border-radius: 24px; overflow-y: auto; }
+        .page-text-real { color: #1a202c; font-size: 1.2rem; line-height: 1.8; font-family: 'Lora', serif; text-align: justify; z-index: 1; margin: 0; }
+        
+        .paper-footer { margin-top: 25px; text-align: center; opacity: 0.4; }
+        .footer-line { height: 1px; background: rgba(0,0,0,0.05); margin-bottom: 8px; }
+        .author-name-mini { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: #2c3e50; }
+        
+        .viewer-controls { display: flex; align-items: center; justify-content: center; gap: 20px; padding: 20px; background: rgba(0,0,0,0.4); border-top: 1px solid rgba(255,255,255,0.05); }
+        .nav-btn-modern { background: #6366f1; border: none; color: white; padding: 12px 28px; border-radius: 14px; cursor: pointer; font-weight: 700; transition: 0.3s; font-size: 1rem; flex: 1; max-width: 160px; }
+        .nav-btn-modern:disabled { opacity: 0.3; cursor: not-allowed; background: #475569; }
+        .nav-btn-modern:hover:not(:disabled) { transform: translateY(-2px); background: #818cf8; box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4); }
+
+        .side-panel-modern { padding: 30px; border-radius: 24px; overflow-y: auto; display: flex; flex-direction: column; }
         .side-cover-img { width: 100%; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        .side-desc-text { color: rgba(255,255,255,0.7); font-size: 1rem; line-height: 1.7; margin-bottom: 25px; }
-        .borrow-btn-large { background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%); width: 100%; padding: 16px; border-radius: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        .overlay-lock-modern { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 100; }
-        .lock-card-modern { padding: 40px; text-align: center; color: white; max-width: 380px; border-radius: 30px; }
-        .btn-primary-modern { background: #818cf8; color: white; border: none; padding: 14px 30px; border-radius: 15px; width: 100%; margin-top: 20px; cursor: pointer; font-weight: 700; }
+        .side-desc-text { color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px; }
+        .borrow-btn-large { background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%); width: 100%; padding: 16px; border-radius: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; color: white; border: none; }
+        
+        .overlay-lock-modern { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 100; border-radius: 4px; }
+        .lock-card-modern { padding: 30px; text-align: center; color: white; width: 100%; border-radius: 30px; }
+        .lock-icon { font-size: 3rem; margin-bottom: 15px; }
+        .btn-primary-modern { background: #818cf8; color: white; border: none; padding: 14px; border-radius: 15px; width: 100%; margin-top: 20px; cursor: pointer; font-weight: 700; font-size: 1rem; }
         .preview-loading { background: #0f172a; height: 100vh; display: flex; align-items: center; justify-content: center; color: white; }
-        @media (max-width: 1100px) { .preview-container { grid-template-columns: 1fr; } .side-panel-modern { display: none; } }
+
+        @media (max-width: 1100px) { 
+          .preview-container { grid-template-columns: 1fr; } 
+          .side-panel-modern { display: none; } 
+        }
+
+        @media (max-width: 600px) {
+          .preview-page { padding: 10px; gap: 10px; }
+          .page-paper-real { padding: 35px 25px; }
+          .page-text-real { font-size: 1rem; line-height: 1.7; }
+          .paper-header { margin-bottom: 15px; }
+          .viewer-controls { padding: 15px; gap: 15px; }
+          .nav-btn-modern { padding: 10px 20px; font-size: 0.9rem; }
+          .text-page-wrapper { padding: 15px; }
+        }
       `}</style>
     </div>
   );
