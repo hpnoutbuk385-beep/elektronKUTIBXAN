@@ -4,10 +4,9 @@ import { useParams, useRouter } from "next/navigation";
 import { fetchApi } from "@/lib/api";
 
 const FALLBACK_BOOKS = {
-  "101": { title: "O'tkan kunlar", author: "Abdulla Qodiriy", description: "O'zbek adabiyotining durdonasi. Kumush va Otabekning fojiaviy muhabbati va Turkistonning og'ir damlari haqida.", image: "https://images.uzum.uz/cl9v365ennt1543387mg/original.jpg", file: "https://www.afisha.uz/pdf/otkan_kunlar.pdf" },
-  "102": { title: "Mehrobdan chayon", author: "Abdulla Qodiriy", description: "Anvar va Ra'noning pokiza muhabbati, diniy ulamolar orasidagi ziddiyatlar va adolat haqida tarixiy asar.", image: "https://images.uzum.uz/cl9v5klennt1543387sg/original.jpg", file: "https://n.ziyouz.com/books/o_zbek_nasri/Abdulla%20Qodiriy%20-%20Mehrobdan%20chayon%20(roman).pdf" },
-  "103": { title: "Kecha va kunduz", author: "Cho'lpon", description: "Milliy uyg'onish davri adabiyotining eng yirik asarlaridan biri. Mustamlaka davri hayoti va inson taqdiri.", image: "https://images.uzum.uz/cl9v765ennt1543387ug/original.jpg", file: null },
-  "default": { title: "Kitob nomi", author: "Muallif", description: "Ushbu kitob mazmuni bilan bu yerda tanishishingiz mumkin.", image: "https://images.uzum.uz/cl9v365ennt1543387mg/original.jpg", file: null }
+  "101": { title: "O'tkan kunlar", author: "Abdulla Qodiriy", description: "O'zbek adabiyotining durdonasi. Kumush va Otabekning fojiaviy muhabbati va Turkistonning og'ir damlari haqida.", image: "https://kitobxon.com/img_u/b/887.jpg", file: "https://n.ziyouz.com/books/o_zbek_nasri/Abdulla%20Qodiriy%20-%20O'tgan%20kunlar%20(roman).pdf" },
+  "102": { title: "Mehrobdan chayon", author: "Abdulla Qodiriy", description: "Anvar va Ra'noning pokiza muhabbati, diniy ulamolar orasidagi ziddiyatlar va adolat haqida tarixiy asar.", image: "https://kitobxon.com/img_u/b/1500.jpg", file: "https://n.ziyouz.com/books/o_zbek_nasri/Abdulla%20Qodiriy%20-%20Mehrobdan%20chayon%20(roman).pdf" },
+  "default": { title: "Kitob nomi", author: "Muallif", description: "Ushbu kitob mazmuni bilan bu yerda tanishishingiz mumkin.", image: "https://kitobxon.com/img_u/b/887.jpg", file: null }
 };
 
 export default function PreviewPage() {
@@ -41,6 +40,9 @@ export default function PreviewPage() {
 
   if (loading) return <div className="preview-loading">Yuklanmoqda...</div>;
 
+  // GOOGLE VIEWER URL YARATAMIZ (404 XATOSINI OLDINI OLISH UCHUN)
+  const pdfUrl = book.file ? `https://docs.google.com/viewer?url=${encodeURIComponent(book.file)}&embedded=true` : null;
+
   return (
     <div className="preview-page animate-fade">
       <div className="preview-container">
@@ -57,14 +59,14 @@ export default function PreviewPage() {
         </div>
 
         <div className="pdf-viewer-side glass-panel">
-          {book.file ? (
+          {pdfUrl ? (
             <div className="pdf-wrapper">
-              <iframe src={`${book.file}#toolbar=0&navpanes=0&page=1`} width="100%" height="100%" style={{ border: 'none' }}></iframe>
+              <iframe src={pdfUrl} width="100%" height="100%" style={{ border: 'none' }}></iframe>
               {showOverlay && (
                 <div className="pdf-overlay animate-fade">
                   <div className="overlay-content glass-panel">
                     <h3>📖 Davomini o'qish</h3>
-                    <p>Kitobni to'liq o'qish uchun ro'yxatdan o'ting.</p>
+                    <p>To'liq versiyani o'qish uchun ro'yxatdan o'ting.</p>
                     <button className="btn-primary" onClick={() => router.push("/register")}>Ro'yxatdan o'tish</button>
                   </div>
                 </div>
@@ -73,7 +75,7 @@ export default function PreviewPage() {
           ) : (
             <div className="no-file-msg">
               <span className="icon">📄</span>
-              <p>Elektron fayl admin tomonidan yuklanmoqda...</p>
+              <p>Elektron fayl yuklanmoqda...</p>
             </div>
           )}
         </div>
@@ -83,11 +85,14 @@ export default function PreviewPage() {
         .preview-page { background: #020617; min-height: 100vh; padding: 20px; }
         .preview-container { display: grid; grid-template-columns: 380px 1fr; gap: 20px; max-width: 1500px; margin: 0 auto; height: calc(100vh - 40px); }
         .book-details-side { padding: 30px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
-        .preview-cover { width: 100%; border-radius: 12px; }
+        .preview-cover { width: 100%; border-radius: 12px; margin-bottom: 15px; }
         .preview-title { font-size: 1.4rem; color: white; font-weight: 800; }
-        .pdf-viewer-side { background: white; border-radius: 20px; overflow: hidden; position: relative; }
+        .preview-author { color: #818cf8; margin-bottom: 15px; }
+        .desc-text { color: rgba(255,255,255,0.7); line-height: 1.6; }
+        .pdf-viewer-side { background: #525659; border-radius: 20px; overflow: hidden; position: relative; }
+        .pdf-wrapper { width: 100%; height: 100%; position: relative; }
         .pdf-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 50; }
-        .overlay-content { padding: 40px; text-align: center; }
+        .overlay-content { padding: 40px; text-align: center; color: white; }
         .preview-loading { background: #020617; height: 100vh; display: flex; align-items: center; justify-content: center; color: white; }
       `}</style>
     </div>
