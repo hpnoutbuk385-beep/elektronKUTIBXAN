@@ -23,7 +23,8 @@ export default function Sidebar({ isOpen, onClose }) {
 
   const menuItems = [
     { name: t('dashboard'), href: "/", icon: "📊" },
-    { name: t('my_books'), href: "/books", icon: "📚" },
+    { name: t('library_title'), href: "/library", icon: "📚" },
+    { name: t('my_books'), href: "/books", icon: "📖" },
     { name: t('profile'), href: "/profile", icon: "👤" },
     { name: t('leaderboard'), href: "/leaderboard", icon: "🏆" },
     { name: t('rewards'), href: "/rewards", icon: "🎁" },

@@ -56,11 +56,19 @@ Loyiha Railway-da **ikki xizmatli (Two-service)** arxitektura asosida sozlangan:
 - **Mobile Responsive UI:** Telefon va planshetlar uchun interfeys to'liq moslashtirildi (Sidebar toggle va Layout fix).
 - **Admin Access:** CSRF xavfsizlik sozlamalari yakunlandi va xavfsiz muhit parametrlari (env) o'rnatildi.
 
-### 12-bosqich: Data Seeding & API Filtering v1.9.0 (So'nggi)
+### 12-bosqich: Data Seeding & API Filtering v1.9.0
 - **Tashkilotlar Filtri:** Ro'yxatdan o'tish (Register) sahifasida faqat maktablarni (SCHOOL) ko'rsatish uchun API Endpoint (`?org_type=SCHOOL`) va Backend ko'rinishlari (ViewSet) takomillashtirildi.
-- **Aniq Maktablar Ro'yxati:** Qoraqalpog'istonning Xo'jayli va Nukus shahri uchun mijoz talabi bo'yicha maxsus 104 ta maktab qo'shildi (`1-maktab — Xo'jayli` shaklida).
+- **Aniq Maktablar Ro'yxati:** Qoraqalpog'istonning Xo'jayli va Nukus shahri uchun mijoz talabi bo'yicha maxsus 104 ta maktab qo'shildi.
 - **Custom Seeding Script:** Railway serverida ushbu maktablarni jonli bazaga qo'shish uchun `backend/seed_custom_schools.py` skripti yaratildi.
 
+### 13-bosqich: Elektron Kutubxona & Raqamli Ijara v2.0.0 (So'nggi)
+- **Ochiq Kutubxona Sahifasi (`/library`):** Barcha tashrif buyuruvchilar (ro'yxatdan o'tmagan ham) kitoblar ro'yxatini ko'ra oladi. Zamonaviy dizayn, qidiruv, kategoriya bo'yicha filtrlash imkoniyatlari mavjud.
+- **Raqamli Ijara Tizimi:** Foydalanuvchilar kitobni "Ijaraga olish" tugmasi orqali olishlari mumkin. Ro'yxatdan o'tmagan foydalanuvchilar avtomatik ravishda ro'yxatdan o'tish sahifasiga yo'naltiriladi.
+- **Elektron Kitob (E-book):** `Book` modeliga `file` maydoni qo'shildi — adminlar PDF yoki boshqa format fayllarni yuklashi mumkin. Foydalanuvchilar kitobni brauzerda onlayn o'qiy oladi.
+- **Mening Kitoblarim (`/books`):** Foydalanuvchi ijaraga olgan kitoblar shaxsiy sahifada ko'rinadi. "O'qish" (PDF ochish) va "Qaytarish" (kitobni bazaga qaytarish) tugmalari mavjud.
+- **Digital Loan/Return API:** Yangi `digital-loan` va `digital-return` endpointlari qo'shildi.
+- **Admin Panel Yangilanishi:** Kitob qo'shishda E-kitob mavjudligi ko'rinishi va QR kod orqali qidirish imkoniyati qo'shildi.
+
 ---
-**Versiya:** v1.9.0 | **Data Seeding & API Filtering**
+**Versiya:** v2.0.0 | **Elektron Kutubxona & Raqamli Ijara**
 © 2026 Raqamli Kutubxona. Barcha huquqlar himoyalangan.

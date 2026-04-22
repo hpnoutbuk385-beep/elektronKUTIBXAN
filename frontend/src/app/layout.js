@@ -14,13 +14,13 @@ export default function RootLayout({ children }) {
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem("access_token") : null;
     
-    // 1. If at root and no token -> force to register
+    // If at root and no token -> redirect to public library
     if (pathname === "/" && !token) {
-      router.replace("/register");
+      router.replace("/library");
       return;
     }
 
-    // 2. If logged in and at auth pages -> force to dashboard
+    // If logged in and at auth pages -> force to dashboard
     if (token && (pathname === "/login" || pathname === "/register")) {
       router.replace("/");
       return;
@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
   }, [pathname, router]);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const isPublicPage = ["/login", "/register"].includes(pathname);
+  const isPublicPage = ["/login", "/register", "/library"].includes(pathname);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -70,3 +70,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+

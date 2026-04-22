@@ -8,10 +8,15 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'category', 'organization', 'available_copies', 'qr_code_preview')
+    list_display = ('title', 'author', 'category', 'organization', 'available_copies', 'has_ebook', 'qr_code_preview')
     list_filter = ('category', 'organization')
-    search_fields = ('title', 'author', 'isbn')
+    search_fields = ('title', 'author', 'isbn', 'qr_code')
     readonly_fields = ('qr_code_preview',)
+
+    def has_ebook(self, obj):
+        return bool(obj.file)
+    has_ebook.boolean = True
+    has_ebook.short_description = 'E-kitob'
 
     def qr_code_preview(self, obj):
         if obj.qr_code_image:

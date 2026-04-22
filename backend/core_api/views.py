@@ -38,12 +38,19 @@ class OrganizationViewSet(viewsets.ModelViewSet):
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
     search_fields = ['title', 'author', 'isbn']
     filterset_fields = ['category', 'available_copies']
 
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
+
     def get_queryset(self):
         user = self.request.user
+        # Public users see all books
+        if not user.is_authenticated:
+            return Book.objects.all()
         # Filter books by user's school if they are school-level
         if user.role in ['SCHOOL_ADMIN', 'TEACHER', 'STUDENT']:
             return Book.objects.filter(organization=user.organization)
@@ -116,6 +123,59 @@ class TransactionViewSet(viewsets.ModelViewSet):
             return Response({"message": "Returned successfully", "points": 10})
         except (Book.DoesNotExist, Transaction.DoesNotExist):
             return Response({"error": "Active loan not found for this book"}, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=False, methods=['post'], url_path='digital-loan')
+    def digital_loan(self, request):
+        """Student borrows a book digitally (no QR needed)"""
+        book_id = request.data.get('book_id')
+        try:
+            book = Book.objects.get(id=book_id)
+            
+            # Check if user already has this book borrowed
+            existing = Transaction.objects.filter(book=book, user=request.user, status='BORROWED').first()
+            if existing:
+                return Response({"error": "Siz bu kitobni allaqachon ijaraga olgansiz"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            if book.available_copies <= 0:
+                return Response({"error": "Kitobning nusxalari tugagan"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            transaction = Transaction.objects.create(
+                book=book,
+                user=request.user,
+                due_date=timezone.now() + timezone.timedelta(days=14),
+                status='BORROWED'
+            )
+            
+            book.available_copies -= 1
+            book.save()
+            
+            return Response(TransactionSerializer(transaction).data, status=status.HTTP_201_CREATED)
+            
+        except Book.DoesNotExist:
+            return Response({"error": "Kitob topilmadi"}, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=False, methods=['post'], url_path='digital-return')
+    def digital_return(self, request):
+        """Student returns a borrowed book digitally"""
+        transaction_id = request.data.get('transaction_id')
+        try:
+            transaction = Transaction.objects.get(id=transaction_id, user=request.user, status='BORROWED')
+            
+            transaction.status = 'RETURNED'
+            transaction.return_date = timezone.now()
+            
+            # Award points
+            transaction.points_earned = 10
+            request.user.points += 10
+            request.user.save()
+            transaction.save()
+            
+            transaction.book.available_copies += 1
+            transaction.book.save()
+            
+            return Response({"message": "Kitob muvaffaqiyatli qaytarildi!", "points": 10})
+        except Transaction.DoesNotExist:
+            return Response({"error": "Bu tranzaksiya topilmadi"}, status=status.HTTP_404_NOT_FOUND)
 
 class LeaderboardViewSet(viewsets.ReadOnlyModelViewSet):
     """Viewset for regional/district/school level leaderboards"""
