@@ -46,26 +46,40 @@ class BookViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get', 'post'], url_path='force-seed')
     def force_seed(self, request):
-        """Bazani kitoblar bilan majburiy to'ldirish"""
-        # Avvalgi kitoblarni tozalaymiz (dublikat bo'lmasligi uchun)
+        """Bazani kitoblar va tashkilotlar bilan majburiy to'ldirish"""
+        # Avvalgi ma'lumotlarni tozalaymiz
         Book.objects.all().delete()
+        Organization.objects.all().delete()
         
-        # Tashkilotni topamiz
-        org = Organization.objects.first() 
-        if not org:
-            org = Organization.objects.create(name="Asosiy Kutubxona", org_type="REGION")
+        # Tashkilotlarni yaratamiz
+        orgs_data = [
+            {"name": "Toshkent shahri, 1-maktab", "type": "SCHOOL"},
+            {"name": "Marg'ilon shahri, 2-maktab", "type": "SCHOOL"},
+            {"name": "Nukus shahri, 5-maktab", "type": "SCHOOL"},
+            {"name": "Samarqand Davlat Universiteti", "type": "UNIVERSITY"},
+            {"name": "Xorazm, 12-IDUM", "type": "SCHOOL"},
+            {"name": "Farg'ona Politexnika Instituti", "type": "UNIVERSITY"},
+        ]
+        
+        created_orgs = []
+        for o in orgs_data:
+            org = Organization.objects.create(name=o["name"], org_type=o["type"])
+            created_orgs.append(org)
+
+        # Asosiy tashkilotni tanlaymiz
+        main_org = created_orgs[0]
 
         books_data = [
-            {"title": "O'tkan kunlar", "author": "Abdulla Qodiriy", "desc": "O'zbek adabiyoti durdonasi.", "img": "https://images.uzum.uz/cl9v365ennt1543387mg/original.jpg"},
-            {"title": "Mehrobdan chayon", "author": "Abdulla Qodiriy", "cat": "Badiiy adabiyot", "desc": "Tarixiy roman.", "img": "https://images.uzum.uz/cl9v5klennt1543387sg/original.jpg"},
-            {"title": "Kecha va kunduz", "author": "Cho'lpon", "cat": "Badiiy adabiyot", "desc": "Milliy uyg'onish.", "img": "https://images.uzum.uz/cl9v765ennt1543387ug/original.jpg"},
-            {"title": "Yulduzli tunlar", "author": "Pirimqul Qodirov", "cat": "Tarixiy", "desc": "Bobur Mirzo hayoti.", "img": "https://images.uzum.uz/cl9v955ennt15433880g/original.jpg"},
-            {"title": "Dunyoning ishlari", "author": "O'tkir Hoshimov", "cat": "Badiiy adabiyot", "desc": "Mehr-oqibat.", "img": "https://images.uzum.uz/cl9vbclennt15433882g/original.jpg"},
-            {"title": "Sariq devni minib", "author": "Xudoyberdi To'xtaboyev", "cat": "Bolalar adabiyoti", "desc": "Sarguzasht asar.", "img": "https://images.uzum.uz/cl9vd55ennt15433884g/original.jpg"},
-            {"title": "Atom odatlar", "author": "James Clear", "cat": "Psixologiya", "desc": "Yaxshi odatlar.", "img": "https://images.uzum.uz/cl9vf5lennt15433886g/original.jpg"},
-            {"title": "Boy ota, kambag'al ota", "author": "Robert Kiyosaki", "cat": "Moliya", "desc": "Moliya sirlari.", "img": "https://images.uzum.uz/cl9vh55ennt15433888g/original.jpg"},
-            {"title": "Diqqat", "author": "Cal Newport", "cat": "Shaxsiy rivojlanish", "desc": "Diqqatni jamlash.", "img": "https://images.uzum.uz/cl9vj55ennt1543388ag/original.jpg"},
-            {"title": "Psixologiya", "author": "Sh. Do'stmuhamedova", "cat": "Darsliklar", "desc": "Darslik.", "img": "https://images.uzum.uz/cl9vl55ennt1543388cg/original.jpg"}
+            {"title": "O'tkan kunlar", "author": "Abdulla Qodiriy", "desc": "O'zbek adabiyoti durdonasi.", "img": "https://kitobxon.com/img_u/b/887.jpg"},
+            {"title": "Mehrobdan chayon", "author": "Abdulla Qodiriy", "desc": "Tarixiy roman.", "img": "https://kitobxon.com/img_u/b/1500.jpg"},
+            {"title": "Kecha va kunduz", "author": "Cho'lpon", "desc": "Milliy uyg'onish.", "img": "https://kitobxon.com/img_u/b/2034.jpg"},
+            {"title": "Yulduzli tunlar", "author": "Pirimqul Qodirov", "desc": "Bobur Mirzo hayoti.", "img": "https://kitobxon.com/img_u/b/2012.jpg"},
+            {"title": "Dunyoning ishlari", "author": "O'tkir Hoshimov", "desc": "Mehr-oqibat.", "img": "https://kitobxon.com/img_u/b/814.jpg"},
+            {"title": "Sariq devni minib", "author": "X. To'xtaboyev", "desc": "Sarguzasht asar.", "img": "https://kitobxon.com/img_u/b/263.jpg"},
+            {"title": "Atom odatlar", "author": "James Clear", "desc": "Yaxshi odatlar.", "img": "https://kitobxon.com/img_u/b/6146.jpg"},
+            {"title": "Boy ota, kambag'al ota", "author": "Robert Kiyosaki", "desc": "Moliya sirlari.", "img": "https://kitobxon.com/img_u/b/4836.jpg"},
+            {"title": "Diqqat", "author": "Cal Newport", "desc": "Diqqatni jamlash.", "img": "https://kitobxon.com/img_u/b/6169.jpg"},
+            {"title": "Psixologiya", "author": "Darslik", "desc": "Darslik.", "img": "https://kitobxon.com/img_u/b/402.jpg"}
         ]
 
         for i, b in enumerate(books_data):
@@ -74,13 +88,13 @@ class BookViewSet(viewsets.ModelViewSet):
                 author=b["author"],
                 description=b.get("desc", ""),
                 image=b.get("img", ""),
-                organization=org,
+                organization=main_org,
                 total_copies=10,
                 available_copies=10,
                 qr_code=f"BK-{i}-{timezone.now().timestamp()}"
             )
 
-        return Response({"message": "10 ta kitob muvaffaqiyatli qo'shildi!"})
+        return Response({"message": f"{len(created_orgs)} ta tashkilot va {len(books_data)} ta kitob muvaffaqiyatli qo'shildi!"})
 
     @action(detail=False, methods=['post'], url_path='scan-qr')
     def scan_qr(self, request):
