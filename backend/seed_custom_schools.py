@@ -4,7 +4,8 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 django.setup()
 
-from accounts.models import Organization
+from accounts.models import Organization, CustomUser
+from library.models import Book
 
 def seed_custom_schools():
     print("Mavhum maktablarni tozalash boshlandi...")
@@ -81,6 +82,31 @@ def seed_custom_schools():
             created_count += 1
             
     print("[OK] Nukus shahri uchun 60 ta maktab qo'shildi.")
+    
+    # Superuser (Admin) yaratish
+    admin_username = os.environ.get("ADMIN_USERNAME", "adminrdx123")
+    admin_password = os.environ.get("ADMIN_PASSWORD", "xx63blk")
+    
+    admin_user, created = CustomUser.objects.get_or_create(
+        username=admin_username,
+        defaults={
+            'email': os.environ.get("ADMIN_EMAIL", "admin@example.com"),
+            'first_name': "Asosiy",
+            'last_name': "Admin",
+            'role': 'SUPERADMIN',
+            'is_staff': True,
+            'is_superuser': True
+        }
+    )
+
+    if created:
+        admin_user.set_password(admin_password)
+        admin_user.save()
+        print(f"[OK] Admin yaratildi: {admin_user.username}")
+    else:
+        admin_user.set_password(admin_password)
+        admin_user.save()
+        print(f"[OK] Admin paroli yangilandi: {admin_user.username}")
     
     print(f"\nBarcha ishlar bajarildi! Jami yangi qo'shilgan maktablar: {created_count}")
 
