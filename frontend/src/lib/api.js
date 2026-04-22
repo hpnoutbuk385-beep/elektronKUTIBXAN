@@ -1,15 +1,9 @@
-const getBaseUrl = () => {
-  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
-  if (typeof window !== 'undefined') {
-    return `${window.location.protocol}//${window.location.host}/api`;
-  }
-  return 'http://localhost:8000/api';
-};
-
-const API_URL = getBaseUrl();
+// Qat'iy Production API manzili
+const PRODUCTION_API_URL = 'https://elektronkutibxan-production-7949.up.railway.app/api';
 
 export const fetchApi = async (endpoint, options = {}) => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+  
   const headers = {
     'Content-Type': 'application/json',
     ...options.headers,
@@ -19,40 +13,39 @@ export const fetchApi = async (endpoint, options = {}) => {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  let response = await fetch(`${API_URL}${endpoint}`, {
+  // To'g'ridan-to'g'ri ishlab turgan PRODUCTION manziliga murojaat qilamiz
+  const url = `${PRODUCTION_API_URL}${endpoint}`;
+  
+  console.log(`Fetching from: ${url}`); // Debug uchun
+
+  let response = await fetch(url, {
     ...options,
     headers,
   });
 
-  // AGAR TOKEN XATO BO'LSA (401)
   if (response.status === 401 && typeof window !== 'undefined') {
     localStorage.removeItem('access_token');
     localStorage.removeItem('user');
     
-    // Kalitsiz qaytadan urinib ko'ramiz (Mehmon sifatida)
+    // Auth-siz qayta urinish
     const newHeaders = { ...headers };
     delete newHeaders['Authorization'];
-    
-    response = await fetch(`${API_URL}${endpoint}`, {
-      ...options,
-      headers: newHeaders,
-    });
+    response = await fetch(url, { ...options, headers: newHeaders });
   }
 
   return response;
 };
 
 export const login = async (username, password) => {
-  const res = await fetch(`${API_URL}/auth/login/`, {
+  return await fetch(`${PRODUCTION_API_URL}/auth/login/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password }),
   });
-  return res;
 };
 
 export const logout = () => {
   localStorage.removeItem('access_token');
   localStorage.removeItem('user');
-  window.location.href = '/library';
+  window.location.href = '/';
 };
