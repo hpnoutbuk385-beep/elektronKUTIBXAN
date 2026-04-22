@@ -16,7 +16,7 @@ export default function LibraryPage() {
   useEffect(() => {
     async function loadBooks() {
       try {
-        const res = await fetchApi('/books/');
+        const res = await fetchApi('/books/?show_all=1');
         if (res.ok) {
           const data = await res.json();
           setBooks(Array.isArray(data) ? data : data.results || []);

@@ -51,6 +51,9 @@ class BookViewSet(viewsets.ModelViewSet):
         # Public users see all books
         if not user.is_authenticated:
             return Book.objects.all()
+        # ?show_all=1 → return all books (for library browse page)
+        if self.request.query_params.get('show_all') == '1':
+            return Book.objects.all()
         # Filter books by user's school if they are school-level
         if user.role in ['SCHOOL_ADMIN', 'TEACHER', 'STUDENT']:
             return Book.objects.filter(organization=user.organization)

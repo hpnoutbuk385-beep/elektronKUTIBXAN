@@ -108,9 +108,8 @@ def seed_custom_schools():
         admin_user.save()
     print(f"[OK] Admin paroli yangilandi: {admin_user.username}")
         
-    # 10 ta kitob qo'shish (1-maktab — Nukus uchun)
-    nukus_1_maktab = Organization.objects.filter(name="1-maktab — Nukus").first()
-    if nukus_1_maktab:
+    # 10 ta kitob qo'shish — viloyat tashkilotiga (hammaga ko'rinsin)
+    if qoraqalpoq_reg:
         print("Kitoblarni qo'shish boshlandi...")
         badiiy, _ = Category.objects.get_or_create(name="Badiiy adabiyot")
         darslik, _ = Category.objects.get_or_create(name="Darsliklar")
@@ -132,7 +131,7 @@ def seed_custom_schools():
         for b in books_data:
             book, created = Book.objects.get_or_create(
                 title=b["title"],
-                organization=nukus_1_maktab,
+                organization=qoraqalpoq_reg,
                 defaults={
                     "author": b["author"],
                     "isbn": b["isbn"],
@@ -144,7 +143,7 @@ def seed_custom_schools():
             if created:
                 books_created += 1
                 
-        print(f"[OK] {books_created} ta kitob 1-maktab — Nukus kutubxonasiga qo'shildi.")
+        print(f"[OK] {books_created} ta kitob kutubxonaga qo'shildi.")
     
     print(f"\nBarcha ishlar bajarildi! Jami yangi qo'shilgan maktablar: {created_count}")
 
