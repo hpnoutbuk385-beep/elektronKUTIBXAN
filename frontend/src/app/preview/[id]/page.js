@@ -33,18 +33,23 @@ export default function PreviewPage() {
       }
     }
     loadBook();
-
     const timer = setTimeout(() => setShowOverlay(true), 60000); 
     return () => clearTimeout(timer);
   }, [id]);
 
   if (loading) return <div className="preview-loading">Yuklanmoqda...</div>;
 
-  // GOOGLE VIEWER URL YARATAMIZ (404 XATOSINI OLDINI OLISH UCHUN)
   const pdfUrl = book.file ? `https://docs.google.com/viewer?url=${encodeURIComponent(book.file)}&embedded=true` : null;
 
   return (
     <div className="preview-page animate-fade">
+      {/* ORQAGA TUGMASI */}
+      <div className="top-nav">
+        <button className="btn-back" onClick={() => router.back()}>
+          ← Orqaga qaytish
+        </button>
+      </div>
+
       <div className="preview-container">
         <div className="book-details-side glass-panel">
           <div className="book-header-info">
@@ -75,7 +80,7 @@ export default function PreviewPage() {
           ) : (
             <div className="no-file-msg">
               <span className="icon">📄</span>
-              <p>Elektron fayl yuklanmoqda...</p>
+              <p>Elektron fayl admin tomonidan yuklanmoqda...</p>
             </div>
           )}
         </div>
@@ -83,16 +88,15 @@ export default function PreviewPage() {
 
       <style jsx>{`
         .preview-page { background: #020617; min-height: 100vh; padding: 20px; }
-        .preview-container { display: grid; grid-template-columns: 380px 1fr; gap: 20px; max-width: 1500px; margin: 0 auto; height: calc(100vh - 40px); }
+        .top-nav { max-width: 1500px; margin: 0 auto 15px auto; }
+        .btn-back { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 10px 20px; border-radius: 12px; cursor: pointer; transition: 0.3s; font-weight: 600; }
+        .btn-back:hover { background: rgba(255,255,255,0.1); transform: translateX(-5px); }
+        
+        .preview-container { display: grid; grid-template-columns: 380px 1fr; gap: 20px; max-width: 1500px; margin: 0 auto; height: calc(100vh - 100px); }
         .book-details-side { padding: 30px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
         .preview-cover { width: 100%; border-radius: 12px; margin-bottom: 15px; }
         .preview-title { font-size: 1.4rem; color: white; font-weight: 800; }
-        .preview-author { color: #818cf8; margin-bottom: 15px; }
-        .desc-text { color: rgba(255,255,255,0.7); line-height: 1.6; }
         .pdf-viewer-side { background: #525659; border-radius: 20px; overflow: hidden; position: relative; }
-        .pdf-wrapper { width: 100%; height: 100%; position: relative; }
-        .pdf-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 50; }
-        .overlay-content { padding: 40px; text-align: center; color: white; }
         .preview-loading { background: #020617; height: 100vh; display: flex; align-items: center; justify-content: center; color: white; }
       `}</style>
     </div>
