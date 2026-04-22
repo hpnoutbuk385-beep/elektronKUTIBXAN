@@ -46,55 +46,77 @@ class BookViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get', 'post'], url_path='force-seed')
     def force_seed(self, request):
-        """Bazani kitoblar va tashkilotlar bilan majburiy to'ldirish"""
-        # Avvalgi ma'lumotlarni tozalaymiz
+        """Bazani Nukus va Xo'jayli maktablari bilan to'ldirish"""
         Book.objects.all().delete()
         Organization.objects.all().delete()
         
-        # Tashkilotlarni yaratamiz
-        orgs_data = [
-            {"name": "Toshkent shahri, 1-maktab", "type": "SCHOOL"},
-            {"name": "Marg'ilon shahri, 2-maktab", "type": "SCHOOL"},
-            {"name": "Nukus shahri, 5-maktab", "type": "SCHOOL"},
-            {"name": "Samarqand Davlat Universiteti", "type": "UNIVERSITY"},
-            {"name": "Xorazm, 12-IDUM", "type": "SCHOOL"},
-            {"name": "Farg'ona Politexnika Instituti", "type": "UNIVERSITY"},
-        ]
+        # 1. Viloyatni yaratish
+        qoraqalpoq_reg = Organization.objects.create(
+            name="Qoraqalpog'iston Respublikasi Maktabgacha va maktab ta'limi vazirligi",
+            org_type='REGION',
+            region_name="Qoraqalpog'iston Resp."
+        )
         
-        created_orgs = []
-        for o in orgs_data:
-            org = Organization.objects.create(name=o["name"], org_type=o["type"])
-            created_orgs.append(org)
+        # 2. Nukus shahri bo'limi
+        nukus_dist = Organization.objects.create(
+            name="Nukus shahri bo'limi",
+            org_type='DISTRICT',
+            parent=qoraqalpoq_reg,
+            district_name="Nukus shahri"
+        )
+        
+        # 3. Xo'jayli tumani bo'limi
+        xojayli_dist = Organization.objects.create(
+            name="Xo'jayli tumani bo'limi",
+            org_type='DISTRICT',
+            parent=qoraqalpoq_reg,
+            district_name="Xo'jayli tumani"
+        )
 
-        # Asosiy tashkilotni tanlaymiz
-        main_org = created_orgs[0]
+        # 4. Nukus maktablari (1-60)
+        for i in range(1, 61):
+            Organization.objects.create(
+                name=f"{i}-maktab — Nukus",
+                org_type='SCHOOL',
+                parent=nukus_dist,
+                district_name="Nukus shahri"
+            )
 
+        # 5. Xo'jayli maktablari (1-44)
+        for i in range(1, 45):
+            Organization.objects.create(
+                name=f"{i}-maktab — Xo'jayli",
+                org_type='SCHOOL',
+                parent=xojayli_dist,
+                district_name="Xo'jayli tumani"
+            )
+
+        # 6. Kitoblarni qo'shish
         books_data = [
-            {"title": "O'tkan kunlar", "author": "Abdulla Qodiriy", "desc": "O'zbek adabiyoti durdonasi.", "img": "https://kitobxon.com/img_u/b/887.jpg"},
-            {"title": "Mehrobdan chayon", "author": "Abdulla Qodiriy", "desc": "Tarixiy roman.", "img": "https://kitobxon.com/img_u/b/1500.jpg"},
-            {"title": "Kecha va kunduz", "author": "Cho'lpon", "desc": "Milliy uyg'onish.", "img": "https://kitobxon.com/img_u/b/2034.jpg"},
-            {"title": "Yulduzli tunlar", "author": "Pirimqul Qodirov", "desc": "Bobur Mirzo hayoti.", "img": "https://kitobxon.com/img_u/b/2012.jpg"},
-            {"title": "Dunyoning ishlari", "author": "O'tkir Hoshimov", "desc": "Mehr-oqibat.", "img": "https://kitobxon.com/img_u/b/814.jpg"},
-            {"title": "Sariq devni minib", "author": "X. To'xtaboyev", "desc": "Sarguzasht asar.", "img": "https://kitobxon.com/img_u/b/263.jpg"},
-            {"title": "Atom odatlar", "author": "James Clear", "desc": "Yaxshi odatlar.", "img": "https://kitobxon.com/img_u/b/6146.jpg"},
-            {"title": "Boy ota, kambag'al ota", "author": "Robert Kiyosaki", "desc": "Moliya sirlari.", "img": "https://kitobxon.com/img_u/b/4836.jpg"},
-            {"title": "Diqqat", "author": "Cal Newport", "desc": "Diqqatni jamlash.", "img": "https://kitobxon.com/img_u/b/6169.jpg"},
-            {"title": "Psixologiya", "author": "Darslik", "desc": "Darslik.", "img": "https://kitobxon.com/img_u/b/402.jpg"}
+            {"title": "O'tkan kunlar", "author": "Abdulla Qodiriy", "img": "https://kitobxon.com/img_u/b/887.jpg"},
+            {"title": "Mehrobdan chayon", "author": "Abdulla Qodiriy", "img": "https://kitobxon.com/img_u/b/1500.jpg"},
+            {"title": "Kecha va kunduz", "author": "Cho'lpon", "img": "https://kitobxon.com/img_u/b/2034.jpg"},
+            {"title": "Yulduzli tunlar", "author": "Pirimqul Qodirov", "img": "https://kitobxon.com/img_u/b/2012.jpg"},
+            {"title": "Dunyoning ishlari", "author": "O'tkir Hoshimov", "img": "https://kitobxon.com/img_u/b/814.jpg"},
+            {"title": "Sariq devni minib", "author": "X. To'xtaboyev", "img": "https://kitobxon.com/img_u/b/263.jpg"},
+            {"title": "Atom odatlar", "author": "James Clear", "img": "https://kitobxon.com/img_u/b/6146.jpg"},
+            {"title": "Boy ota, kambag'al ota", "author": "Robert Kiyosaki", "img": "https://kitobxon.com/img_u/b/4836.jpg"},
+            {"title": "Diqqat", "author": "Cal Newport", "img": "https://kitobxon.com/img_u/b/6169.jpg"},
+            {"title": "Psixologiya", "author": "Darslik", "img": "https://kitobxon.com/img_u/b/402.jpg"}
         ]
 
         for i, b in enumerate(books_data):
             Book.objects.create(
                 title=b["title"],
                 author=b["author"],
-                description=b.get("desc", ""),
                 image=b.get("img", ""),
-                organization=main_org,
+                organization=qoraqalpoq_reg,
                 total_copies=10,
                 available_copies=10,
                 qr_code=f"BK-{i}-{timezone.now().timestamp()}"
             )
 
-        return Response({"message": f"{len(created_orgs)} ta tashkilot va {len(books_data)} ta kitob muvaffaqiyatli qo'shildi!"})
+        return Response({"message": "Nukus va Xo'jayli maktablari (104 ta) va 10 ta kitob muvaffaqiyatli qo'shildi!"})
 
     @action(detail=False, methods=['post'], url_path='scan-qr')
     def scan_qr(self, request):
