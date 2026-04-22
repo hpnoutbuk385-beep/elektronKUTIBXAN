@@ -15,11 +15,21 @@ export default function RegisterPage() {
   const router = useRouter();
 
   useEffect(() => {
+    // 104 ta maktabning fallback ro'yxati (API ishlamasa ham chiqadi)
+    const fallbackOrgs = [
+      ...Array.from({length: 60}, (_, i) => ({id: `n-${i+1}`, name: `${i+1}-maktab — Nukus`})),
+      ...Array.from({length: 44}, (_, i) => ({id: `x-${i+1}`, name: `${i+1}-maktab — Xo'jayli`}))
+    ];
+    setOrganizations(fallbackOrgs);
+
     async function loadOrgs() {
       try {
         const res = await fetchApi('/organizations/');
-        if (res.ok) setOrganizations(await res.json());
-      } catch (err) { console.error(err); }
+        if (res.ok) {
+          const data = await res.json();
+          if (data.length > 0) setOrganizations(data);
+        }
+      } catch (err) { console.error("API Error, using fallback", err); }
     }
     loadOrgs();
   }, []);
