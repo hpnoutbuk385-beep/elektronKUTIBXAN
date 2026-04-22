@@ -16,9 +16,10 @@ export default function RootLayout({ children }) {
     const token = typeof window !== 'undefined' ? localStorage.getItem("access_token") : null;
     setIsLoggedIn(!!token);
     
-    // Tizimga kirmagan bo'lsa va login/register bo'lmasa -> /library ga yuborish
-    if (!token && !["/login", "/register", "/library"].includes(pathname)) {
+    // Faqat asosiy sahifada bo'lsa va login qilmagan bo'lsa -> /library
+    if (pathname === "/" && !token) {
       router.replace("/library");
+      return;
     }
   }, [pathname, router]);
 
