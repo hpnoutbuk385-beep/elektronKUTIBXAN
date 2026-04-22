@@ -15,13 +15,7 @@ export default function RootLayout({ children }) {
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem("access_token") : null;
     setIsLoggedIn(!!token);
-    
-    // Faqat asosiy sahifada bo'lsa va login qilmagan bo'lsa -> /library
-    if (pathname === "/" && !token) {
-      router.replace("/library");
-      return;
-    }
-  }, [pathname, router]);
+  }, [pathname]);
 
   const isAuthPage = ["/login", "/register"].includes(pathname);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);

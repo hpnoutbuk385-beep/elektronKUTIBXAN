@@ -30,11 +30,6 @@ export default function Sidebar({ isOpen, onClose }) {
     { name: t('profile'), href: "/profile", icon: "👤" },
   ];
 
-  const adminRoles = ['SUPERADMIN', 'REGION_ADMIN', 'DISTRICT_ADMIN', 'SCHOOL_ADMIN'];
-  if (user && adminRoles.includes(user.role)) {
-    menuItems.push({ name: t('admin_panel'), href: "/admin", icon: "🛡️" });
-  }
-
   return (
     <>
       {isOpen && <div className="sidebar-overlay" onClick={onClose}></div>}
@@ -46,29 +41,26 @@ export default function Sidebar({ isOpen, onClose }) {
         </div>
         
         <nav className="menu-nav">
-          {menuItems.map((item) => (
-            <Link 
-              key={item.href} 
-              href={item.href}
-              className={`menu-item ${pathname === item.href ? "active" : ""}`}
-            >
-              <span className="menu-icon">{item.icon}</span>
-              <span className="menu-label">{item.name}</span>
-            </Link>
-          ))}
+          {menuItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link 
+                key={item.href} 
+                href={item.href}
+                className={`menu-item ${isActive ? "active" : ""}`}
+                onClick={onClose}
+              >
+                <span className="menu-icon">{item.icon}</span>
+                <span className="menu-label">{item.name}</span>
+              </Link>
+            );
+          })}
           
           <button className="menu-item logout-btn" onClick={logout}>
             <span className="menu-icon">🚪</span>
-            <span className="menu-label">{t('logout')}</span>
+            <span className="menu-label">Chiqish</span>
           </button>
         </nav>
-
-        <div className="user-card-mini glass-card">
-          <div className="mini-info">
-            <p className="mini-name">{user?.first_name || user?.username || t('user_label')}</p>
-            <p className="mini-points">🌟 {user?.points || 0} PTS</p>
-          </div>
-        </div>
 
         <style jsx>{`
           .sidebar {
@@ -82,11 +74,8 @@ export default function Sidebar({ isOpen, onClose }) {
             padding: 30px 20px;
             margin-left: 20px;
             z-index: 1000;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            background: rgba(13, 13, 33, 0.7) !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
+            transition: all 0.4s ease;
+            background: rgba(13, 13, 33, 0.8) !important;
           }
 
           .logo-section {
@@ -94,28 +83,29 @@ export default function Sidebar({ isOpen, onClose }) {
             align-items: center;
             gap: 12px;
             margin-bottom: 50px;
+            padding-left: 10px;
           }
           .logo-icon { font-size: 24px; }
-          .logo-text { font-size: 1.1rem; color: white; font-weight: 700; line-height: 1.2; }
+          .logo-text { font-size: 1.1rem; color: white; font-weight: 800; }
 
           .menu-nav {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            flex-grow: 1;
+            gap: 10px;
           }
 
           .menu-item {
             display: flex;
             align-items: center;
             gap: 15px;
-            padding: 12px 18px;
+            padding: 12px 15px;
             border-radius: 12px;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.5); /* Asl holatda kulrang */
             transition: all 0.3s ease;
             text-decoration: none;
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 500;
+            border-bottom: 2px solid transparent;
           }
 
           .menu-item:hover {
@@ -123,27 +113,20 @@ export default function Sidebar({ isOpen, onClose }) {
             background: rgba(255, 255, 255, 0.05);
           }
 
+          /* FAQAT ACTIVE BO'LGANDA BINAFSHARANG VA UNDERLINE BO'LADI */
           .menu-item.active {
-            color: #818cf8;
-            background: rgba(129, 140, 248, 0.1);
-            font-weight: 600;
+            color: #a855f7 !important; 
+            background: rgba(168, 85, 247, 0.1);
+            font-weight: 700;
+            border-bottom: 2px solid #a855f7;
+            text-decoration: underline;
           }
 
           .logout-btn {
             background: none; border: none; cursor: pointer; width: 100%; text-align: left;
-            margin-top: 10px;
+            margin-top: 20px; color: rgba(255, 255, 255, 0.4);
           }
           .logout-btn:hover { color: #f87171; }
-
-          .user-card-mini {
-            margin-top: auto;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-          }
-          .mini-name { color: white; font-weight: 600; font-size: 0.9rem; }
-          .mini-points { color: #fbbf24; font-size: 0.8rem; font-weight: 700; margin-top: 2px; }
 
           @media (max-width: 1024px) {
             .sidebar {

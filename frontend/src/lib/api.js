@@ -26,12 +26,8 @@ export const fetchApi = async (endpoint, options = {}) => {
   });
 
   if (response.status === 401 && typeof window !== 'undefined') {
-    // Handle token expiration - could refresh here, but for now just logout
+    // Token muddati o'tgan bo'lsa tozalaymiz, lekin majburiy redirect qilmaymiz
     localStorage.removeItem('access_token');
-    const path = window.location.pathname;
-    if (!path.includes('/register') && !path.includes('/login') && !path.includes('/library')) {
-      window.location.href = '/register';
-    }
   }
 
   return response;
