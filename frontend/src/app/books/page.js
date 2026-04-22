@@ -1,189 +1,148 @@
 "use client";
 import { useEffect, useState } from "react";
-import { fetchApi } from "@/lib/api";
 import { useLanguage } from "@/context/LanguageContext";
-import Link from "next/link";
+import { fetchApi } from "@/lib/api";
 
-export default function MyBooks() {
+export default function MyBooksPage() {
   const { t } = useLanguage();
-  const [activeTab, setActiveTab] = useState("current");
-  const [books, setBooks] = useState([]);
+  const [loans, setLoans] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [returningId, setReturningId] = useState(null);
-  const [statusMsg, setStatusMsg] = useState({ type: "", text: "" });
+  const [actionId, setActionId] = useState(null);
 
   useEffect(() => {
-    async function loadBooks() {
-      try {
-        const res = await fetchApi('/transactions/');
-        const data = await res.json();
-        setBooks(data.results || []);
-      } catch (err) {
-        console.error("Failed to load books", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadBooks();
+    loadMyBooks();
   }, []);
 
-  const handleReturn = async (transactionId) => {
-    if (!confirm(t('return_confirm'))) return;
-    
-    setReturningId(transactionId);
+  async function loadMyBooks() {
+    try {
+      const res = await fetchApi('/transactions/my-loans/');
+      if (res.ok) {
+        const data = await res.json();
+        setLoans(data);
+      }
+    } catch (err) {
+      console.error("Failed to load loans", err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleReturn = async (loanId) => {
+    setActionId(loanId);
     try {
       const res = await fetchApi('/transactions/digital-return/', {
         method: "POST",
-        body: JSON.stringify({ transaction_id: transactionId }),
+        body: JSON.stringify({ transaction_id: loanId }),
       });
-      const data = await res.json();
       if (res.ok) {
-        setStatusMsg({ type: "success", text: t('return_success') });
-        setBooks(prev => prev.map(b => 
-          b.id === transactionId ? { ...b, status: 'RETURNED', return_date: new Date().toISOString(), points_earned: 10 } : b
-        ));
-        setTimeout(() => setStatusMsg({ type: "", text: "" }), 3000);
-      } else {
-        setStatusMsg({ type: "error", text: data.error || "Xatolik" });
-        setTimeout(() => setStatusMsg({ type: "", text: "" }), 3000);
+        setLoans(prev => prev.filter(l => l.id !== loanId));
+        alert("Kitob muvaffaqiyatli qaytarildi! +10 ball 🌟");
       }
     } catch (err) {
-      setStatusMsg({ type: "error", text: "Server xatoligi" });
-      setTimeout(() => setStatusMsg({ type: "", text: "" }), 3000);
+      alert("Xatolik yuz berdi");
     } finally {
-      setReturningId(null);
+      setActionId(null);
     }
   };
 
-  const handleReadOnline = (fileUrl) => {
+  const handleRead = (fileUrl) => {
     if (fileUrl) {
       window.open(fileUrl, '_blank');
+    } else {
+      alert("Ushbu kitobning elektron versiyasi mavjud emas.");
     }
   };
-
-  const filteredBooks = books.filter(b => 
-    activeTab === "current" ? b.status === "BORROWED" : b.status === "RETURNED"
-  );
 
   if (loading) return <div className="flex-center h-full">{t('loading')}</div>;
 
   return (
-    <div className="books-page animate-fade">
-      <div className="page-header">
-        <h1 className="gradient-text">{t('books_title')}</h1>
-        <p className="subtitle">{t('books_subtitle')}</p>
+    <div className="dashboard-content animate-fade">
+      <div className="welcome-header">
+        <h1 className="welcome-title">{t('my_books')} 📖</h1>
+        <p className="welcome-subtitle">Siz ijaraga olgan va hozirda o'qiyotgan kitoblaringiz ro'yxati.</p>
       </div>
 
-      {statusMsg.text && (
-        <div className={`status-toast glass-card ${statusMsg.type}`}>
-          {statusMsg.text}
-        </div>
-      )}
-
-      <div className="tabs glass-panel">
-        <button 
-          className={`tab-btn ${activeTab === "current" ? "active" : ""}`}
-          onClick={() => setActiveTab("current")}
-        >
-          {t('tab_current')}
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === "history" ? "active" : ""}`}
-          onClick={() => setActiveTab("history")}
-        >
-          {t('tab_history')}
-        </button>
-      </div>
-
-      <div className="books-grid">
-        {filteredBooks.length > 0 ? filteredBooks.map((trans) => (
-          <div key={trans.id} className="book-card-full glass-panel">
-            <div className="book-visual">📚</div>
-            <div className="book-content">
-              <div className="book-main">
-                <h3>{trans.book_details.title}</h3>
-                <p>{trans.book_details.author}</p>
+      <div className="books-main-card glass-panel">
+        <h3 className="section-header">Sizdagi kitoblar ({loans.length})</h3>
+        
+        <div className="books-list-container">
+          {loans.length > 0 ? loans.map((loan) => (
+            <div key={loan.id} className="book-card-item glass-card">
+              <div className="book-cover-mini">
+                {loan.book_details?.image ? <img src={loan.book_details.image} alt="" /> : "📕"}
               </div>
-              <div className="book-meta">
-                <div className="meta-item">
-                  <span>📅 {t('borrowed_at')}</span>
-                  <span>{new Date(trans.borrow_date).toLocaleDateString()}</span>
+              <div className="book-info-box">
+                <h4 className="book-item-title">{loan.book_details?.title}</h4>
+                <p className="book-item-author">{loan.book_details?.author}</p>
+                <div className="book-item-meta">
+                  <span className="status-pill available">📅 Qaytarish: {new Date(loan.due_date).toLocaleDateString()}</span>
+                  {loan.book_details?.file && <span className="status-pill ebook">📱 E-kitob mavjud</span>}
                 </div>
-                {trans.status === "BORROWED" ? (
-                  <div className="meta-item warning">
-                    <span>⏳ {t('due_at')}</span>
-                    <span>{new Date(trans.due_date).toLocaleDateString()}</span>
-                  </div>
-                ) : (
-                  <div className="meta-item success">
-                    <span>✅ {t('returned_at')}</span>
-                    <span>{trans.return_date ? new Date(trans.return_date).toLocaleDateString() : t('unknown')}</span>
-                  </div>
-                )}
-              </div>
-              {trans.points_earned > 0 && (
-                <div className="points-badge">+{trans.points_earned} {t('points_earned')}</div>
-              )}
-              {/* Yangi tugmalar — avvalgi dizayn bilan mos */}
-              {trans.status === "BORROWED" && (
+                
                 <div className="action-row">
-                  {trans.book_details?.file && (
-                    <button className="btn-primary btn-sm" onClick={() => handleReadOnline(trans.book_details.file)}>
-                      📖 {t('read_btn')}
-                    </button>
-                  )}
                   <button 
-                    className="btn-return-sm"
-                    onClick={() => handleReturn(trans.id)}
-                    disabled={returningId === trans.id}
+                    className={`btn-primary read-btn ${!loan.book_details?.file ? 'disabled' : ''}`}
+                    onClick={() => handleRead(loan.book_details?.file)}
+                    disabled={!loan.book_details?.file}
                   >
-                    {returningId === trans.id ? "⏳" : `🔄 ${t('return_btn')}`}
+                    📖 O'qish
+                  </button>
+                  <button 
+                    className="btn-secondary return-btn"
+                    onClick={() => handleReturn(loan.id)}
+                    disabled={actionId === loan.id}
+                  >
+                    {actionId === loan.id ? "..." : "🔄 Qaytarish"}
                   </button>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
-        )) : <p className="text-muted">{t('no_books')}</p>}
+          )) : (
+            <div className="empty-state-box">
+              <p>Sizda hali ijaraga olingan kitoblar yo'q.</p>
+              <button className="btn-primary" onClick={() => window.location.href='/library'}>
+                Kutubxonaga borish
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <style jsx>{`
-        .books-page { display: flex; flex-direction: column; gap: 30px; }
-        .subtitle { color: var(--text-muted); margin-top: 5px; }
-        .tabs { display: flex; gap: 10px; padding: 10px; width: fit-content; }
-        .tab-btn { padding: 10px 25px; border-radius: 10px; border: none; background: none; color: var(--text-muted); cursor: pointer; font-weight: 600; transition: all 0.3s ease; }
-        .tab-btn.active { background: var(--primary); color: white; }
-        .books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; }
-        .book-card-full { display: flex; padding: 25px; gap: 25px; }
-        .book-visual { font-size: 50px; background: rgba(255,255,255,0.05); width: 80px; height: 110px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
-        .book-content { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .book-main h3 { font-size: 1.25rem; margin-bottom: 5px; }
-        .book-main p { color: var(--text-muted); font-size: 0.9rem; }
-        .book-meta { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; font-size: 0.85rem; }
-        .meta-item { display: flex; justify-content: space-between; }
-        .warning { color: var(--accent); font-weight: 600; }
-        .success { color: #10b981; font-weight: 600; }
-        .points-badge { margin-top: 15px; padding: 5px 12px; background: rgba(245, 158, 11, 0.1); color: var(--accent); border-radius: 20px; font-weight: 700; font-size: 0.8rem; width: fit-content; }
-        .text-muted { color: var(--text-muted); margin: 20px 0; }
+        .dashboard-content { display: flex; flex-direction: column; gap: 25px; }
+        .welcome-title { font-size: 2rem; color: white; }
+        .welcome-subtitle { color: rgba(255, 255, 255, 0.5); }
 
-        .status-toast { padding: 14px 24px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; }
-        .status-toast.success { border-color: #10b981; color: #34d399; background: rgba(16, 185, 129, 0.08); }
-        .status-toast.error { border-color: #ef4444; color: #fca5a5; background: rgba(239, 68, 68, 0.08); }
-
-        .action-row { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-sm { padding: 8px 16px; font-size: 0.8rem; border-radius: 8px; }
-        .btn-return-sm {
-          padding: 8px 16px;
-          font-size: 0.8rem;
-          border-radius: 8px;
-          border: 1px solid rgba(245, 158, 11, 0.3);
-          background: rgba(245, 158, 11, 0.08);
-          color: var(--accent);
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
+        .books-main-card { padding: 25px; min-height: 400px; }
+        .section-header { margin-bottom: 25px; color: white; font-size: 1.1rem; }
+        
+        .books-list-container { display: flex; flex-direction: column; gap: 15px; }
+        .book-card-item { padding: 20px; display: flex; gap: 20px; align-items: flex-start; }
+        
+        .book-cover-mini { 
+          width: 80px; height: 110px; background: rgba(255,255,255,0.05); 
+          border-radius: 10px; display: flex; align-items: center; justify-content: center;
+          overflow: hidden; font-size: 32px; flex-shrink: 0;
         }
-        .btn-return-sm:hover { background: rgba(245, 158, 11, 0.15); }
-        .btn-return-sm:disabled { opacity: 0.5; cursor: not-allowed; }
+        .book-cover-mini img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .book-info-box { flex-grow: 1; }
+        .book-item-title { font-size: 1.1rem; color: white; font-weight: 700; margin-bottom: 4px; }
+        .book-item-author { color: rgba(255,255,255,0.4); font-size: 0.9rem; margin-bottom: 10px; }
+        
+        .book-item-meta { display: flex; gap: 10px; margin-bottom: 15px; }
+        .status-pill { padding: 4px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; }
+        .status-pill.available { background: rgba(59, 130, 246, 0.1); color: #60a5fa; }
+        .status-pill.ebook { background: rgba(16, 185, 129, 0.1); color: #34d399; }
+        
+        .action-row { display: flex; gap: 12px; }
+        .read-btn { background: #818cf8 !important; padding: 8px 20px; font-size: 0.85rem; }
+        .read-btn.disabled { opacity: 0.3; cursor: not-allowed; }
+        .return-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 8px 20px; font-size: 0.85rem; border-radius: 10px; transition: all 0.3s; }
+        .return-btn:hover { background: rgba(239, 68, 68, 0.1); color: #fca5a5; border-color: rgba(239, 68, 68, 0.2); }
+
+        .empty-state-box { text-align: center; padding: 60px 20px; color: rgba(255,255,255,0.3); }
+        .empty-state-box .btn-primary { margin-top: 20px; }
       `}</style>
     </div>
   );

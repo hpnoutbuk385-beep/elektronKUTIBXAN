@@ -1,41 +1,33 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { fetchApi } from "@/lib/api";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 
-export default function RegisterPage() {
-  const router = useRouter();
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://elektronkutibxan-production.up.railway.app/api';
+
+export default function Register() {
   const { t } = useLanguage();
+  const router = useRouter();
   const [organizations, setOrganizations] = useState([]);
   const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    confirmPassword: "",
     first_name: "",
     last_name: "",
     email: "",
     phone: "",
-    password: "",
-    confirm_password: "",
     organization: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    async function getOrgs() {
-      try {
-        const res = await fetchApi('/organizations/?org_type=SCHOOL', { cache: 'no-store' });
-        if (res.ok) {
-          const data = await res.json();
-          setOrganizations(data.results || data);
-        } else {
-          console.error("Failed to fetch organizations: Status", res.status);
-        }
-      } catch (err) {
-        console.error("Failed to load organizations", err);
-      }
-    }
-    getOrgs();
+    fetch(`${API_URL}/organizations/`)
+      .then((res) => res.json())
+      .then((data) => setOrganizations(Array.isArray(data) ? data : data.results || []))
+      .catch((err) => console.error("Org fetch error:", err));
   }, []);
 
   const handleChange = (e) => {
@@ -44,183 +36,131 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirm_password) {
-      setError(t('password_mismatch'));
+    if (formData.password !== formData.confirmPassword) {
+      setError("Parollar mos kelmadi");
       return;
     }
-    setLoading(true);
     setError("");
+    setLoading(true);
 
     try {
-      const res = await fetchApi('/auth/register/', {
+      const res = await fetch(`${API_URL}/accounts/register/`, {
         method: "POST",
-        body: JSON.stringify({
-          first_name: formData.first_name,
-          last_name: formData.last_name,
-          email: formData.email,
-          phone: formData.phone,
-          password: formData.password,
-          organization: formData.organization,
-          role: "STUDENT"
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
       if (res.ok) {
-        const data = await res.json();
-        localStorage.setItem("access_token", data.access);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        router.push("/");
+        router.push("/login");
       } else {
         const data = await res.json();
-        setError(Object.values(data).flat().join(", ") || t('registration_failed'));
+        setError(Object.values(data).flat().join(", "));
       }
     } catch (err) {
-      setError(t('server_error'));
+      setError("Server bilan bog'lanishda xatolik");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-pixel-bg">
-        <div className="particles">
-            {[...Array(30)].map((_, i) => {
-                const r1 = (i * 13) % 100;
-                const r2 = (i * 29) % 100;
-                const r3 = ((i * 7) % 40) / 100;
-                const dur = 10 + ((i * 2) % 15);
-                const del = (i * 3) % 15;
-                return (
-                    <div 
-                        key={i} 
-                        className="particle" 
-                        style={{
-                            left: `${r1}%`,
-                            top: `${r2}%`,
-                            opacity: r3,
-                            animationDuration: `${dur}s`,
-                            animationDelay: `-${del}s`
-                        }}
-                    />
-                );
-            })}
-        </div>
-        <div className="lamp-glow"></div>
-      </div>
-      <div className="auth-overlay"></div>
-      
+    <div className="register-container">
+      {/* Faqat toza fon, rasm va animatsiyalar olib tashlandi */}
+      <div className="auth-card glass-panel">
+        <h1 className="auth-title">Ro'yxatdan O'tish</h1>
+        <p className="auth-subtitle">Raqamli kutubxona dunyosiga xush kelibsiz!</p>
 
-      
-      <div className="auth-card glass-panel animate-slide-up">
-        <div className="auth-header">
-          <h1 className="gradient-text">{t('register')}</h1>
-          <p className="auth-subtitle">Raqamli kutubxona dunyosiga xush kelibsiz!</p>
-        </div>
-
-        {error && <div className="error-message glass-card">{error}</div>}
+        {error && <div className="error-box">{error}</div>}
 
         <form onSubmit={handleSubmit} className="auth-form">
-          <div className="form-row">
-              <div className="form-group">
-                <label>{t('first_name')}</label>
-                <input
-                    type="text"
-                    name="first_name"
-                    placeholder="Ismingiz"
-                    value={formData.first_name}
-                    onChange={handleChange}
-                    required
-                />
-              </div>
-              <div className="form-group">
-                <label>{t('last_name')}</label>
-                <input
-                    type="text"
-                    name="last_name"
-                    placeholder="Familyangiz"
-                    value={formData.last_name}
-                    onChange={handleChange}
-                    required
-                />
-              </div>
+          <div className="form-grid">
+            <div className="input-group">
+              <label>Ism</label>
+              <input type="text" name="first_name" placeholder="Ismingiz" onChange={handleChange} required />
+            </div>
+            <div className="input-group">
+              <label>Familya</label>
+              <input type="text" name="last_name" placeholder="Familyangiz" onChange={handleChange} required />
+            </div>
+            <div className="input-group full">
+              <label>Email</label>
+              <input type="email" name="email" placeholder="Email manzilingiz" onChange={handleChange} required />
+            </div>
+            <div className="input-group full">
+              <label>Telefon</label>
+              <input type="text" name="phone" placeholder="+998 90 123 45 67" onChange={handleChange} />
+            </div>
+            <div className="input-group full">
+              <label>Tashkilot (Maktab)</label>
+              <select name="organization" onChange={handleChange} required className="auth-select">
+                <option value="">Tashkilotni tanlang...</option>
+                {organizations.map((org) => (
+                  <option key={org.id} value={org.id}>{org.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="input-group">
+              <label>Parol</label>
+              <input type="password" name="password" placeholder="••••••••" onChange={handleChange} required />
+            </div>
+            <div className="input-group">
+              <label>Parolni tasdiqlash</label>
+              <input type="password" name="confirmPassword" placeholder="••••••••" onChange={handleChange} required />
+            </div>
           </div>
 
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              name="email"
-              placeholder="example@mail.com"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>{t('phone')}</label>
-            <input
-              type="text"
-              name="phone"
-              placeholder="+998 90 123 45 67"
-              value={formData.phone}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>{t('organization')}</label>
-            <select
-              name="organization"
-              value={formData.organization}
-              onChange={handleChange}
-              required
-            >
-              <option value="">{t('select_org')}</option>
-              {organizations.map((org) => (
-                <option key={org.id} value={org.id}>
-                  {org.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-row">
-              <div className="form-group">
-                <label>{t('password')}</label>
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="••••••••"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                />
-              </div>
-              <div className="form-group">
-                <label>{t('confirm_password')}</label>
-                <input
-                    type="password"
-                    name="confirm_password"
-                    placeholder="••••••••"
-                    value={formData.confirm_password}
-                    onChange={handleChange}
-                    required
-                />
-              </div>
-          </div>
-
-          <button type="submit" className="btn-primary auth-submit" disabled={loading}>
-            {loading ? t('loading') : t('register')}
+          <button type="submit" className="btn-primary auth-btn" disabled={loading}>
+            {loading ? "Yuklanmoqda..." : "Ro'yxatdan O'tish"}
           </button>
         </form>
 
-        <div className="auth-footer">
-          <span>Hisobingiz bormi? </span>
-          <Link href="/login" className="link-text">Kirish</Link>
-        </div>
+        <p className="auth-footer">
+          Profilingiz bormi? <Link href="/login">Kirish</Link>
+        </p>
       </div>
+
+      <style jsx>{`
+        .register-container {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #020617; /* Oddiy to'q fon */
+          padding: 20px;
+        }
+
+        .auth-card {
+          width: 100%;
+          max-width: 650px;
+          padding: 40px;
+          z-index: 10;
+        }
+
+        .auth-title { font-size: 2.2rem; text-align: center; margin-bottom: 10px; font-weight: 800; color: white; }
+        .auth-subtitle { text-align: center; color: rgba(255,255,255,0.5); margin-bottom: 30px; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .input-group.full { grid-column: span 2; }
+        
+        .input-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.8); }
+        .input-group input, .auth-select {
+          width: 100%; padding: 12px 16px; border-radius: 12px;
+          background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+          color: white; outline: none; transition: all 0.3s;
+        }
+        .input-group input:focus, .auth-select:focus { border-color: #818cf8; background: rgba(255,255,255,0.08); }
+
+        .auth-btn { width: 100%; margin-top: 30px; padding: 14px; font-size: 1rem; }
+        .error-box { background: rgba(239, 68, 68, 0.1); color: #fca5a5; padding: 12px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-size: 0.9rem; }
+        
+        .auth-footer { text-align: center; margin-top: 25px; color: rgba(255,255,255,0.4); }
+        .auth-footer a { color: #818cf8; font-weight: 600; text-decoration: none; }
+
+        @media (max-width: 600px) {
+          .form-grid { grid-template-columns: 1fr; }
+          .input-group.full { grid-column: span 1; }
+        }
+      `}</style>
     </div>
   );
 }
