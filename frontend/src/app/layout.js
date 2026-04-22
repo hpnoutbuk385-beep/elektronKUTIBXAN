@@ -14,9 +14,9 @@ export default function RootLayout({ children }) {
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem("access_token") : null;
     
-    // If at root and no token -> force to register
+    // Tizimga kirmagan foydalanuvchi → kutubxonani ko'rsin
     if (pathname === "/" && !token) {
-      router.replace("/register");
+      router.replace("/library");
       return;
     }
 
@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
   }, [pathname, router]);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const isPublicPage = ["/login", "/register"].includes(pathname);
+  const isPublicPage = ["/login", "/register", "/library"].includes(pathname);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
