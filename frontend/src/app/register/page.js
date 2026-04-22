@@ -24,7 +24,7 @@ export default function RegisterPage() {
   useEffect(() => {
     async function getOrgs() {
       try {
-        const res = await fetchApi('/organizations/', { cache: 'no-store' });
+        const res = await fetchApi('/organizations/?org_type=SCHOOL', { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           setOrganizations(data.results || data);

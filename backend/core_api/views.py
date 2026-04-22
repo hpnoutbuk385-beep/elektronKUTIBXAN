@@ -22,11 +22,18 @@ class OrganizationViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        qs = Organization.objects.all()
+        
+        # Allow filtering by org_type (e.g. ?org_type=SCHOOL)
+        org_type = self.request.query_params.get('org_type')
+        if org_type:
+            qs = qs.filter(org_type=org_type)
+            
         if not user.is_authenticated:
-            return Organization.objects.all()
+            return qs
         if user.role == 'SUPERADMIN' or user.is_superuser:
-            return Organization.objects.all()
-        return Organization.objects.filter(id=user.organization_id)
+            return qs
+        return qs.filter(id=user.organization_id)
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
