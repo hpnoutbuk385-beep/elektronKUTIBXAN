@@ -14,9 +14,9 @@ export default function RootLayout({ children }) {
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem("access_token") : null;
     
-    // If at root and no token -> redirect to public library
+    // If at root and no token -> force to register
     if (pathname === "/" && !token) {
-      router.replace("/library");
+      router.replace("/register");
       return;
     }
 
@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
   }, [pathname, router]);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const isPublicPage = ["/login", "/register", "/library"].includes(pathname);
+  const isPublicPage = ["/login", "/register"].includes(pathname);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
