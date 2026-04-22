@@ -25,12 +25,11 @@ export default function Sidebar({ isOpen, onClose }) {
     { name: t('dashboard'), href: "/", icon: "📊" },
     { name: t('library_title'), href: "/library", icon: "📚" },
     { name: t('my_books'), href: "/books", icon: "📖" },
-    { name: t('profile'), href: "/profile", icon: "👤" },
     { name: t('leaderboard'), href: "/leaderboard", icon: "🏆" },
     { name: t('rewards'), href: "/rewards", icon: "🎁" },
+    { name: t('profile'), href: "/profile", icon: "👤" },
   ];
 
-  // Only show Admin Panel to authorized roles
   const adminRoles = ['SUPERADMIN', 'REGION_ADMIN', 'DISTRICT_ADMIN', 'SCHOOL_ADMIN'];
   if (user && adminRoles.includes(user.role)) {
     menuItems.push({ name: t('admin_panel'), href: "/admin", icon: "🛡️" });
@@ -42,7 +41,7 @@ export default function Sidebar({ isOpen, onClose }) {
       <aside className={`sidebar glass-panel ${isOpen ? 'mobile-open' : ''}`}>
         <div className="logo-section">
           <span className="logo-icon">📖</span>
-          <h2 className="logo-text">{t('digital_library')}</h2>
+          <h2 className="logo-text">Raqamli Kutubxona</h2>
           <button className="mobile-close-btn" onClick={onClose}>✕</button>
         </div>
         
@@ -66,7 +65,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
         <div className="user-card-mini glass-card">
           <div className="mini-info">
-            <p className="mini-name">{user?.username || t('user_label')}</p>
+            <p className="mini-name">{user?.first_name || user?.username || t('user_label')}</p>
             <p className="mini-points">🌟 {user?.points || 0} PTS</p>
           </div>
         </div>
@@ -84,49 +83,10 @@ export default function Sidebar({ isOpen, onClose }) {
             margin-left: 20px;
             z-index: 1000;
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          }
-
-          .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 999;
-          }
-
-          .mobile-close-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-          }
-
-          @media (max-width: 1024px) {
-            .sidebar {
-              position: fixed;
-              height: 100vh;
-              top: 0;
-              margin: 0;
-              border-radius: 0 24px 24px 0;
-              transform: translateX(-100%);
-              width: 280px;
-              background: #0a0a0f !important; /* Solid dark background for mobile */
-              box-shadow: 10px 0 50px rgba(0, 0, 0, 0.8);
-              padding-top: 40px;
-            }
-            .sidebar.mobile-open {
-              transform: translateX(0);
-            }
-            .mobile-close-btn {
-              display: block;
-              margin-left: auto;
-              padding: 10px;
-            }
+            background: rgba(13, 13, 33, 0.7) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
           }
 
           .logo-section {
@@ -135,14 +95,13 @@ export default function Sidebar({ isOpen, onClose }) {
             gap: 12px;
             margin-bottom: 50px;
           }
-
           .logo-icon { font-size: 24px; }
-          .logo-text { font-size: 1.25rem; color: white; }
+          .logo-text { font-size: 1.1rem; color: white; font-weight: 700; line-height: 1.2; }
 
           .menu-nav {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             flex-grow: 1;
           }
 
@@ -152,24 +111,48 @@ export default function Sidebar({ isOpen, onClose }) {
             gap: 15px;
             padding: 12px 18px;
             border-radius: 12px;
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.5);
             transition: all 0.3s ease;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            cursor: pointer;
             text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
           }
 
-          .menu-item:hover { background: rgba(255, 255, 255, 0.05); color: white; }
-          .menu-item.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; box-shadow: 0 4px 15px var(--primary-glow); }
-          .logout-btn:hover { color: #ef4444; }
-          .menu-icon { font-size: 20px; }
+          .menu-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+          }
 
-          .user-card-mini { margin-top: auto; display: flex; align-items: center; padding: 15px; gap: 10px; }
-          .mini-name { font-weight: 600; font-size: 0.9rem; }
-          .mini-points { font-size: 0.8rem; color: var(--accent); font-weight: 700; }
+          .menu-item.active {
+            color: #818cf8;
+            background: rgba(129, 140, 248, 0.1);
+            font-weight: 600;
+          }
+
+          .logout-btn {
+            background: none; border: none; cursor: pointer; width: 100%; text-align: left;
+            margin-top: 10px;
+          }
+          .logout-btn:hover { color: #f87171; }
+
+          .user-card-mini {
+            margin-top: auto;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+          }
+          .mini-name { color: white; font-weight: 600; font-size: 0.9rem; }
+          .mini-points { color: #fbbf24; font-size: 0.8rem; font-weight: 700; margin-top: 2px; }
+
+          @media (max-width: 1024px) {
+            .sidebar {
+              position: fixed; top: 0; left: 0; height: 100vh; margin: 0;
+              border-radius: 0 24px 24px 0;
+              transform: translateX(-100%);
+            }
+            .sidebar.mobile-open { transform: translateX(0); }
+          }
         `}</style>
       </aside>
     </>
