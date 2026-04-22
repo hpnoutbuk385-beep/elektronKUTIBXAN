@@ -15,12 +15,26 @@ export default function LibraryPage() {
   const router = useRouter();
 
   useEffect(() => {
+    // Kafolatlangan kitoblar ro'yxati (API'dan oldin ko'rinadi)
+    const fallbackBooks = [
+      { id: "101", title: "O'tkan kunlar", author: "Abdulla Qodiriy", image: "https://kitobxon.com/img_u/b/887.jpg" },
+      { id: "102", title: "Mehrobdan chayon", author: "Abdulla Qodiriy", image: "https://kitobxon.com/img_u/b/1500.jpg" },
+      { id: "103", title: "Kecha va kunduz", author: "Cho'lpon", image: "https://kitobxon.com/img_u/b/2034.jpg" },
+      { id: "104", title: "Yulduzli tunlar", author: "Pirimqul Qodirov", image: "https://kitobxon.com/img_u/b/2012.jpg" },
+      { id: "105", title: "Dunyoning ishlari", author: "O'tkir Hoshimov", image: "https://kitobxon.com/img_u/b/814.jpg" },
+      { id: "106", title: "Sariq devni minib", author: "X. To'xtaboyev", image: "https://kitobxon.com/img_u/b/263.jpg" }
+    ];
+    setBooks(fallbackBooks);
+
     async function loadBooks() {
       try {
         const res = await fetchApi('/books/');
-        if (res.ok) setBooks(await res.json());
+        if (res.ok) {
+          const data = await res.json();
+          if (data.length > 0) setBooks(data);
+        }
       } catch (err) {
-        console.error(err);
+        console.error("API Error, using fallback", err);
       } finally {
         setLoading(false);
       }
