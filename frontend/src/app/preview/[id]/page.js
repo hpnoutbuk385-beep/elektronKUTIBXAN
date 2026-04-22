@@ -3,18 +3,40 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchApi } from "@/lib/api";
 
-const FALLBACK_BOOKS = {
-  "101": { title: "O'tkan kunlar", author: "Abdulla Qodiriy", image: "https://kitobxon.com/img_u/b/887.jpg", pages: ["/otkan_kunlar_page_1_1776854793090.png", "https://n.ziyouz.com/images/stories/books/otgan_kunlar_2.jpg", "https://n.ziyouz.com/images/stories/books/otgan_kunlar_3.jpg"] },
-  "102": { title: "Mehrobdan chayon", author: "Abdulla Qodiriy", image: "https://kitobxon.com/img_u/b/1500.jpg", pages: ["https://n.ziyouz.com/images/stories/books/mehrobdan_chayon_1.jpg", "https://n.ziyouz.com/images/stories/books/mehrobdan_chayon_2.jpg"] },
-  "103": { title: "Kecha va kunduz", author: "Cho'lpon", image: "https://kitobxon.com/img_u/b/2034.jpg", pages: ["https://n.ziyouz.com/images/stories/books/kecha_va_kunduz_1.jpg", "https://n.ziyouz.com/images/stories/books/kecha_va_kunduz_2.jpg"] },
-  "104": { title: "Yulduzli tunlar", author: "Pirimqul Qodirov", image: "https://kitobxon.com/img_u/b/2012.jpg", pages: ["https://n.ziyouz.com/images/stories/books/yulduzli_tunlar_1.jpg", "https://n.ziyouz.com/images/stories/books/yulduzli_tunlar_2.jpg"] },
-  "105": { title: "Dunyoning ishlari", author: "O'tkir Hoshimov", image: "https://kitobxon.com/img_u/b/814.jpg", pages: ["https://n.ziyouz.com/images/stories/books/dunyoning_ishlari_1.jpg", "https://n.ziyouz.com/images/stories/books/dunyoning_ishlari_2.jpg"] },
-  "106": { title: "Sariq devni minib", author: "X. To'xtaboyev", image: "https://kitobxon.com/img_u/b/263.jpg", pages: ["https://n.ziyouz.com/images/stories/books/sariq_devni_minib_1.jpg", "https://n.ziyouz.com/images/stories/books/sariq_devni_minib_2.jpg"] },
-  "107": { title: "Atom odatlar", author: "James Clear", image: "https://kitobxon.com/img_u/b/6146.jpg", pages: ["https://miro.medium.com/v2/resize:fit:1400/1*D9I5L5A0D-t-t1-9-P3-A.png", "https://miro.medium.com/v2/resize:fit:1400/1*D9I5L5A0D-t-t1-9-P3-A.png"] },
-  "108": { title: "Boy ota, kambag'al ota", author: "Robert Kiyosaki", image: "https://kitobxon.com/img_u/b/4836.jpg", pages: ["https://via.placeholder.com/600x800/1e293b/ffffff?text=Moliyaviy+erkinlik", "https://via.placeholder.com/600x800/1e293b/ffffff?text=Aktiv+va+Passiv"] },
-  "109": { title: "Diqqat", author: "Cal Newport", image: "https://kitobxon.com/img_u/b/6169.jpg", pages: ["https://via.placeholder.com/600x800/1e293b/ffffff?text=Diqqatni+jamlash", "https://via.placeholder.com/600x800/1e293b/ffffff?text=Deep+Work"] },
-  "110": { title: "Psixologiya", author: "Darslik", image: "https://kitobxon.com/img_u/b/402.jpg", pages: ["https://via.placeholder.com/600x800/1e293b/ffffff?text=Psixologiya+faniga+kirish", "https://via.placeholder.com/600x800/1e293b/ffffff?text=Shaxs+psixologiyasi"] },
-  "default": { title: "Kitob", author: "Muallif", image: "https://kitobxon.com/img_u/b/887.jpg", pages: ["https://via.placeholder.com/600x800/1e293b/ffffff?text=Mundarija", "https://via.placeholder.com/600x800/1e293b/ffffff?text=Sahifa+2"] }
+const BOOK_CONTENT = {
+  "101": { 
+    title: "O'tkan kunlar", author: "Abdulla Qodiriy", 
+    image: "https://kitobxon.com/img_u/b/887.jpg",
+    pages: [
+      "1264-inchi hijriya, dalv oyining o'ninchisi, qishki kunlarning biri, quyosh botqan, ufqda qizil shafaq ko'ringan bir vaqtda Toshkentning 'Zarkaynar' ko'chasidagi bir do'kon oldiga bir otliq kelib to'xtadi...",
+      "Otabek otidan tushib, do'kondor bilan so'rashdi. Uning ko'zlarida qandaydir bir g'amginlik, ammo shu bilan birga qat'iyat bor edi. Marg'ilondan kelgan bu yosh yigitning taqdiri hali o'zi bilmagan holda buyuk muhabbatga bog'lanib bo'lgan edi...",
+      "Kumushbibi o'z xonasida o'tirib, derazadan tashqariga boqar ekan, ko'nglida bir g'ashlik bor edi. Bu g'ashlik balki kutilayotgan baxtning, balki kelajakdagi fojianing darakchisi edi..."
+    ]
+  },
+  "102": { 
+    title: "Mehrobdan chayon", author: "Abdulla Qodiriy", 
+    image: "https://kitobxon.com/img_u/b/1500.jpg",
+    pages: [
+      "Xudoyorxon o'rdasi. Saroy ichidagi fitnalar va amaldorlarning bir-biriga bo'lgan adovati avjiga chiqqan. Anvar o'zining pok niyati bilan bu muhitda yashashga harakat qilar edi...",
+      "Ra'no o'z otasining do'sti bo'lgan amaldorning hiylasidan bexabar, Anvarni kutar edi. Ular o'rtasidagi munosabat nafaqat muhabbat, balki sadoqat va adolat timsoli edi..."
+    ]
+  },
+  "107": { 
+    title: "Atom odatlar", author: "James Clear", 
+    image: "https://kitobxon.com/img_u/b/6146.jpg",
+    pages: [
+      "Odatlar - bu shaxsiy o'sishning murakkab foizidir. Agar siz har kuni 1 foizga yaxshilanib borsangiz, bir yildan so'ng siz 37 barobar yaxshi natijaga erishasiz...",
+      "Kichik odatlarning kuchi ularning takrorlanishidadir. Sizning natijalaringiz sizning odatlaringizning kechikkan ko'rsatkichidir. Boyligingiz - moliyaviy odatlaringiz natijasi..."
+    ]
+  },
+  "default": { 
+    title: "Kitob", author: "Muallif", 
+    image: "https://kitobxon.com/img_u/b/887.jpg",
+    pages: [
+      "Ushbu kitobning birinchi sahifasi. Bu yerda asarning kirish qismi va asosiy g'oyalari bayon etiladi. Kitobxonni qiziqarli sarguzashtlar kutmoqda...",
+      "Ikkinchi sahifa. Voqealar rivoji davom etadi. Qahramonlar o'z maqsadlari yo'lida turli to'siqlarga duch keladilar. Asar o'zining falsafiy chuqurligi bilan ajralib turadi..."
+    ]
+  }
 };
 
 export default function PreviewPage() {
@@ -29,7 +51,7 @@ export default function PreviewPage() {
     async function loadBook() {
       try {
         const res = await fetchApi(`/books/${id}/`);
-        const fb = FALLBACK_BOOKS[id] || FALLBACK_BOOKS["default"];
+        const fb = BOOK_CONTENT[id] || BOOK_CONTENT["default"];
         if (res.ok) {
           const data = await res.json();
           setBook({ ...fb, ...data, pages: fb.pages });
@@ -37,7 +59,7 @@ export default function PreviewPage() {
           setBook(fb);
         }
       } catch (err) {
-        setBook(FALLBACK_BOOKS[id] || FALLBACK_BOOKS["default"]);
+        setBook(BOOK_CONTENT[id] || BOOK_CONTENT["default"]);
       } finally {
         setLoading(false);
       }
@@ -57,10 +79,6 @@ export default function PreviewPage() {
     }
   };
 
-  const handlePrev = () => {
-    if (currentPage > 0) setCurrentPage(prev => prev - 1);
-  };
-
   return (
     <div className="preview-page animate-fade">
       <div className="top-nav">
@@ -73,19 +91,18 @@ export default function PreviewPage() {
 
       <div className="preview-container">
         <div className="page-viewer glass-panel">
-          <div className="page-display">
-            <img 
-              src={pages[currentPage]} 
-              alt={`Page ${currentPage + 1}`} 
-              className="page-img" 
-              onError={(e) => e.target.src = `https://via.placeholder.com/600x800/1e293b/ffffff?text=${book.title}+Sahifa+${currentPage + 1}`}
-            />
+          <div className="text-page-content">
+            <div className="page-paper animate-slide-up">
+              <div className="paper-texture"></div>
+              <p className="page-text">{pages[currentPage]}</p>
+              <div className="page-footer-num">- {currentPage + 1} -</div>
+            </div>
             
             {showOverlay && (
               <div className="overlay-lock animate-fade">
                 <div className="lock-card glass-panel">
-                  <h3>📖 Kitobni to'liq o'qing</h3>
-                  <p>Preview tugadi. Davomini o'qish uchun ro'yxatdan o'ting.</p>
+                  <h3>📖 Davomini o'qish</h3>
+                  <p>Preview tugadi. To'liq versiyani o'qish uchun ro'yxatdan o'ting.</p>
                   <button className="btn-primary" onClick={() => router.push("/register")}>Ro'yxatdan o'tish</button>
                 </div>
               </div>
@@ -93,46 +110,57 @@ export default function PreviewPage() {
           </div>
 
           <div className="viewer-footer">
-            <button className="nav-btn" onClick={handlePrev} disabled={currentPage === 0}>Oldingi</button>
-            <div className="page-indicator">
-              Sahifa <span>{currentPage + 1}</span> / {pages.length}
-            </div>
+            <button className="nav-btn" onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))} disabled={currentPage === 0}>Oldingi</button>
+            <div className="page-indicator">Sahifa <span>{currentPage + 1}</span> / {pages.length}</div>
             <button className="nav-btn next" onClick={handleNext}>Keyingi</button>
           </div>
         </div>
 
         <div className="side-details glass-panel">
           <img src={book.image} alt="" className="side-cover" />
-          <h4>Kitob haqida</h4>
-          <p>{book.description || "Ushbu asar o'zbek adabiyotining eng sara namunalaridan biri hisoblanadi. Kitobning to'liq versiyasida ko'plab qiziqarli voqealar sizni kutmoqda."}</p>
+          <h4>Tavsif</h4>
+          <p>{book.description || "Ushbu asar bilan tanishib chiqing. To'liq versiyada sizni yanada qiziqarli voqealar kutmoqda."}</p>
         </div>
       </div>
 
       <style jsx>{`
         .preview-page { background: #020617; min-height: 100vh; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
-        .top-nav { display: flex; align-items: center; gap: 20px; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .btn-back { background: rgba(255,255,255,0.05); color: white; padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.3s; }
-        .btn-back:hover { background: rgba(255,255,255,0.1); }
-        .book-top-info h3 { color: white; font-size: 1.1rem; margin-bottom: 2px; }
+        .top-nav { display: flex; align-items: center; gap: 20px; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .btn-back { background: rgba(255,255,255,0.05); color: white; padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+        .book-top-info h3 { color: white; font-size: 1.1rem; }
         .book-top-info span { color: #818cf8; font-size: 0.85rem; }
-        .preview-container { display: grid; grid-template-columns: 1fr 320px; gap: 20px; max-width: 1400px; margin: 0 auto; width: 100%; flex-grow: 1; height: calc(100vh - 100px); }
-        .page-viewer { display: flex; flex-direction: column; overflow: hidden; background: #1e293b; border-radius: 20px; }
-        .page-display { flex-grow: 1; position: relative; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: hidden; }
-        .page-img { max-height: 100%; box-shadow: 0 15px 40px rgba(0,0,0,0.5); border-radius: 4px; transition: 0.4s; }
-        .viewer-footer { background: rgba(0,0,0,0.3); padding: 12px; display: flex; align-items: center; justify-content: center; gap: 30px; }
-        .nav-btn { background: rgba(255,255,255,0.08); border: none; color: white; padding: 8px 20px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-        .nav-btn:hover:not(:disabled) { background: #818cf8; }
+
+        .preview-container { display: grid; grid-template-columns: 1fr 300px; gap: 20px; max-width: 1200px; margin: 0 auto; width: 100%; flex-grow: 1; height: calc(100vh - 100px); }
+        .page-viewer { display: flex; flex-direction: column; background: #1e293b; border-radius: 20px; overflow: hidden; }
+        
+        .text-page-content { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 40px; position: relative; }
+        .page-paper { 
+          background: #fdf6e3; width: 100%; max-width: 500px; aspect-ratio: 3/4; 
+          padding: 50px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.4); 
+          display: flex; flex-direction: column; justify-content: center;
+        }
+        .paper-texture { position: absolute; inset: 0; opacity: 0.05; background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png'); pointer-events: none; }
+        .page-text { color: #2c3e50; font-size: 1.3rem; line-height: 1.8; font-family: 'Georgia', serif; text-align: justify; z-index: 1; }
+        .page-footer-num { position: absolute; bottom: 30px; left: 0; right: 0; text-align: center; color: #7f8c8d; font-size: 0.9rem; }
+
+        .viewer-footer { background: rgba(0,0,0,0.3); padding: 15px; display: flex; align-items: center; justify-content: center; gap: 40px; }
+        .nav-btn { background: #818cf8; border: none; color: white; padding: 8px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; }
         .nav-btn:disabled { opacity: 0.2; }
-        .page-indicator { color: white; font-size: 0.9rem; }
-        .page-indicator span { font-weight: 800; color: #818cf8; }
-        .side-details { padding: 20px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; border-radius: 20px; }
-        .side-cover { width: 100%; border-radius: 10px; }
-        .side-details h4 { color: white; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
-        .side-details p { color: rgba(255,255,255,0.6); font-size: 0.9rem; line-height: 1.6; }
-        .overlay-lock { position: absolute; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 10; }
+        .page-indicator { color: white; }
+
+        .side-details { padding: 20px; border-radius: 20px; overflow-y: auto; }
+        .side-cover { width: 100%; border-radius: 10px; margin-bottom: 15px; }
+        .side-details p { color: rgba(255,255,255,0.6); font-size: 0.9rem; line-height: 1.5; }
+
+        .overlay-lock { position: absolute; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 10; }
         .lock-card { padding: 40px; text-align: center; color: white; max-width: 350px; border-radius: 25px; }
         .preview-loading { background: #020617; height: 100vh; display: flex; align-items: center; justify-content: center; color: white; }
-        @media (max-width: 900px) { .preview-container { grid-template-columns: 1fr; } .side-details { display: none; } }
+        
+        @media (max-width: 800px) {
+          .preview-container { grid-template-columns: 1fr; }
+          .side-details { display: none; }
+          .page-paper { padding: 30px; font-size: 1rem; }
+        }
       `}</style>
     </div>
   );
