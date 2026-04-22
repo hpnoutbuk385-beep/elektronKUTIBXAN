@@ -116,15 +116,51 @@ export default function LibraryPage() {
         
         @media (max-width: 768px) {
           .dashboard-content { padding: 15px; }
-          .welcome-title { font-size: 1.8rem; }
+          .welcome-title { font-size: 1.8rem; margin-bottom: 20px; }
+          
           .books-grid { 
-            grid-template-columns: repeat(2, 1fr); 
+            grid-template-columns: 1fr; /* 1 qatorga o'tamiz */
             gap: 15px; 
           }
-          .book-card { border-radius: 20px; padding: 8px; }
-          .book-title { font-size: 0.9rem; height: 2.3rem; }
-          .book-author { font-size: 0.75rem; margin-bottom: 10px; }
-          .btn-borrow-mini { font-size: 0.8rem; padding: 10px; }
+
+          .book-card { 
+            flex-direction: row; /* Rasm chapda, matn o'ngda */
+            height: 160px;
+            padding: 10px;
+            align-items: center;
+            gap: 15px;
+          }
+
+          .book-image-wrap { 
+            width: 100px;
+            height: 140px;
+            flex-shrink: 0;
+            aspect-ratio: auto;
+          }
+
+          .book-card-info { 
+            padding: 0;
+            text-align: left;
+            justify-content: center;
+          }
+
+          .book-title { 
+            font-size: 1.05rem; 
+            height: auto; 
+            max-height: 2.8rem; 
+            margin-bottom: 5px;
+          }
+
+          .book-author { 
+            font-size: 0.85rem; 
+            margin-bottom: 12px; 
+          }
+
+          .btn-borrow-mini { 
+            width: fit-content;
+            padding: 8px 20px;
+            font-size: 0.8rem;
+          }
         }
       `}</style>
     </div>
