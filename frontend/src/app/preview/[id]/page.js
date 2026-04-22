@@ -4,54 +4,17 @@ import { useParams, useRouter } from "next/navigation";
 import { fetchApi } from "@/lib/api";
 
 const FALLBACK_BOOKS = {
-  "101": { 
-    title: "O'tkan kunlar", author: "Abdulla Qodiriy", 
-    image: "https://kitobxon.com/img_u/b/887.jpg",
-    pages: [
-      "/otkan_kunlar_page_1_1776854793090.png",
-      "https://n.ziyouz.com/images/stories/books/otgan_kunlar_2.jpg",
-      "https://n.ziyouz.com/images/stories/books/otgan_kunlar_3.jpg"
-    ]
-  },
-  "102": { 
-    title: "Mehrobdan chayon", author: "Abdulla Qodiriy", 
-    image: "https://kitobxon.com/img_u/b/1500.jpg",
-    pages: [
-      "https://n.ziyouz.com/images/stories/books/mehrobdan_chayon_1.jpg",
-      "https://n.ziyouz.com/images/stories/books/mehrobdan_chayon_2.jpg",
-      "https://n.ziyouz.com/images/stories/books/mehrobdan_chayon_3.jpg"
-    ]
-  },
-  "103": { 
-    title: "Kecha va kunduz", author: "Cho'lpon", 
-    image: "https://kitobxon.com/img_u/b/2034.jpg",
-    pages: [
-      "https://n.ziyouz.com/images/stories/books/kecha_va_kunduz_1.jpg",
-      "https://n.ziyouz.com/images/stories/books/kecha_va_kunduz_2.jpg"
-    ]
-  },
-  "104": { 
-    title: "Yulduzli tunlar", author: "Pirimqul Qodirov", 
-    image: "https://kitobxon.com/img_u/b/2012.jpg",
-    pages: [
-      "https://n.ziyouz.com/images/stories/books/yulduzli_tunlar_1.jpg",
-      "https://n.ziyouz.com/images/stories/books/yulduzli_tunlar_2.jpg"
-    ]
-  },
-  "105": { 
-    title: "Dunyoning ishlari", author: "O'tkir Hoshimov", 
-    image: "https://kitobxon.com/img_u/b/814.jpg",
-    pages: ["https://n.ziyouz.com/images/stories/books/dunyoning_ishlari_1.jpg"]
-  },
-  "default": { 
-    title: "Kitob", author: "Muallif", 
-    image: "https://kitobxon.com/img_u/b/887.jpg",
-    pages: [
-      "https://via.placeholder.com/600x800/2a3441/ffffff?text=Mundarija",
-      "https://via.placeholder.com/600x800/2a3441/ffffff?text=Kirish+qismi",
-      "https://via.placeholder.com/600x800/2a3441/ffffff?text=Birinchi+bob"
-    ]
-  }
+  "101": { title: "O'tkan kunlar", author: "Abdulla Qodiriy", image: "https://kitobxon.com/img_u/b/887.jpg", pages: ["/otkan_kunlar_page_1_1776854793090.png", "https://n.ziyouz.com/images/stories/books/otgan_kunlar_2.jpg", "https://n.ziyouz.com/images/stories/books/otgan_kunlar_3.jpg"] },
+  "102": { title: "Mehrobdan chayon", author: "Abdulla Qodiriy", image: "https://kitobxon.com/img_u/b/1500.jpg", pages: ["https://n.ziyouz.com/images/stories/books/mehrobdan_chayon_1.jpg", "https://n.ziyouz.com/images/stories/books/mehrobdan_chayon_2.jpg"] },
+  "103": { title: "Kecha va kunduz", author: "Cho'lpon", image: "https://kitobxon.com/img_u/b/2034.jpg", pages: ["https://n.ziyouz.com/images/stories/books/kecha_va_kunduz_1.jpg", "https://n.ziyouz.com/images/stories/books/kecha_va_kunduz_2.jpg"] },
+  "104": { title: "Yulduzli tunlar", author: "Pirimqul Qodirov", image: "https://kitobxon.com/img_u/b/2012.jpg", pages: ["https://n.ziyouz.com/images/stories/books/yulduzli_tunlar_1.jpg", "https://n.ziyouz.com/images/stories/books/yulduzli_tunlar_2.jpg"] },
+  "105": { title: "Dunyoning ishlari", author: "O'tkir Hoshimov", image: "https://kitobxon.com/img_u/b/814.jpg", pages: ["https://n.ziyouz.com/images/stories/books/dunyoning_ishlari_1.jpg", "https://n.ziyouz.com/images/stories/books/dunyoning_ishlari_2.jpg"] },
+  "106": { title: "Sariq devni minib", author: "X. To'xtaboyev", image: "https://kitobxon.com/img_u/b/263.jpg", pages: ["https://n.ziyouz.com/images/stories/books/sariq_devni_minib_1.jpg", "https://n.ziyouz.com/images/stories/books/sariq_devni_minib_2.jpg"] },
+  "107": { title: "Atom odatlar", author: "James Clear", image: "https://kitobxon.com/img_u/b/6146.jpg", pages: ["https://miro.medium.com/v2/resize:fit:1400/1*D9I5L5A0D-t-t1-9-P3-A.png", "https://miro.medium.com/v2/resize:fit:1400/1*D9I5L5A0D-t-t1-9-P3-A.png"] },
+  "108": { title: "Boy ota, kambag'al ota", author: "Robert Kiyosaki", image: "https://kitobxon.com/img_u/b/4836.jpg", pages: ["https://via.placeholder.com/600x800/1e293b/ffffff?text=Moliyaviy+erkinlik", "https://via.placeholder.com/600x800/1e293b/ffffff?text=Aktiv+va+Passiv"] },
+  "109": { title: "Diqqat", author: "Cal Newport", image: "https://kitobxon.com/img_u/b/6169.jpg", pages: ["https://via.placeholder.com/600x800/1e293b/ffffff?text=Diqqatni+jamlash", "https://via.placeholder.com/600x800/1e293b/ffffff?text=Deep+Work"] },
+  "110": { title: "Psixologiya", author: "Darslik", image: "https://kitobxon.com/img_u/b/402.jpg", pages: ["https://via.placeholder.com/600x800/1e293b/ffffff?text=Psixologiya+faniga+kirish", "https://via.placeholder.com/600x800/1e293b/ffffff?text=Shaxs+psixologiyasi"] },
+  "default": { title: "Kitob", author: "Muallif", image: "https://kitobxon.com/img_u/b/887.jpg", pages: ["https://via.placeholder.com/600x800/1e293b/ffffff?text=Mundarija", "https://via.placeholder.com/600x800/1e293b/ffffff?text=Sahifa+2"] }
 };
 
 export default function PreviewPage() {
@@ -115,7 +78,7 @@ export default function PreviewPage() {
               src={pages[currentPage]} 
               alt={`Page ${currentPage + 1}`} 
               className="page-img" 
-              onError={(e) => e.target.src = "https://via.placeholder.com/600x800/1e293b/ffffff?text=Sahifa+yuklanmoqda..."}
+              onError={(e) => e.target.src = `https://via.placeholder.com/600x800/1e293b/ffffff?text=${book.title}+Sahifa+${currentPage + 1}`}
             />
             
             {showOverlay && (
@@ -140,43 +103,36 @@ export default function PreviewPage() {
 
         <div className="side-details glass-panel">
           <img src={book.image} alt="" className="side-cover" />
-          <h4>Kitob tavsifi</h4>
-          <p>{book.description || "Ushbu asar o'zbek adabiyotining eng sara namunalaridan biri hisoblanadi."}</p>
+          <h4>Kitob haqida</h4>
+          <p>{book.description || "Ushbu asar o'zbek adabiyotining eng sara namunalaridan biri hisoblanadi. Kitobning to'liq versiyasida ko'plab qiziqarli voqealar sizni kutmoqda."}</p>
         </div>
       </div>
 
       <style jsx>{`
         .preview-page { background: #020617; min-height: 100vh; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
         .top-nav { display: flex; align-items: center; gap: 20px; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .btn-back { background: rgba(255,255,255,0.05); color: white; padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+        .btn-back { background: rgba(255,255,255,0.05); color: white; padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.3s; }
+        .btn-back:hover { background: rgba(255,255,255,0.1); }
         .book-top-info h3 { color: white; font-size: 1.1rem; margin-bottom: 2px; }
         .book-top-info span { color: #818cf8; font-size: 0.85rem; }
-
         .preview-container { display: grid; grid-template-columns: 1fr 320px; gap: 20px; max-width: 1400px; margin: 0 auto; width: 100%; flex-grow: 1; height: calc(100vh - 100px); }
-        .page-viewer { display: flex; flex-direction: column; overflow: hidden; background: #1e293b; }
+        .page-viewer { display: flex; flex-direction: column; overflow: hidden; background: #1e293b; border-radius: 20px; }
         .page-display { flex-grow: 1; position: relative; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: hidden; }
         .page-img { max-height: 100%; box-shadow: 0 15px 40px rgba(0,0,0,0.5); border-radius: 4px; transition: 0.4s; }
-        
         .viewer-footer { background: rgba(0,0,0,0.3); padding: 12px; display: flex; align-items: center; justify-content: center; gap: 30px; }
         .nav-btn { background: rgba(255,255,255,0.08); border: none; color: white; padding: 8px 20px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
         .nav-btn:hover:not(:disabled) { background: #818cf8; }
         .nav-btn:disabled { opacity: 0.2; }
         .page-indicator { color: white; font-size: 0.9rem; }
         .page-indicator span { font-weight: 800; color: #818cf8; }
-
-        .side-details { padding: 20px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+        .side-details { padding: 20px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; border-radius: 20px; }
         .side-cover { width: 100%; border-radius: 10px; }
         .side-details h4 { color: white; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
         .side-details p { color: rgba(255,255,255,0.6); font-size: 0.9rem; line-height: 1.6; }
-
         .overlay-lock { position: absolute; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 10; }
-        .lock-card { padding: 40px; text-align: center; color: white; max-width: 350px; }
+        .lock-card { padding: 40px; text-align: center; color: white; max-width: 350px; border-radius: 25px; }
         .preview-loading { background: #020617; height: 100vh; display: flex; align-items: center; justify-content: center; color: white; }
-        
-        @media (max-width: 900px) {
-          .preview-container { grid-template-columns: 1fr; }
-          .side-details { display: none; }
-        }
+        @media (max-width: 900px) { .preview-container { grid-template-columns: 1fr; } .side-details { display: none; } }
       `}</style>
     </div>
   );
