@@ -7,92 +7,52 @@ const BOOK_CONTENT = {
   "101": { 
     title: "O'tkan kunlar", author: "Abdulla Qodiriy", image: "https://kitobxon.com/img_u/b/887.jpg",
     description: "Abdulla Qodiriyning 'O'tkan kunlar' romani o'zbek adabiyoti tarixidagi birinchi roman hisoblanadi. Asarda XIX asr o'rtalaridagi Turkiston hayoti, o'sha davrdagi siyosiy nizolar va fojiaviy muhabbat qissasi mohirona bayon etilgan.",
-    pages: [
-      "1264-inchi hijriya, dalv oyining o'ninchisi, qishki kunlarning biri, quyosh botqan, ufqda qizil shafaq ko'ringan bir vaqtda Toshkentning 'Zarkaynar' ko'chasidagi bir do'kon oldiga bir otliq kelib to'xtadi. Bu yigit Otabek edi...",
-      "Kumushbibi o'z xonasida o'tirib, Marg'ilondan kelgan bu kutilmagan mehmon haqida o'ylardi. Uning ko'zlarida qandaydir bir g'amginlik, ammo shu bilan birga qat'iyat bor edi.",
-      "Otabek va Kumushning uchrashuvi. Bu uchrashuv nafaqat ikki yoshning taqdirini, balki butun Turkiston adabiyotining yo'nalishini o'zgartirdi..."
-    ]
+    pages: ["1264-inchi hijriya, dalv oyining o'ninchisi, Toshkentning 'Zarkaynar' ko'chasidagi bir do'kon oldiga bir otliq kelib to'xtadi...", "Kumushbibi o'z xonasida o'tirib, Marg'ilondan kelgan bu kutilmagan mehmon haqida o'ylardi...", "Otabek va Kumushning uchrashuvi. Bu uchrashuv nafaqat ikki yoshning taqdirini o'zgartirdi."]
   },
   "102": { 
     title: "Mehrobdan chayon", author: "Abdulla Qodiriy", image: "https://kitobxon.com/img_u/b/1500.jpg",
     description: "Ushbu asarda yozuvchi Xudoyorxon davridagi saroy hayoti, u yerdagi fitnalar va adolatsizliklarni fosh etadi. Roman markazida Anvar va Ra'no ismli ikki yoshning pokiza muhabbati turadi.",
-    pages: [
-      "Xudoyorxon o'rdasi. Saroy ichidagi fitnalar va amaldorlarning bir-biriga bo'lgan adovati avjiga chiqqan. Anvar o'zining pok niyati bilan bu muhitda yashashga harakat qilar edi.",
-      "Ra'noning maktubi. 'Sizga bo'lgan ishonchim hech qachon so'nmaydi, Anvar'. Bu so'zlar yigitga ulkan kuch bag'ishladi va uni kurashga chorladi.",
-      "Mehrob ichidagi sirlar. Din pardasi ostidagi insoniy illatlar fosh bo'la boshladi. Adolat va zulm o'rtasidagi chegara ko'rindi."
-    ]
+    pages: ["Xudoyorxon saroyidagi hiylalar va fitnalar. Anvar o'zining pokligi bilan yashashga intilar edi...", "Ra'noning maktubi. 'Sizga bo'lgan ishonchim hech qachon so'nmaydi, Anvar'...", "Mehrob ichidagi sirlar fosh bo'la boshladi."]
   },
   "103": { 
     title: "Kecha va kunduz", author: "Cho'lpon", image: "https://kitobxon.com/img_u/b/2034.jpg",
     description: "Cho'lponning bu asari jadid adabiyotining eng yirik namunalaridan biridir. Romanda mustamlaka davridagi Turkiston ijtimoiy hayoti, ayollar huquqsizligi va xalqning uyg'onish jarayoni tasvirlangan.",
-    pages: [
-      "Zebi o'zining yoshligi va go'zalligi bilan hayotdan katta umidlar qilar edi. Ammo taqdir o'yinlari uni kutilmagan ko'chalarga boshladi...",
-      "Akbarali mingboshi saroyi. Bu yerda boylik va hokimiyat inson qadrini qanchalik pasaytirishi yaqqol ko'rinardi...",
-      "Ozodlik va zulmat o'rtasidagi kurash. 'Kecha' o'tib, 'Kunduz' kelishi uchun hali ko'p qurbonlar berilishi kerak edi."
-    ]
+    pages: ["Zebi o'zining yoshligi va go'zalligi bilan hayotdan katta umidlar qilar edi...", "Akbarali mingboshi saroyidagi hayot...", "Ozodlik va zulmat o'rtasidagi kurash."]
   },
   "104": { 
     title: "Yulduzli tunlar", author: "Pirimqul Qodirov", image: "https://kitobxon.com/img_u/b/2012.jpg",
-    description: "Bu tarixiy roman Zahiriddin Muhammad Boburning murakkab hayoti va faoliyatiga bag'ishlangan. Muallif Boburni nafaqat shoh, balki vatan sog'inchi bilan yonayotgan hassos shoir sifatida tasvirlaydi.",
-    pages: [
-      "Zahiriddin Muhammad Bobur Mirzo o'zining o'n ikki yoshida taxtga o'tirdi. Farg'ona vodiysining go'zal tabiatini tark etish og'ir edi...",
-      "Yulduzli tunlarda Bobur o'zining 'Boburnoma' asarini yozishni boshladi. Har bir satr vatan sog'inchi va armoni bilan to'la edi...",
-      "Afg'oniston va Hindiston sari yurishlar. Bobur shoh bo'lish bilan birga, har doim shoir va adib bo'lib qoldi."
-    ]
+    description: "Bu tarixiy roman Zahiriddin Muhammad Boburning murakkab hayoti va faoliyatiga bag'ishlangan. Muallif Boburni nafaqat shoh va sarkarda, balki vatan sog'inchi bilan yonayotgan hassos shoir sifatida tasvirlaydi.",
+    pages: ["Bobur Mirzo o'zining o'n ikki yoshida taxtga o'tirdi. Farg'onani tark etish og'ir edi...", "Yulduzli tunlarda Bobur o'zining 'Boburnoma' asarini yozishni boshladi...", "Afg'oniston va Hindiston sari yurishlar."]
   },
   "105": { 
     title: "Dunyoning ishlari", author: "O'tkir Hoshimov", image: "https://kitobxon.com/img_u/b/814.jpg",
     description: "O'tkir Hoshimovning ushbu asari insoniylik, mehr-oqibat va eng asosiysi - onaga bo'lgan cheksiz muhabbat haqidadir. Kitob bir nechta turkum hikoyalardan iborat.",
-    pages: [
-      "Ona! Bu dunyoda onadan buyukroq zot bormi? Onamning qo'llari har doim tandir isi bilan anqib turardi...",
-      "Hikoyalar to'plami insoniy fazilatlar haqida. Qatog'on yillari va urush davri odamlarining matonati bayon etiladi...",
-      "Inson o'z o'tmishini unutmasligi kerak. Onamning har bir nasihati men uchun eng katta hayot darsi bo'lib qoldi."
-    ]
+    pages: ["Onamning qo'llari har doim tandir isi bilan anqib turardi...", "Qatog'on yillari va urush davri odamlarining matonati...", "Onamning har bir nasihati men uchun hayot darsi bo'ldi."]
   },
   "106": { 
     title: "Sariq devni minib", author: "X. To'xtaboyev", image: "https://kitobxon.com/img_u/b/263.jpg",
-    description: "Soddadil va sho'x Hoshimjonning sarguzashtlari orqali yozuvchi bolalarni dangasalikdan qochishga, ilm olishga va mehnatsevarlikka chorlaydi.",
-    pages: [
-      "Hoshimjonning sarguzashtlari. Sehrli sholcha bilan osmonga uchish va dunyoni kezish uning eng katta orzusi edi...",
-      "Sariq dev - bu nafaqat ertak qahramoni, balki insonning dangasaligi ustidan qozonilgan g'alabasi ramzi edi...",
-      "Maktabdagi darslar va Hoshimjonning sho'xliklari. Bolalikning beg'ubor va kutilmagan sarguzashtlarga boy damlari."
-    ]
+    description: "Bu asar o'zbek bolalar adabiyotining eng mashhur namunasi bo'lib, u ko'plab tillarga tarjima qilingan. Soddadil va sho'x Hoshimjonning sarguzashtlari orqali yozuvchi bolalarni dangasalikdan qochishga chorlaydi.",
+    pages: ["Hoshimjonning sarguzashtlari. Sehrli sholcha bilan osmonga uchish...", "Sariq dev - bu insonning dangasaligi ustidan g'alabasi ramzi...", "Bolalikning beg'ubor damlari."]
   },
   "107": { 
     title: "Atom odatlar", author: "James Clear", image: "https://kitobxon.com/img_u/b/6146.jpg",
-    description: "James Clear kichik o'zgarishlar qanday qilib ulkan natijalarga olib kelishini isbotlab beradi. 'Atom odatlar' - bu murakkab foizlar kabi to'planib boradigan kichik qadamlar haqida.",
-    pages: [
-      "Kichik o'zgarishlar - katta natijalar. Har kuni 1% yaxshilanish yil oxirida sizni mutlaqo boshqa odamga aylantiradi...",
-      "Odatlarni shakllantirishning to'rt bosqichi: Ishtiyoq, Reaksiya, Mukofot va Takrorlash jarayoni...",
-      "O'zlikni o'zgartirish odatlarni o'zgartirishdan boshlanadi. Siz o'zingizni kim deb bilishingiz natijalaringizni belgilaydi."
-    ]
+    description: "James Clear o'zining ushbu jahon bestsellerida kichik o'zgarishlar qanday qilib ulkan natijalarga olib kelishini isbotlab beradi. 'Atom odatlar' - bu murakkab foizlar kabi to'planib boradigan kichik qadamlar haqida.",
+    pages: ["Kichik o'zgarishlar - katta natijalar. Har kuni 1% yaxshilanish...", "Odatlarni shakllantirishning to'rt bosqichi...", "O'zlikni o'zgartirish odatlarni o'zgartirishdan boshlanadi."]
   },
   "108": { 
     title: "Boy ota, kambag'al ota", author: "Robert Kiyosaki", image: "https://kitobxon.com/img_u/b/4836.jpg",
     description: "Robert Kiyosaki bu kitobda moliyaviy savodxonlikning sirlari bilan bo'lishadi. Aktivlar va passivlar orasidagi farqni tushunish boylikka olib boradigan birinchi qadamdir.",
-    pages: [
-      "Moliyaviy savodxonlik - boy bo'lishning asosi. Boylar pul uchun ishlamaydilar, pul ular uchun ishlashini ta'minlaydilar...",
-      "Aktiv va Passiv farqi. Aktivlar sizning cho'ntagingizga pul olib keladi, passivlar esa pulni olib ketadi...",
-      "O'z biznesingizni boshlashdan qo'rqmang. Moliyaviy erkinlikka erishish uchun jasorat va bilim kerak."
-    ]
+    pages: ["Moliyaviy savodxonlik - boy bo'lishning asosi...", "Aktiv va Passiv farqi. Aktivlar cho'ntagingizga pul olib keladi...", "Moliyaviy erkinlikka erishish uchun jasorat va bilim kerak."]
   },
   "109": { 
     title: "Diqqat", author: "Cal Newport", image: "https://kitobxon.com/img_u/b/6169.jpg",
-    description: "Chalg'ituvchi texnologiyalar davrida diqqatni bir joyga jamlash eng noyob va qimmatli mahoratga aylandi. Cal Newport 'Deep Work' (Chuqur mehnat) konsepsiyasini o'rgatadi.",
-    pages: [
-      "Deep Work (Chuqur mehnat) - bu chalg'ituvchi dunyoda muvaffaqiyatga erishishning yagona yo'lidir...",
-      "Diqqatni jamlash qobiliyati kamayib bormoqda. Ijtimoiy tarmoqlar va kutilmagan xabarlar bizning potensialimizni bo'g'ib qo'ymoqda...",
-      "Kunlik rejalashtirish va diqqatni faqat bitta narsaga qaratish yuqori unumdorlikning asosiy siridir."
-    ]
+    description: "Chalg'ituvchi texnologiyalar davrida diqqatni bir joyga jamlash eng noyob mahoratga aylandi. Cal Newport 'Deep Work' konsepsiyasi orqali sifatli natijaga erishishni o'rgatadi.",
+    pages: ["Deep Work - bu muvaffaqiyatga erishishning yagona yo'lidir...", "Diqqatni jamlash qobiliyati kamayib bormoqda...", "Kunlik rejalashtirish yuqori unumdorlikning siridir."]
   },
   "110": { 
     title: "Psixologiya", author: "Darslik", image: "https://kitobxon.com/img_u/b/402.jpg",
     description: "Bu darslik psixologiya fanining asosiy tushunchalari, inson ruhiyatining shakllanishi va ijtimoiy munosabatlar psixologiyasini o'rganadi.",
-    pages: [
-      "Psixologiya fanining predmeti va vazifalari. Inson ruhiyati va uning tashqi muhit bilan doimiy aloqasi...",
-      "Shaxs temperamenti va xarakteri. Inson qanday qilib o'z hissiyotlarini va irodasini boshqarishi mumkin?...",
-      "O'smirlik davri psixologiyasi. Bu davrdagi hissiy o'zgarishlar va shaxsiyatning shakllanish jarayoni."
-    ]
+    pages: ["Psixologiya fanining predmeti va vazifalari...", "Shaxs temperamenti va xarakteri...", "O'smirlik davri psixologiyasi."]
   }
 };
 
@@ -187,8 +147,12 @@ export default function PreviewPage() {
         <div className="side-panel-modern glass-panel">
           <div className="side-cover-wrap"><img src={book.image} alt="" className="side-cover-img" /></div>
           <div className="side-desc-wrap">
-            <h4>Asar haqida</h4>
+            <h4>Batafsil Tavsif</h4>
             <p className="side-desc-text">{book.description}</p>
+            
+            <button className="btn-primary-modern borrow-btn-large" onClick={() => router.push('/register')}>
+              📖 Kitobni ijaraga olish
+            </button>
           </div>
         </div>
       </div>
@@ -198,7 +162,7 @@ export default function PreviewPage() {
         .top-nav { display: flex; align-items: center; gap: 20px; max-width: 1400px; margin: 0 auto; width: 100%; }
         .btn-back { background: rgba(255,255,255,0.05); color: white; padding: 10px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.3s; font-weight: 600; }
         .btn-back:hover { background: rgba(255,255,255,0.1); transform: translateX(-5px); }
-        .book-top-info h3 { color: white; font-size: 1.2rem; margin-bottom: 2px; }
+        .book-top-info h3 { color: white; font-size: 1.2rem; }
         .book-top-info span { color: #818cf8; font-size: 0.9rem; }
         .preview-container { display: grid; grid-template-columns: 1fr 380px; gap: 30px; max-width: 1400px; margin: 0 auto; width: 100%; flex-grow: 1; height: calc(100vh - 120px); }
         .page-viewer { display: flex; flex-direction: column; gap: 20px; }
@@ -220,13 +184,14 @@ export default function PreviewPage() {
         .viewer-controls { display: flex; align-items: center; gap: 20px; padding: 0 20px; }
         .nav-btn-modern { background: #818cf8; border: none; color: white; padding: 12px 30px; border-radius: 12px; cursor: pointer; font-weight: 700; transition: 0.3s; }
         .nav-btn-modern:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(129, 140, 248, 0.4); }
-        .nav-btn-modern:disabled { opacity: 0.2; transform: none; }
+        .nav-btn-modern:disabled { opacity: 0.2; }
         .progress-bar-wrap { flex-grow: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
         .progress-fill { height: 100%; background: #818cf8; transition: 0.5s; }
         .side-panel-modern { padding: 30px; border-radius: 24px; display: flex; flex-direction: column; gap: 25px; overflow-y: auto; }
         .side-cover-img { width: 100%; border-radius: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
         .side-desc-wrap h4 { color: white; font-size: 1.3rem; margin-bottom: 15px; border-left: 4px solid #818cf8; padding-left: 15px; }
-        .side-desc-text { color: rgba(255,255,255,0.7); font-size: 1rem; line-height: 1.7; text-align: justify; white-space: pre-line; }
+        .side-desc-text { color: rgba(255,255,255,0.7); font-size: 1rem; line-height: 1.7; text-align: justify; white-space: pre-line; margin-bottom: 25px; }
+        .borrow-btn-large { background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%); width: 100%; padding: 16px; border-radius: 15px; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3); }
         .overlay-lock-modern { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 100; }
         .lock-card-modern { padding: 40px; text-align: center; color: white; max-width: 380px; border-radius: 30px; }
         .lock-icon { font-size: 3rem; margin-bottom: 20px; }
