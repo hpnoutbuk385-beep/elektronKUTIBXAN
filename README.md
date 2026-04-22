@@ -51,11 +51,16 @@ Loyiha Railway-da **ikki xizmatli (Two-service)** arxitektura asosida sozlangan:
 - **Unified Startup:** Mahalliy ishlab chiqishni osonlashtirish uchun `start.py` skripti yaratildi.
 - **Railway Optimization:** Monorepo tuzilmasi uchun Dockerfayllar optimallashtirildi va Railway serverida alohida Backend/Frontend xizmatlari sifatida muvaffaqiyatli ishga tushirildi.
 
-### 11-bosqich: Production Connectivity & Optimization v1.8.1 (So'nggi)
+### 11-bosqich: Production Connectivity & Optimization v1.8.1
 - **Hardcoded Production API:** Railway'da environment o'zgaruvchilari muammosini hal qilish uchun Backend manzilini kodga biriktirildi.
 - **Mobile Responsive UI:** Telefon va planshetlar uchun interfeys to'liq moslashtirildi (Sidebar toggle va Layout fix).
 - **Admin Access:** CSRF xavfsizlik sozlamalari yakunlandi va xavfsiz muhit parametrlari (env) o'rnatildi.
 
+### 12-bosqich: Data Seeding & API Filtering v1.9.0 (So'nggi)
+- **Tashkilotlar Filtri:** Ro'yxatdan o'tish (Register) sahifasida faqat maktablarni (SCHOOL) ko'rsatish uchun API Endpoint (`?org_type=SCHOOL`) va Backend ko'rinishlari (ViewSet) takomillashtirildi.
+- **Aniq Maktablar Ro'yxati:** Qoraqalpog'istonning Xo'jayli va Nukus shahri uchun mijoz talabi bo'yicha maxsus 104 ta maktab qo'shildi (`1-maktab — Xo'jayli` shaklida).
+- **Custom Seeding Script:** Railway serverida ushbu maktablarni jonli bazaga qo'shish uchun `backend/seed_custom_schools.py` skripti yaratildi.
+
 ---
-**Versiya:** v1.8.1 | **Mobile UI & Admin Optimization**
+**Versiya:** v1.9.0 | **Data Seeding & API Filtering**
 © 2026 Raqamli Kutubxona. Barcha huquqlar himoyalangan.
