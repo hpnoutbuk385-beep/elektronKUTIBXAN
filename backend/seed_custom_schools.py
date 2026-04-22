@@ -137,9 +137,8 @@ def seed_custom_schools():
                     "author": b["author"],
                     "isbn": b["isbn"],
                     "category": b["category"],
-                    "total_quantity": b["quantity"],
-                    "available_quantity": b["quantity"],
-                    "description": f"{b['title']} kitobi"
+                    "total_copies": b["quantity"],
+                    "available_copies": b["quantity"],
                 }
             )
             if created:
