@@ -11,16 +11,24 @@ export const fetchApi = async (endpoint, options = {}) => {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
+  let response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers,
   });
 
-  // AGAR TOKEN XATO BO'LSA (401), FAQAT TOKENNI TOZALAYMIZ
-  // LEKIN FOYDALANUVCHINI HECH QAYERGA REDIRECT QILMAYMIZ
+  // AGAR TOKEN XATO BO'LSA (401)
   if (response.status === 401 && typeof window !== 'undefined') {
     localStorage.removeItem('access_token');
     localStorage.removeItem('user');
+    
+    // Kalitsiz qaytadan urinib ko'ramiz (Mehmon sifatida)
+    const newHeaders = { ...headers };
+    delete newHeaders['Authorization'];
+    
+    response = await fetch(`${API_URL}${endpoint}`, {
+      ...options,
+      headers: newHeaders,
+    });
   }
 
   return response;
