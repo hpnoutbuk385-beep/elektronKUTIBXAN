@@ -26,6 +26,7 @@ class Book(models.Model):
     page_count = models.IntegerField(default=0)
     image = models.ImageField(upload_to='books/', null=True, blank=True)
     file = models.FileField(upload_to='books/files/', null=True, blank=True, help_text='Kitobning elektron varianti (PDF, EPUB va h.k.)')
+    description = models.TextField(blank=True, null=True, help_text='Kitob haqida qisqacha ma\'lumot')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):

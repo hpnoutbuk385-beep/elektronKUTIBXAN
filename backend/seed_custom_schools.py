@@ -111,31 +111,91 @@ def seed_custom_schools():
     # 10 ta kitob qo'shish — viloyat tashkilotiga (hammaga ko'rinsin)
     if qoraqalpoq_reg:
         print("Kitoblarni qo'shish boshlandi...")
-        badiiy, _ = Category.objects.get_or_create(name="Badiiy adabiyot")
-        darslik, _ = Category.objects.get_or_create(name="Darsliklar")
         
         books_data = [
-            {"title": "O'tkan kunlar", "author": "Abdulla Qodiriy", "isbn": "978-9943-00-123-4", "category": badiiy, "quantity": 5},
-            {"title": "Mehrobdan chayon", "author": "Abdulla Qodiriy", "isbn": "978-9943-00-124-1", "category": badiiy, "quantity": 3},
-            {"title": "Shum bola", "author": "G'afur G'ulom", "isbn": "978-9943-00-125-8", "category": badiiy, "quantity": 7},
-            {"title": "Sariq devni minib", "author": "Xudoyberdi To'xtaboyev", "isbn": "978-9943-00-126-5", "category": badiiy, "quantity": 4},
-            {"title": "Yulduzli tunlar", "author": "Pirimqul Qodirov", "isbn": "978-9943-00-127-2", "category": badiiy, "quantity": 6},
-            {"title": "Matematika 5-sinf", "author": "M. Mirzaahmedov", "isbn": "978-9943-00-201-9", "category": darslik, "quantity": 20},
-            {"title": "Ona tili 5-sinf", "author": "N. Mahmudov", "isbn": "978-9943-00-202-6", "category": darslik, "quantity": 25},
-            {"title": "Tarix 5-sinf", "author": "A. Muhammadjonov", "isbn": "978-9943-00-203-3", "category": darslik, "quantity": 15},
-            {"title": "Fizika 7-sinf", "author": "P. Habibullayev", "isbn": "978-9943-00-204-0", "category": darslik, "quantity": 10},
-            {"title": "Informatika 7-sinf", "author": "T. Tayloqov", "isbn": "978-9943-00-205-7", "category": darslik, "quantity": 12},
+            {
+                "title": "O'tkan kunlar", "author": "Abdulla Qodiriy", 
+                "category": "Badiiy adabiyot", 
+                "description": "O'zbek adabiyotining durdonasi. Kumush va Otabekning fojiaviy muhabbati va Turkistonning og'ir damlari haqida.",
+                "image": "https://images.uzum.uz/cl9v365ennt1543387mg/original.jpg",
+                "quantity": 5
+            },
+            {
+                "title": "Mehrobdan chayon", "author": "Abdulla Qodiriy", 
+                "category": "Badiiy adabiyot", 
+                "description": "Anvar va Ra'noning pokiza muhabbati, diniy ulamolar orasidagi ziddiyatlar va adolat haqida tarixiy asar.",
+                "image": "https://images.uzum.uz/cl9v5klennt1543387sg/original.jpg",
+                "quantity": 3
+            },
+            {
+                "title": "Kecha va kunduz", "author": "Cho'lpon", 
+                "category": "Badiiy adabiyot", 
+                "description": "Milliy uyg'onish davri adabiyotining eng yirik asarlaridan biri. Mustamlaka davri hayoti va inson taqdiri.",
+                "image": "https://images.uzum.uz/cl9v765ennt1543387ug/original.jpg",
+                "quantity": 4
+            },
+            {
+                "title": "Yulduzli tunlar", "author": "Pirimqul Qodirov", 
+                "category": "Tarixiy", 
+                "description": "Bobur Mirzo hayoti va faoliyatiga bag'ishlangan eng mashhur tarixiy roman. Temuriylar saltanatining so'nggi yillari.",
+                "image": "https://images.uzum.uz/cl9v955ennt15433880g/original.jpg",
+                "quantity": 6
+            },
+            {
+                "title": "Dunyoning ishlari", "author": "O'tkir Hoshimov", 
+                "category": "Badiiy adabiyot", 
+                "description": "Insoniylik, mehr-oqibat va onaga bo'lgan yuksak muhabbat haqidagi hikoyalar to'plami.",
+                "image": "https://images.uzum.uz/cl9vbclennt15433882g/original.jpg",
+                "quantity": 7
+            },
+            {
+                "title": "Sariq devni minib", "author": "Xudoyberdi To'xtaboyev", 
+                "category": "Bolalar adabiyoti", 
+                "description": "O'zbek bolalar adabiyotining shoh asari. Hoshimjonning sarguzashtlari va sehrli sholcha haqida qiziqarli qissa.",
+                "image": "https://images.uzum.uz/cl9vd55ennt15433884g/original.jpg",
+                "quantity": 4
+            },
+            {
+                "title": "Atom odatlar", "author": "James Clear", 
+                "category": "Psixologiya", 
+                "description": "Kichik o'zgarishlar orqali katta natijalarga erishish va yaxshi odatlarni shakllantirish bo'yicha dunyo bestselleri.",
+                "image": "https://images.uzum.uz/cl9vf5lennt15433886g/original.jpg",
+                "quantity": 5
+            },
+            {
+                "title": "Boy ota, kambag'al ota", "author": "Robert Kiyosaki", 
+                "category": "Moliya", 
+                "description": "Moliyaviy savodxonlikni oshirish va boy bo'lish sirlari haqidagi eng mashhur kitoblardan biri.",
+                "image": "https://images.uzum.uz/cl9vh55ennt15433888g/original.jpg",
+                "quantity": 3
+            },
+            {
+                "title": "Diqqat", "author": "Cal Newport", 
+                "category": "Shaxsiy rivojlanish", 
+                "description": "Chalg'ituvchi dunyoda diqqatni jamlash va yuqori natijali ishlarni amalga oshirish san'ati.",
+                "image": "https://images.uzum.uz/cl9vj55ennt1543388ag/original.jpg",
+                "quantity": 5
+            },
+            {
+                "title": "Psixologiya", "author": "Sh. Do'stmuhamedova", 
+                "category": "Darsliklar", 
+                "description": "Oliy va o'rta maxsus ta'lim muassasalari uchun psixologiya fanining asosiy tushunchalari bayon etilgan darslik.",
+                "image": "https://images.uzum.uz/cl9vl55ennt1543388cg/original.jpg",
+                "quantity": 10
+            }
         ]
         
         books_created = 0
         for b in books_data:
-            book, created = Book.objects.get_or_create(
+            cat, _ = Category.objects.get_or_create(name=b["category"])
+            book, created = Book.objects.update_or_create(
                 title=b["title"],
                 organization=qoraqalpoq_reg,
                 defaults={
                     "author": b["author"],
-                    "isbn": b["isbn"],
-                    "category": b["category"],
+                    "category": cat,
+                    "description": b["description"],
+                    "image": b["image"],
                     "total_copies": b["quantity"],
                     "available_copies": b["quantity"],
                 }
