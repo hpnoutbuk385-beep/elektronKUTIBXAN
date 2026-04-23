@@ -1,6 +1,6 @@
-// Dinamik API manzili: Environment variable'dan oladi, bo'lmasa localhost ishlatadi
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
-const PRODUCTION_API_URL = API_URL; // Qulaylik uchun eski nom saqlab qolindi
+// Dinamik API manzili: Environment variable'dan oladi, bo'lmasa Production manzilini ishlatadi
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://elektronkutibxan-production.up.railway.app/api';
+const PRODUCTION_API_URL = API_URL;
 
 export const fetchApi = async (endpoint, options = {}) => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
