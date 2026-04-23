@@ -1,5 +1,12 @@
 import os
 import django
+from pathlib import Path
+
+# Load .env from project root
+BASE_DIR = Path(__file__).resolve().parent.parent
+if os.path.exists(BASE_DIR / ".env"):
+    from dotenv import load_dotenv
+    load_dotenv(BASE_DIR / ".env")
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 django.setup()
@@ -63,16 +70,24 @@ def seed_data():
     if created:
         admin_user.set_password(admin_password)
         admin_user.save()
-        print(f"Main Admin created: {admin_user.username} (Admin Kutubxona)")
+        print(f"Main Admin created: {admin_user.username}")
     else:
-        print(f"Main Admin already exists: {admin_user.username}. Skipping password setup.")
+        # Har doim parolni yangilab qo'yamiz (agar .env'da o'zgargan bo'lsa)
+        admin_user.set_password(admin_password)
+        admin_user.is_staff = True
+        admin_user.is_superuser = True
+        admin_user.role = 'SUPERADMIN'
+        admin_user.save()
+        print(f"Main Admin updated: {admin_user.username}. Password refreshed.")
 
     # 4. Create a School Admin (Librarian)
     librarian, created = CustomUser.objects.get_or_create(
         username="librarian1",
-        email="lib@school.uz",
-        role='SCHOOL_ADMIN',
-        organization=sample_school
+        defaults={
+            'email': "lib@school.uz",
+            'role': 'SCHOOL_ADMIN',
+            'organization': sample_school
+        }
     )
     if created:
         librarian.set_password("admin123")

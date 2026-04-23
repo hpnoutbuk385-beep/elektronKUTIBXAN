@@ -1,5 +1,6 @@
-// Qat'iy Production API manzili
-const PRODUCTION_API_URL = 'https://elektronkutibxan-production-7949.up.railway.app/api';
+// Dinamik API manzili: Environment variable'dan oladi, bo'lmasa localhost ishlatadi
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+const PRODUCTION_API_URL = API_URL; // Qulaylik uchun eski nom saqlab qolindi
 
 export const fetchApi = async (endpoint, options = {}) => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
