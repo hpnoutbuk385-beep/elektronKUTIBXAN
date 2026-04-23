@@ -1,6 +1,15 @@
 // Dinamik API manzili: Environment variable'dan oladi, bo'lmasa nisbiy yo'l ishlatadi
-const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
-const PRODUCTION_API_URL = API_URL;
+// Agarda domen localhost bo'lmasa va env bo'sh bo'lsa, aniq production manziliga ulanadi
+const getBaseUrl = () => {
+  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
+  if (typeof window !== 'undefined') {
+    if (window.location.hostname === 'localhost') return 'http://localhost:8000/api';
+    return `${window.location.origin}/api`;
+  }
+  return 'https://elektronkutibxan-production.up.railway.app/api';
+};
+
+const PRODUCTION_API_URL = getBaseUrl();
 
 export const fetchApi = async (endpoint, options = {}) => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
@@ -15,9 +24,9 @@ export const fetchApi = async (endpoint, options = {}) => {
   }
 
   // To'g'ridan-to'g'ri ishlab turgan PRODUCTION manziliga murojaat qilamiz
-  // Agar API_URL bo'sh bo'lsa, /api/{endpoint} nisbiy yo'li ishlatiladi
-  const baseUrl = PRODUCTION_API_URL || '/api';
-  const url = `${baseUrl}${endpoint}`;
+  const baseUrl = PRODUCTION_API_URL.endsWith('/') ? PRODUCTION_API_URL.slice(0, -1) : PRODUCTION_API_URL;
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = `${baseUrl}${cleanEndpoint}`;
   
   console.log(`Fetching from: ${url}`);
 
@@ -40,7 +49,7 @@ export const fetchApi = async (endpoint, options = {}) => {
 };
 
 export const login = async (username, password) => {
-  const baseUrl = PRODUCTION_API_URL || '/api';
+  const baseUrl = PRODUCTION_API_URL.endsWith('/') ? PRODUCTION_API_URL.slice(0, -1) : PRODUCTION_API_URL;
   return await fetch(`${baseUrl}/auth/login/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
