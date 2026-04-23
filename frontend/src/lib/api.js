@@ -1,5 +1,5 @@
-// Dinamik API manzili: Environment variable'dan oladi, bo'lmasa Production manzilini ishlatadi
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://elektronkutibxan-production.up.railway.app/api';
+// Dinamik API manzili: Environment variable'dan oladi, bo'lmasa nisbiy yo'l ishlatadi
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 const PRODUCTION_API_URL = API_URL;
 
 export const fetchApi = async (endpoint, options = {}) => {
@@ -15,9 +15,11 @@ export const fetchApi = async (endpoint, options = {}) => {
   }
 
   // To'g'ridan-to'g'ri ishlab turgan PRODUCTION manziliga murojaat qilamiz
-  const url = `${PRODUCTION_API_URL}${endpoint}`;
+  // Agar API_URL bo'sh bo'lsa, /api/{endpoint} nisbiy yo'li ishlatiladi
+  const baseUrl = PRODUCTION_API_URL || '/api';
+  const url = `${baseUrl}${endpoint}`;
   
-  console.log(`Fetching from: ${url}`); // Debug uchun
+  console.log(`Fetching from: ${url}`);
 
   let response = await fetch(url, {
     ...options,
@@ -38,7 +40,8 @@ export const fetchApi = async (endpoint, options = {}) => {
 };
 
 export const login = async (username, password) => {
-  return await fetch(`${PRODUCTION_API_URL}/auth/login/`, {
+  const baseUrl = PRODUCTION_API_URL || '/api';
+  return await fetch(`${baseUrl}/auth/login/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password }),
