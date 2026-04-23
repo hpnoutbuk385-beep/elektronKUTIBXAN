@@ -18,7 +18,7 @@ def kill_process_on_port(port):
         
         for pid in pids:
             if pid != '0':
-                print(f"⚠️ Port {port} band ekan. PID {pid} o'chirilmoqda...")
+                print(f"Port {port} band ekan. PID {pid} o'chirilmoqda...")
                 subprocess.call(['taskkill', '/F', '/T', '/PID', pid], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception:
         # Port is likely free
@@ -26,7 +26,7 @@ def kill_process_on_port(port):
 
 def run_servers():
     print("\n" + "="*50)
-    print("🚀 Raqamli Kutubxona - Robust Startup v2.0")
+    print("Raqamli Kutubxona - Robust Startup v2.0")
     print("="*50 + "\n")
 
     # Step 1: Cleanup ports
@@ -39,7 +39,7 @@ def run_servers():
     frontend_dir = os.path.join(base_dir, "frontend")
 
     # Start Backend
-    print("📂 Starting Backend (Django) on http://localhost:8000...")
+    print("Starting Backend (Django) on http://localhost:8000...")
     backend_process = subprocess.Popen(
         [sys.executable, "manage.py", "runserver", "8000"],
         cwd=backend_dir,
@@ -48,7 +48,7 @@ def run_servers():
     )
 
     # Start Frontend
-    print("📂 Starting Frontend (Next.js) on http://localhost:3000...")
+    print("Starting Frontend (Next.js) on http://localhost:3000...")
     npm_cmd = "npm.cmd" if os.name == 'nt' else "npm"
     frontend_process = subprocess.Popen(
         [npm_cmd, "run", "dev"],
@@ -57,22 +57,22 @@ def run_servers():
         creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == 'nt' else 0
     )
 
-    print("\n✅ Ikkala server ham ishga tushirildi!")
-    print("👉 User Interface: http://localhost:3000")
-    print("👉 Admin Panel: http://localhost:8000/admin")
-    print("\n🛑 To'xtatish uchun: Ctrl+C\n")
+    print("\nIkkala server ham ishga tushirildi!")
+    print("User Interface: http://localhost:3000")
+    print("Admin Panel: http://localhost:8000/admin")
+    print("\nTo'xtatish uchun: Ctrl+C\n")
 
     try:
         while True:
             time.sleep(2)
             if backend_process.poll() is not None:
-                print("❌ Backend server to'xtab qoldi. Qayta ishga tushirilmoqda...")
+                print("Backend server to'xtab qoldi. Qayta ishga tushirilmoqda...")
                 backend_process = subprocess.Popen([sys.executable, "manage.py", "runserver", "8000"], cwd=backend_dir)
             if frontend_process.poll() is not None:
-                print("❌ Frontend server to'xtab qoldi. Qayta ishga tushirilmoqda...")
+                print("Frontend server to'xtab qoldi. Qayta ishga tushirilmoqda...")
                 frontend_process = subprocess.Popen([npm_cmd, "run", "dev"], cwd=frontend_dir, shell=True)
     except KeyboardInterrupt:
-        print("\n⏳ Hammasi yopilmoqda...")
+        print("\nHammasi yopilmoqda...")
         if os.name == 'nt':
             subprocess.call(['taskkill', '/F', '/T', '/PID', str(backend_process.pid)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             subprocess.call(['taskkill', '/F', '/T', '/PID', str(frontend_process.pid)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

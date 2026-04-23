@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 import { fetchApi } from "@/lib/api";
 
 const getImageUrl = (url) => {
-  if (!url) return 'https://via.placeholder.com/300x450?text=Kitob';
-  // Eng ishonchli proksi: Cloudinary Fetch
-  return `https://res.cloudinary.com/demo/image/fetch/w_300,h_450,c_fill/${encodeURIComponent(url)}`;
+  if (!url) return 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=300&h=450&fit=crop';
+  // To'g'ridan-to'g'ri URL ishlatamiz, agar xato bo'lsa onError ishlaydi
+  return url;
 };
 
 export default function LibraryPage() {
@@ -69,7 +69,7 @@ export default function LibraryPage() {
                 src={getImageUrl(book.image)} 
                 alt={book.title} 
                 className="v-img"
-                onError={(e) => { e.target.src = 'https://via.placeholder.com/300x450?text=Kitob'; }}
+                onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=300&h=450&fit=crop'; }}
               />
               <div className="v-overlay"><span>MUTOLAA</span></div>
             </div>

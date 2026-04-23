@@ -21,17 +21,13 @@ export default function Sidebar({ isOpen, onClose }) {
     }
   }, []);
 
-  // MEHMONLAR UCHUN FAQAT KERAKLI MENULAR
-  const menuItems = user ? [
+  const menuItems = [
     { name: t('dashboard'), href: "/", icon: "📊" },
     { name: t('library_title'), href: "/library", icon: "📚" },
-    { name: t('my_books'), href: "/books", icon: "📖" },
-    { name: t('leaderboard'), href: "/leaderboard", icon: "🏆" },
-    { name: t('rewards'), href: "/rewards", icon: "🎁" },
-    { name: t('profile'), href: "/profile", icon: "👤" },
-  ] : [
-    { name: t('dashboard'), href: "/", icon: "📊" },
-    { name: t('library_title'), href: "/library", icon: "📚" },
+    { name: t('my_books'), href: "/books", icon: "📖", locked: !user },
+    { name: t('leaderboard'), href: "/leaderboard", icon: "🏆", locked: !user },
+    { name: t('rewards'), href: "/rewards", icon: "🎁", locked: !user },
+    { name: t('profile'), href: "/profile", icon: "👤", locked: !user },
   ];
 
   return (
@@ -47,6 +43,15 @@ export default function Sidebar({ isOpen, onClose }) {
         <nav className="menu-nav">
           {menuItems.map((item) => {
             const isActive = pathname === item.href;
+            if (item.locked) {
+              return (
+                <div key={item.href} className="menu-item locked" title="Kirish kerak">
+                  <span className="menu-icon">{item.icon}</span>
+                  <span className="menu-label">{item.name}</span>
+                  <span className="lock-badge">🔒</span>
+                </div>
+              );
+            }
             return (
               <Link 
                 key={item.href} 
@@ -85,6 +90,8 @@ export default function Sidebar({ isOpen, onClose }) {
           }
           .menu-item:hover { color: white; background: rgba(255, 255, 255, 0.05); }
           .menu-item.active { color: #818cf8 !important; background: rgba(129, 140, 248, 0.1); font-weight: 700; }
+          .menu-item.locked { opacity: 0.4; cursor: not-allowed; position: relative; }
+          .lock-badge { position: absolute; right: 15px; font-size: 0.7rem; opacity: 0.7; }
           
           .logout-btn { background: none; border: none; cursor: pointer; width: 100%; margin-top: 20px; }
           .logout-btn:hover { color: #f87171; }
