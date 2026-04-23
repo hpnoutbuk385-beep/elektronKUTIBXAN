@@ -16,9 +16,20 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
     try {
+      const loginData = { password };
+      
+      // Smart Login: Agar foydalanuvchi ism-familiya kiritgan bo'lsa (probel bilan)
+      const parts = username.trim().split(/\s+/);
+      if (parts.length >= 2) {
+        loginData.first_name = parts[0];
+        loginData.last_name = parts.slice(1).join(" ");
+      } else {
+        loginData.username = username;
+      }
+
       const res = await fetchApi('/auth/login/', {
         method: 'POST',
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify(loginData),
       });
       if (res.ok) {
         const data = await res.json();
@@ -48,10 +59,10 @@ export default function LoginPage() {
 
         <form onSubmit={handleLogin} className="auth-form">
           <div className="input-group">
-            <label>Login (Username)</label>
+            <label>Login yoki Ism Familiya</label>
             <input 
               type="text" 
-              placeholder="Username" 
+              placeholder="Username yoki Ism Familiya" 
               required 
               onChange={(e) => setUsername(e.target.value)} 
             />
