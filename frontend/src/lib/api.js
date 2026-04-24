@@ -2,12 +2,15 @@ const getBaseUrl = () => {
   if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
+    const origin = window.location.origin;
+    
     // Mahalliy server uchun (localhost, 127.0.0.1 yoki LAN IP)
     if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.')) {
       return 'http://localhost:8000/api';
     }
-    // Agar dastur Railway'da yoki boshqa joyda tursa va .env berilmagan bo'lsa, aniq backend manzilini qaytaramiz:
-    return 'https://elektronkutibxan-production.up.railway.app/api';
+    
+    // Avtomatik ravishda hozirgi turgan manzilingizni API uchun ishlatamiz
+    return `${origin}/api`;
   }
   return 'https://elektronkutibxan-production.up.railway.app/api';
 };
