@@ -53,7 +53,7 @@ export default function MyBooksPage() {
     }
   };
 
-  if (loading) return <div className="flex-center h-full">{t('loading')}</div>;
+  if (loading) return <div className="flex-center h-full" style={{color: '#DAA520', fontFamily: "'Lora', serif"}}>{t('loading')}</div>;
 
   return (
     <div className="dashboard-content animate-fade">
@@ -63,7 +63,10 @@ export default function MyBooksPage() {
       </div>
 
       <div className="books-main-card glass-panel">
-        <h3 className="section-header">Sizdagi kitoblar ({loans.length})</h3>
+        <h3 className="section-header">
+          <span className="header-ornament">✦</span>
+          Sizdagi kitoblar ({loans.length})
+        </h3>
         
         <div className="books-list-container">
           {loans.length > 0 ? loans.map((loan) => (
@@ -75,7 +78,7 @@ export default function MyBooksPage() {
                 <h4 className="book-item-title">{loan.book_details?.title}</h4>
                 <p className="book-item-author">{loan.book_details?.author}</p>
                 <div className="book-item-meta">
-                  <span className="status-pill available">📅 Qaytarish: {new Date(loan.due_date).toLocaleDateString()}</span>
+                  <span className="status-pill due">📅 Qaytarish: {new Date(loan.due_date).toLocaleDateString()}</span>
                   {loan.book_details?.file && <span className="status-pill ebook">📱 E-kitob mavjud</span>}
                 </div>
                 
@@ -99,6 +102,7 @@ export default function MyBooksPage() {
             </div>
           )) : (
             <div className="empty-state-box">
+              <div className="empty-icon">📚</div>
               <p>Sizda hali ijaraga olingan kitoblar yo'q.</p>
               <button className="btn-primary" onClick={() => window.location.href='/library'}>
                 Kutubxonaga borish
@@ -110,38 +114,49 @@ export default function MyBooksPage() {
 
       <style jsx>{`
         .dashboard-content { display: flex; flex-direction: column; gap: 25px; }
-        .welcome-title { font-size: 2rem; color: white; }
-        .welcome-subtitle { color: rgba(255, 255, 255, 0.5); }
+        .welcome-title { font-size: 2rem; color: #f5e6c8; font-family: 'Playfair Display', serif; }
+        .welcome-subtitle { color: rgba(196, 168, 130, 0.5); font-family: 'Lora', serif; }
 
-        .books-main-card { padding: 25px; min-height: 400px; }
-        .section-header { margin-bottom: 25px; color: white; font-size: 1.1rem; }
+        .books-main-card { padding: 30px; min-height: 400px; }
+        .section-header {
+          margin-bottom: 25px; color: #f5e6c8; font-size: 1.1rem;
+          font-family: 'Playfair Display', serif; display: flex; align-items: center; gap: 10px;
+        }
+        .header-ornament { color: rgba(218, 165, 32, 0.4); font-size: 0.7rem; }
         
         .books-list-container { display: flex; flex-direction: column; gap: 15px; }
         .book-card-item { padding: 20px; display: flex; gap: 20px; align-items: flex-start; }
         
         .book-cover-mini { 
-          width: 80px; height: 110px; background: rgba(255,255,255,0.05); 
+          width: 80px; height: 110px; background: rgba(139, 69, 19, 0.15); 
           border-radius: 10px; display: flex; align-items: center; justify-content: center;
           overflow: hidden; font-size: 32px; flex-shrink: 0;
+          box-shadow: inset -2px 0 5px rgba(0,0,0,0.2);
+          border-left: 3px solid rgba(218, 165, 32, 0.3);
         }
         .book-cover-mini img { width: 100%; height: 100%; object-fit: cover; }
         
         .book-info-box { flex-grow: 1; }
-        .book-item-title { font-size: 1.1rem; color: white; font-weight: 700; margin-bottom: 4px; }
-        .book-item-author { color: rgba(255,255,255,0.4); font-size: 0.9rem; margin-bottom: 10px; }
+        .book-item-title { font-size: 1.1rem; color: #f5e6c8; font-weight: 700; margin-bottom: 4px; font-family: 'Playfair Display', serif; }
+        .book-item-author { color: rgba(218, 165, 32, 0.6); font-size: 0.9rem; margin-bottom: 10px; font-style: italic; font-family: 'Lora', serif; }
         
-        .book-item-meta { display: flex; gap: 10px; margin-bottom: 15px; }
-        .status-pill { padding: 4px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; }
-        .status-pill.available { background: rgba(59, 130, 246, 0.1); color: #60a5fa; }
-        .status-pill.ebook { background: rgba(16, 185, 129, 0.1); color: #34d399; }
+        .book-item-meta { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        .status-pill { padding: 4px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; font-family: 'Inter', sans-serif; }
+        .status-pill.due { background: rgba(139, 69, 19, 0.12); color: #C19A6B; }
+        .status-pill.ebook { background: rgba(218, 165, 32, 0.1); color: #DAA520; }
         
         .action-row { display: flex; gap: 12px; }
-        .read-btn { background: #818cf8 !important; padding: 8px 20px; font-size: 0.85rem; }
+        .read-btn { padding: 8px 20px; font-size: 0.85rem; }
         .read-btn.disabled { opacity: 0.3; cursor: not-allowed; }
-        .return-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 8px 20px; font-size: 0.85rem; border-radius: 10px; transition: all 0.3s; }
-        .return-btn:hover { background: rgba(239, 68, 68, 0.1); color: #fca5a5; border-color: rgba(239, 68, 68, 0.2); }
+        .return-btn {
+          background: rgba(193, 154, 107, 0.06); border: 1px solid rgba(218, 165, 32, 0.15);
+          color: #f5e6c8; padding: 8px 20px; font-size: 0.85rem; border-radius: 10px;
+          transition: all 0.3s; cursor: pointer; font-family: 'Lora', serif;
+        }
+        .return-btn:hover { background: rgba(229, 115, 115, 0.08); color: #e57373; border-color: rgba(229, 115, 115, 0.2); }
 
-        .empty-state-box { text-align: center; padding: 60px 20px; color: rgba(255,255,255,0.3); }
+        .empty-state-box { text-align: center; padding: 60px 20px; color: rgba(196, 168, 130, 0.3); font-family: 'Lora', serif; }
+        .empty-icon { font-size: 3rem; margin-bottom: 15px; opacity: 0.5; }
         .empty-state-box .btn-primary { margin-top: 20px; }
       `}</style>
     </div>

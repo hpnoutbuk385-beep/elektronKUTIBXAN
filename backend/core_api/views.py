@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from django.utils import timezone
 from django.db.models import Sum, Count
 from .serializers import *
-from accounts.models import Organization, CustomUser
+from accounts.models import Organization, CustomUser, SchoolClass
 from library.models import Book, Category, Transaction
 from exams.models import Quiz, Question, Attempt
 from competitions.models import Competition, Participant
@@ -34,6 +34,20 @@ class OrganizationViewSet(viewsets.ModelViewSet):
         if user.role == 'SUPERADMIN' or user.is_superuser:
             return qs
         return qs.filter(id=user.organization_id)
+
+class SchoolClassViewSet(viewsets.ModelViewSet):
+    queryset = SchoolClass.objects.all()
+    serializer_class = SchoolClassSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = SchoolClass.objects.all()
+        if user.is_superuser or user.role == 'SUPERADMIN':
+            return qs
+        if user.organization:
+            return qs.filter(organization=user.organization)
+        return qs.none()
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
@@ -133,20 +147,50 @@ class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    @action(detail=False, methods=['post'], url_path='process-loan')
+    @action(detail=False, methods=['post'], url_path='process_loan')
     def process_loan(self, request):
-        """Processes a book loan: Student QR + Book QR"""
-        student_qr = request.data.get('student_qr')
-        book_qr = request.data.get('book_qr')
+        """Processes a book loan: Dynamic Student QR + Book ID"""
+        qr_string = request.data.get('qr_code')
+        book_id = request.data.get('book_id')
         
         try:
-            student = CustomUser.objects.get(qr_code=student_qr, role='STUDENT')
-            book = Book.objects.get(qr_code=book_qr, organization=request.user.organization)
+            # 1. Identify student from QR
+            student = None
+            if qr_string.startswith('DYN-'):
+                # Dynamic QR: DYN-BASEQR-HASH
+                parts = qr_string.split('-')
+                if len(parts) == 3:
+                    base_qr = parts[1]
+                    received_hash = parts[2]
+                    student = CustomUser.objects.filter(qr_code=base_qr, role='STUDENT').first()
+                    
+                    if student:
+                        # Verify hash (approximate for the minute)
+                        import hashlib
+                        import time
+                        minute_timestamp = int(time.time() / 120)
+                        
+                        def verify_hash(ts):
+                            hash_input = f"{student.qr_code}{ts}{student.dynamic_qr_secret}"
+                            return hashlib.sha256(hash_input.encode()).hexdigest()[:10]
+                        
+                        # Allow +/- 1 minute for clock drift
+                        if received_hash not in [verify_hash(minute_timestamp), verify_hash(minute_timestamp-1), verify_hash(minute_timestamp+1)]:
+                            return Response({"error": "QR kod muddati o'tgan yoki noto'g'ri"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                # Fallback to static QR for testing/demo
+                student = CustomUser.objects.filter(qr_code=qr_string, role='STUDENT').first()
+
+            if not student:
+                 return Response({"error": "O'quvchi topilmadi"}, status=status.HTTP_404_NOT_FOUND)
+
+            # 2. Identify book
+            book = Book.objects.get(id=book_id, organization=request.user.organization)
             
             if book.available_copies <= 0:
-                return Response({"error": "No copies available"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": "Kitobning nusxalari tugagan"}, status=status.HTTP_400_BAD_REQUEST)
             
-            # Simple loan logic
+            # 3. Create transaction
             transaction = Transaction.objects.create(
                 book=book,
                 user=student,
@@ -160,7 +204,9 @@ class TransactionViewSet(viewsets.ModelViewSet):
             return Response(TransactionSerializer(transaction).data, status=status.HTTP_201_CREATED)
             
         except (CustomUser.DoesNotExist, Book.DoesNotExist):
-            return Response({"error": "Student or Book not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Ma'lumot topilmadi"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['post'], url_path='process-return')
     def process_return(self, request):
@@ -439,4 +485,10 @@ class ProfileView(APIView):
 
     def get(self, request):
         serializer = UserSerializer(request.user)
-        return Response(serializer.data)
+        data = serializer.data
+        data['dynamic_qr'] = request.user.get_dynamic_qr()
+        return Response(data)
+
+    @action(detail=False, methods=['get'], url_path='dynamic-qr')
+    def dynamic_qr(self, request):
+        return Response({"dynamic_qr": request.user.get_dynamic_qr()})

@@ -6,12 +6,11 @@ O'zbekiston ta'lim muassasalari uchun mo'ljallangan zamonaviy va premium elektro
 
 Platforma to'liq "Production-ready" holatga keltirildi:
 
-*   **✨ Mehmonlar uchun ochiqlik**: Saytga kirgan har qanday foydalanuvchi (ro'yxatdan o'tmasdan) kitoblar ro'yxatini ko'rishi va asarlar bilan tanishishi mumkin.
-*   **📖 Matnli Preview (Haqiqiy kitob hissi)**: Kitoblarni o'qishdan oldin ularning 3 ta sahifasi bilan "Paper-Stack" (varaqlangan kitob) dizaynida tanishish imkoniyati qo'shildi.
-*   **🔓 To'liq PDF O'quvchi**: Ro'yxatdan o'tgan foydalanuvchilar uchun kitobning barcha 100+ sahifalari to'liq PDF formatida (iframe orqali) ochiladi.
-*   **🖼️ Ishonchli Rasmlar (Image Proxy)**: Kitob muqovalari endi `images.weserv.nl` proksisi orqali yuklanadi, bu rasmlarning har doim ko'rinishini ta'minlaydi.
-*   **📱 Mobil Optimizatsiya**: Sayt barcha turdagi qurilmalar (smartfon, planshet, kompyuter) uchun to'liq moslashtirilgan.
-*   **💳 Ijaraga olish tizimi**: Har bir kitobda "Ijaraga olish" tugmasi mavjud bo'lib, u foydalanuvchini ro'yxatdan o'tishga va asarni shaxsiy javoniga qo'shishga yo'naltiradi.
+*   **🏫 Maktab Sinflari Tizimi**: O'quv maskanlari uchun sinflar va ta'lim tillari (Qoraqalpoq, O'zbek, Rus) bo'yicha guruhlash imkoniyati.
+*   **👤 Rolga asoslangan Ro'yxatdan o'tish**: O'quvchilar (sinfni tanlash) va O'qituvchilar (fanini kiritish) uchun alohida ro'yxatdan o'tish jarayoni.
+*   **📷 Kutubxonachi Skaneri**: Adminlar uchun o'quvchi QR-kodini skanerlash orqali kitoblarni tezkor topshirish va qabul qilish tizimi.
+*   **🛡️ Dinamik QR-kodlar**: Xavfsizlikni ta'minlash maqsadida har daqiqada yangilanib turuvchi dinamik QR-kodlar tizimi (skrinshotlardan himoya).
+*   **📱 Mobil Optimizatsiya va Qulaylik**: "Back" tugmalari, ixcham Dashbord va barcha qurilmalar uchun mukammal moslashuvchanlik.
 
 ## 🛠 Texnologiyalar
 
