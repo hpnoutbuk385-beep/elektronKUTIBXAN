@@ -3,7 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils import timezone
-from django.db.models import Sum, Count
+from django.db import models
+from django.db.models import Sum, Count, Q
 from .serializers import *
 from accounts.models import Organization, CustomUser, SchoolClass
 from library.models import Book, Category, Transaction
@@ -189,9 +190,16 @@ class BookViewSet(viewsets.ModelViewSet):
         return [permissions.IsAuthenticated()]
 
     def get_queryset(self):
-        # Hamshira / Studentlar hamma kitobni ko'ra oladi
-        # Lekin boshqarish (edit/delete) faqat o'z maktabi uchun bo'ladi
-        return Book.objects.all()
+        user = self.request.user
+        if user.is_anonymous:
+            return Book.objects.all()
+        
+        # Super admin hamma kitoblarni ko'radi
+        if user.role == 'SUPERADMIN':
+            return Book.objects.all()
+            
+        # Maktab admini va o'quvchilar faqat o'z maktabi kitoblarini ko'radi
+        return Book.objects.filter(organization=user.organization)
 
     def perform_create(self, serializer):
         if self.request.user.role == 'SCHOOL_ADMIN':
@@ -503,17 +511,17 @@ class CompetitionViewSet(viewsets.ModelViewSet):
         return [permissions.IsAuthenticated()]
 
     def get_queryset(self):
-        # Hamshira / Studentlar hamma aktiv musobaqalarni ko'ra oladi
-        if self.action in ['list', 'retrieve']:
-            return Competition.objects.filter(is_active=True)
-        
-        # Boshqaruv uchun faqat o'z maktabinikini ko'radi (School Admin)
         user = self.request.user
+        if user.is_anonymous:
+            return Competition.objects.filter(is_active=True)
+
         if user.role == 'SUPERADMIN':
             return Competition.objects.all()
-        elif user.role == 'SCHOOL_ADMIN':
-            return Competition.objects.filter(organization=user.organization)
-        return Competition.objects.none()
+            
+        # O'quvchilar va Maktab adminlari o'z tashkilotiga tegishli yoki umumiy musobaqalarni ko'radi
+        return Competition.objects.filter(
+            Q(organization=user.organization) | Q(level='REGION') | Q(level='DISTRICT')
+        ).filter(is_active=True)
 
     def perform_create(self, serializer):
         if self.request.user.role == 'SCHOOL_ADMIN':
@@ -633,6 +641,10 @@ class NameLoginView(APIView):
                 is_correct = user.check_password(password)
                 print(f"Password check for {user.username}: {is_correct}")
                 if is_correct:
+                    import secrets
+                    user.dynamic_qr_secret = secrets.token_hex(16)
+                    user.save(update_fields=['dynamic_qr_secret'])
+                    
                     from rest_framework_simplejwt.tokens import RefreshToken
                     refresh = RefreshToken.for_user(user)
                     return Response({
@@ -670,8 +682,15 @@ class NewsViewSet(viewsets.ModelViewSet):
         return [permissions.IsAuthenticated()]
 
     def get_queryset(self):
-        qs = News.objects.filter(is_active=True)
-        return qs
+        user = self.request.user
+        if user.is_anonymous:
+            return News.objects.filter(is_active=True)
+            
+        if user.role == 'SUPERADMIN':
+            return News.objects.all()
+            
+        # O'z maktabi yangiliklari
+        return News.objects.filter(organization=user.organization, is_active=True)
 
     def perform_create(self, serializer):
         if self.request.user.role == 'SCHOOL_ADMIN':
