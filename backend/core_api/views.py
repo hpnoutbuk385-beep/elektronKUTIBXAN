@@ -16,7 +16,7 @@ class OrganizationViewSet(viewsets.ModelViewSet):
     serializer_class = OrganizationSerializer
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ['list', 'retrieve', 'seed_all']:
             return [permissions.AllowAny()]
         return [permissions.IsAuthenticated()]
 
@@ -33,19 +33,75 @@ class OrganizationViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get', 'post'], url_path='seed-all', permission_classes=[permissions.AllowAny])
     def seed_all(self, request):
         try:
-            import sys
-            import os
-            from django.conf import settings
-            script_path = os.path.join(settings.BASE_DIR, 'seed_classes_and_schools.py')
-            if not os.path.exists(script_path):
-                return Response({"error": "Script not found"}, status=500)
-            
-            with open(script_path, 'r', encoding='utf-8') as f:
-                exec(f.read(), globals())
-            
-            return Response({"message": "Successfully seeded database with schools and classes!"})
+            # 1. Viloyat
+            ministry = Organization.objects.filter(org_type='MINISTRY').first()
+            qoraqalpoq_reg, _ = Organization.objects.get_or_create(
+                name="Qoraqalpog'iston Respublikasi Maktabgacha va maktab ta'limi vazirligi",
+                org_type='REGION',
+                defaults={'parent': ministry, 'region_name': "Qoraqalpog'iston Resp."}
+            )
+
+            # 2. Tumanlar
+            xojayli_dist, _ = Organization.objects.get_or_create(
+                name="Xo'jayli tumani bo'limi",
+                org_type='DISTRICT',
+                defaults={'parent': qoraqalpoq_reg, 'region_name': "Qoraqalpog'iston Resp.", 'district_name': "Xo'jayli tumani"}
+            )
+            nukus_city, _ = Organization.objects.get_or_create(
+                name="Nukus shahri bo'limi",
+                org_type='DISTRICT',
+                defaults={'parent': qoraqalpoq_reg, 'region_name': "Qoraqalpog'iston Resp.", 'district_name': "Nukus shahri"}
+            )
+
+            # 3. Sinf nomlari
+            classes_to_create = []
+            for i in range(1, 12):
+                classes_to_create.extend([
+                    (f"{i}-A", 'uz'),
+                    (f"{i}-B", 'ru'),
+                    (f"{i}-V", 'kk')
+                ])
+
+            schools_count = 0
+            classes_count = 0
+
+            districts_info = [
+                (xojayli_dist, "Xo'jayli", 44),
+                (nukus_city, "Nukus", 60),
+            ]
+
+            for dist, suffix, count in districts_info:
+                for i in range(1, count + 1):
+                    maktab_name = f"{i}-maktab — {suffix}"
+                    org, created = Organization.objects.get_or_create(
+                        name=maktab_name,
+                        org_type='SCHOOL',
+                        defaults={
+                            'parent': dist,
+                            'region_name': "Qoraqalpog'iston Resp.",
+                            'district_name': dist.district_name
+                        }
+                    )
+                    if created:
+                        schools_count += 1
+
+                    existing_classes = set(org.classes.values_list('name', flat=True))
+                    new_classes = []
+                    for cls_name, lang in classes_to_create:
+                        if cls_name not in existing_classes:
+                            new_classes.append(SchoolClass(name=cls_name, language=lang, organization=org))
+                    if new_classes:
+                        SchoolClass.objects.bulk_create(new_classes)
+                        classes_count += len(new_classes)
+
+            return Response({
+                "message": f"{schools_count} ta yangi maktab va {classes_count} ta yangi sinf qo'shildi!",
+                "schools": schools_count,
+                "classes": classes_count
+            })
         except Exception as e:
-            return Response({"error": str(e)}, status=500)
+            import traceback
+            return Response({"error": str(e), "trace": traceback.format_exc()}, status=500)
 
 class SchoolClassViewSet(viewsets.ModelViewSet):
     queryset = SchoolClass.objects.all()
