@@ -10,8 +10,10 @@ export default function RegisterPage() {
   const [formData, setFormData] = useState({
     username: "", password: "", first_name: "", last_name: "", 
     email: "", phone: "", organization: "", role: "STUDENT", 
-    school_class: "", subject: ""
+    school_class: "", subject: "", confirmPassword: ""
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [organizations, setOrganizations] = useState([]);
   const [classes, setClasses] = useState([]);
   const [error, setError] = useState("");
@@ -54,12 +56,32 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
+
+    // Parol validatsiyasi
+    if (formData.password.length < 8) {
+      setError("Parol kamida 8 ta belgidan iborat bo'lishi kerak!");
+      return;
+    }
+    
+    const hasLetter = /[a-zA-Z]/.test(formData.password);
+    const hasNumber = /[0-9]/.test(formData.password);
+    if (!hasLetter || !hasNumber) {
+      setError("Parolda kamida bitta harf va bitta raqam bo'lishi shart!");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError(t('passwords_dont_match'));
+      return;
+    }
+
+    setLoading(true);
     try {
+      const { confirmPassword, ...registerData } = formData;
       const res = await fetchApi('/auth/register/', {
         method: "POST",
-        body: JSON.stringify(formData)
+        body: JSON.stringify(registerData)
       });
       if (res.ok) {
         router.push("/login?registered=true");
@@ -145,9 +167,35 @@ export default function RegisterPage() {
             </div>
           )}
 
-          <div className="input-group">
-            <label>{t('password')}</label>
-            <input type="password" placeholder="••••••••" required onChange={(e) => setFormData({...formData, password: e.target.value})} />
+          <div className="form-grid">
+            <div className="input-group">
+              <label>{t('password')}</label>
+              <div className="password-wrapper">
+                <input 
+                  type={showPassword ? "text" : "password"} 
+                  placeholder="••••••••" 
+                  required 
+                  onChange={(e) => setFormData({...formData, password: e.target.value})} 
+                />
+                <button type="button" className="eye-btn" onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? "👁️" : "🙈"}
+                </button>
+              </div>
+            </div>
+            <div className="input-group">
+              <label>{t('confirm_password')}</label>
+              <div className="password-wrapper">
+                <input 
+                  type={showConfirmPassword ? "text" : "password"} 
+                  placeholder="••••••••" 
+                  required 
+                  onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})} 
+                />
+                <button type="button" className="eye-btn" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  {showConfirmPassword ? "👁️" : "🙈"}
+                </button>
+              </div>
+            </div>
           </div>
 
           <button type="submit" className="btn-auth" disabled={loading}>
@@ -193,6 +241,15 @@ export default function RegisterPage() {
         }
         input::placeholder { color: rgba(196, 168, 130, 0.3); }
         select option { background: #2a1f14; color: #f5e6c8; }
+
+        .password-wrapper { position: relative; display: flex; align-items: center; }
+        .password-wrapper input { width: 100%; padding-right: 45px; }
+        .eye-btn {
+          position: absolute; right: 10px; background: none; border: none;
+          color: rgba(196, 168, 130, 0.6); cursor: pointer; font-size: 1.2rem;
+          padding: 5px; transition: 0.3s; z-index: 5;
+        }
+        .eye-btn:hover { color: #DAA520; transform: scale(1.1); }
 
         .btn-auth { 
           background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #DAA520 100%);
