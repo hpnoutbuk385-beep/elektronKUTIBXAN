@@ -21,7 +21,6 @@ class OrganizationViewSet(viewsets.ModelViewSet):
         return [permissions.IsAuthenticated()]
 
     def get_queryset(self):
-        user = self.request.user
         qs = Organization.objects.all()
         
         # Allow filtering by org_type (e.g. ?org_type=SCHOOL)
@@ -29,25 +28,25 @@ class OrganizationViewSet(viewsets.ModelViewSet):
         if org_type:
             qs = qs.filter(org_type=org_type)
             
-        if not user.is_authenticated:
-            return qs
-        if user.role == 'SUPERADMIN' or user.is_superuser:
-            return qs
-        return qs.filter(id=user.organization_id)
+        return qs
 
 class SchoolClassViewSet(viewsets.ModelViewSet):
     queryset = SchoolClass.objects.all()
     serializer_class = SchoolClassSerializer
-    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
 
     def get_queryset(self):
-        user = self.request.user
         qs = SchoolClass.objects.all()
-        if user.is_superuser or user.role == 'SUPERADMIN':
-            return qs
-        if user.organization:
-            return qs.filter(organization=user.organization)
-        return qs.none()
+        
+        org_id = self.request.query_params.get('organization')
+        if org_id:
+            qs = qs.filter(organization_id=org_id)
+            
+        return qs
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
