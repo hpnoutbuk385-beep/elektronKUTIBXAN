@@ -39,6 +39,19 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def perform_update(self, serializer):
+        user = self.get_object()
+        if self.request.user.role == 'SCHOOL_ADMIN' and user.organization != self.request.user.organization:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Siz faqat o'z maktabingiz o'quvchilarini o'zgartira olasiz")
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        if self.request.user.role == 'SCHOOL_ADMIN' and instance.organization != self.request.user.organization:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Siz faqat o'z maktabingiz o'quvchilarini o'chira olasiz")
+        instance.delete()
+
     @action(detail=True, methods=['post'], url_path='change-password')
     def change_password(self, request, pk=None):
         admin = request.user
@@ -603,30 +616,35 @@ class NameLoginView(APIView):
         password = request.data.get('password')
 
         if not password:
-            return Response({"error": "Parol majburiy"}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
+            return Response({"error": "Parol majburiy"}, status=status.HTTP_400_BAD_REQUES        try:
+            print(f"Login attempt: username={username}, first_name={first_name}, last_name={last_name}")
             user = None
             if username:
-                # Try login by username first
                 user = CustomUser.objects.filter(username=username).first()
+                if user: print(f"User found by username: {user.username}")
             
             if not user and first_name and last_name:
-                # Fallback to Name + Familya
                 user = CustomUser.objects.filter(first_name__iexact=first_name, last_name__iexact=last_name).first()
+                if user: print(f"User found by name: {user.username}")
 
-            if user and user.check_password(password):
-                from rest_framework_simplejwt.tokens import RefreshToken
-                refresh = RefreshToken.for_user(user)
-                return Response({
-                    'refresh': str(refresh),
-                    'access': str(refresh.access_token),
-                    'user': UserSerializer(user).data
-                })
-            else:
-                return Response({"error": "Login yoki parol noto'g'ri"}, status=status.HTTP_401_UNAUTHORIZED)
+            if user:
+                is_correct = user.check_password(password)
+                print(f"Password check for {user.username}: {is_correct}")
+                if is_correct:
+                    from rest_framework_simplejwt.tokens import RefreshToken
+                    refresh = RefreshToken.for_user(user)
+                    return Response({
+                        'refresh': str(refresh),
+                        'access': str(refresh.access_token),
+                        'user': UserSerializer(user).data
+                    })
+            
+            print(f"Login failed for: {username or (first_name + ' ' + last_name)}")
+            return Response({"error": "Login yoki parol noto'g'ri"}, status=status.HTTP_401_UNAUTHORIZED)
         except Exception as e:
+            print(f"Login error: {str(e)}")
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+EST)
 
 class ProfileView(APIView):
     permission_classes = [permissions.IsAuthenticated]
