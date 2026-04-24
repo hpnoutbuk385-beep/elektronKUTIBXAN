@@ -7,9 +7,12 @@ Ushbu qo'llanma "Raqamli Kutubxona" platformasidan foydalanuvchilarning turli ro
 
 ## 👨‍🎓 O'quvchilar uchun
 
-### 1. Ro'yxatdan o'tish va Kirish
-- **Rol tanlash:** Ro'yxatdan o'tishda "O'quvchi" rolini tanlang.
-- **Sinfni biriktirish:** O'z maktabingiz va o'qiyotgan sinfingizni (masalan: 9-A) ro'yxatdan tanlang. Bu sizning reytingingizni sinfingiz bilan bog'laydi.
+### 🔐 O'quvchilarni tizimga qo'shish (Adminlar uchun)
+
+1.  **Login yaratish**: "Loglar va Parollar" bo'limiga kiring va "➕ Yangi Login Yaratish" tugmasini bosing. Faqat Login va Parol kiriting.
+2.  **Parolni tarqatish**: Ro'yxatdan o'quvchining parolini oling (yoki PDF qilib chop eting) va o'quvchiga bering.
+3.  **Ma'lumotlarni to'ldirish**: "Shaxsiy Ma'lumotlar" bo'limiga o'tib, o'sha o'quvchining ism-familiyasi, telefoni va sinfini kiritib qo'ying.
+ Bu sizning reytingingizni sinfingiz bilan bog'laydi.
 - **Dinamik QR-kod:** Profilingizdagi QR-kod endi xavfsizlik uchun har daqiqada yangilanadi. Skrinshotdan foydalanmang, kutubxonaga borganingizda kodni jonli ko'rsating.
 
 ### 2. Kitob olish va qaytarish

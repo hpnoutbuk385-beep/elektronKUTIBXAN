@@ -27,9 +27,12 @@ O'zbekiston ta'lim muassasalari uchun mo'ljallangan zamonaviy va premium elektro
 
 ---
 
-## 📋 Oldingi Yangilanishlar (v2.0 - Cinematic Release)
-
-*   **🏫 Maktab Sinflari Tizimi**: O'quv maskanlari uchun sinflar va ta'lim tillari (Qoraqalpoq, O'zbek, Rus) bo'yicha guruhlash imkoniyati.
+## 🚀 Oxirgi yangilanishlar (v2.0)
+- **Yopiq tizim**: Ro'yxatdan o'tish butunlay to'xtatildi. Endi faqat adminlar o'quvchi qo'sha oladi.
+- **Loglar va Parollar**: Adminlar uchun barcha login va parollarni ko'rish va chop etish bo'limi qo'shildi.
+- **Shaxsiy Ma'lumotlar**: O'quvchilarning ism-familiyasi va boshqa ma'lumotlarini alohida "papka"da boshqarish imkoniyati.
+- **Smart Login**: Ism-familiya yoki username orqali tezkor kirish tizimi.
+ (Qoraqalpoq, O'zbek, Rus) bo'yicha guruhlash imkoniyati.
 *   **👤 Rolga asoslangan Ro'yxatdan o'tish**: O'quvchilar (sinfni tanlash) va O'qituvchilar (fanini kiritish) uchun alohida ro'yxatdan o'tish jarayoni.
 *   **📷 Kutubxonachi Skaneri**: Adminlar uchun o'quvchi QR-kodini skanerlash orqali kitoblarni tezkor topshirish va qabul qilish tizimi.
 *   **🛡️ Dinamik QR-kodlar**: Xavfsizlikni ta'minlash maqsadida har daqiqada yangilanib turuvchi dinamik QR-kodlar tizimi (skrinshotlardan himoya).
