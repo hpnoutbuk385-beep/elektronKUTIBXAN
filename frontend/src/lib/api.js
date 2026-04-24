@@ -44,6 +44,7 @@ export const fetchApi = async (endpoint, options = {}) => {
   let response = await fetch(url, {
     ...options,
     headers,
+    cache: 'no-store', // Keshni o'chirish: har doim yangi ma'lumot olish uchun
   });
 
   if (response.status === 401 && typeof window !== 'undefined') {
