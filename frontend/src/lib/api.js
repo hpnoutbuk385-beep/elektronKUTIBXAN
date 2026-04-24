@@ -2,15 +2,14 @@ const getBaseUrl = () => {
   if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
-    const origin = window.location.origin;
     
-    // Mahalliy server uchun (localhost, 127.0.0.1 yoki LAN IP)
+    // Mahalliy server uchun
     if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.')) {
       return 'http://localhost:8000/api';
     }
     
-    // Avtomatik ravishda hozirgi turgan manzilingizni API uchun ishlatamiz
-    return `${origin}/api`;
+    // Production backend manzili (Railway)
+    return 'https://elektronkutibxan-production.up.railway.app/api';
   }
   return 'https://elektronkutibxan-production.up.railway.app/api';
 };

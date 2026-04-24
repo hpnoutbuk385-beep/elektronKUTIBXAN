@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "@/lib/api";
+import { login, getBaseUrl } from "@/lib/api";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -21,7 +21,8 @@ export default function LoginPage() {
       const parts = username.trim().split(/\s+/);
       if (parts.length >= 2) {
         // Ism Familiya orqali kirish
-        res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/auth/login/`, {
+        const baseUrl = getBaseUrl();
+        res = await fetch(`${baseUrl}/auth/login/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
