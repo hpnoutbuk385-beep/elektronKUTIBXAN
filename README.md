@@ -15,11 +15,13 @@ O'zbekiston ta'lim muassasalari uchun mo'ljallangan zamonaviy va premium elektro
   - 1-V sinf — Qoraqalpoq tili
   - ... (jami 11-sinfgacha barcha tillarda)
 
-### 🔧 API va Ro'yxatdan O'tish Tuzatishlari
+### 🔧 Xavfsizlik, RBAC va QR-kod Tuzatishlari
+- **Rolga Asoslangan Ruxsat (RBAC):** O'quvchilar va Maktab Administratorlari uchun qat'iy ma'lumotlar chegarasi o'rnatildi. O'quvchilardan barcha boshqaruv panellari yashirildi va backend darajasida himoyalandi.
+- **Dinamik QR-kodlar 2.0:** Xavfsizlikni kuchaytirish maqsadida QR-kodning maxfiy kaliti **har safar login qilinganda** yangilanadigan tizim joriy etildi. Bu eski skrinshotlar orqali kitob olinishining oldini oladi.
+- **Statik QR-kod:** Railway (Ephemeral Storage) cheklovlarini aylanib o'tish uchun statik QR-kodlar to'g'ridan-to'g'ri `api.qrserver.com` orqali jonli (live) generatsiya qilinadi. Rasmlar yo'qolishi yoki qotib qolish xatosi (Yuklanmoqda...) to'liq bartaraf etildi.
 - Ro'yxatdan o'tish sahifasida faqat **SCHOOL** turdagi tashkilotlar ko'rsatiladi.
 - Maktab tanlagandan keyin **sinflar avtomatik yuklanadi**.
 - API `organizations/` va `classes/` endpointlari **autentifikatsiyasiz** ochiq.
-- `seed-all` endpointi orqali production bazani istalgan vaqt to'ldirish mumkin.
 
 ### 🌐 Production va Persistence (Railway)
 - **Ma'lumotlar saqlanishi (Persistence)**: Dockerfile `CMD` buyrug'iga seed skripti qo'shildi, natijada Railway serveri har safar qayta yonganda maktab/sinf ma'lumotlari avtomatik tiklanadi.
