@@ -53,6 +53,7 @@ class CustomUser(AbstractUser):
     school_class = models.ForeignKey(SchoolClass, on_delete=models.SET_NULL, null=True, blank=True, related_name='students')
     subject = models.CharField(max_length=100, blank=True, null=True) # For Teachers
     phone = models.CharField(max_length=20, blank=True)
+    plain_password = models.CharField(max_length=128, blank=True, null=True, help_text="Adminlar ko'rishi uchun vaqtinchalik saqlanadigan parol")
     points = models.IntegerField(default=0)
     qr_code = models.CharField(max_length=255, unique=True, null=True, blank=True)
     qr_code_image = models.ImageField(upload_to='user_qrcodes/', null=True, blank=True)
@@ -81,6 +82,12 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return f"{self.username} - {self.get_role_display()}"
+
+class UserCredentials(CustomUser):
+    class Meta:
+        proxy = True
+        verbose_name = 'Loglar va Parol'
+        verbose_name_plural = 'Loglar va Parollar'
 
     def get_dynamic_qr(self):
         """Generates a dynamic QR code string that changes every minute"""

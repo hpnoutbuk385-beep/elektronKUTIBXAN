@@ -69,3 +69,17 @@ class Transaction(models.Model):
     class Meta:
         verbose_name = _('Kitob o\'lish/qaytarish')
         verbose_name_plural = _('Kitob o\'lish/qaytarishlar')
+class News(models.Model):
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='news')
+    image = models.ImageField(upload_to='news/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = _('Yangilik')
+        verbose_name_plural = _('Yangiliklar')

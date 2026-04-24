@@ -3,7 +3,8 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     OrganizationViewSet, BookViewSet, TransactionViewSet, LeaderboardViewSet,
     QuizViewSet, CompetitionViewSet, RewardViewSet, PurchaseViewSet,
-    RegisterView, ProfileView, NameLoginView, SchoolClassViewSet
+    RegisterView, ProfileView, NameLoginView, SchoolClassViewSet, UserViewSet,
+    NewsViewSet
 )
 from .reports import SchoolReportPDFView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -18,6 +19,8 @@ router.register(r'quizzes', QuizViewSet)
 router.register(r'competitions', CompetitionViewSet)
 router.register(r'rewards', RewardViewSet)
 router.register(r'purchases', PurchaseViewSet)
+router.register(r'users', UserViewSet, basename='user-management')
+router.register(r'news', NewsViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

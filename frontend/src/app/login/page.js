@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { fetchApi } from "@/lib/api";
+import { login } from "@/lib/api";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -16,21 +16,25 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
     try {
-      const loginData = { password };
-      
+      let res;
       // Smart Login: Agar foydalanuvchi ism-familiya kiritgan bo'lsa (probel bilan)
       const parts = username.trim().split(/\s+/);
       if (parts.length >= 2) {
-        loginData.first_name = parts[0];
-        loginData.last_name = parts.slice(1).join(" ");
+        // Ism Familiya orqali kirish
+        res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/auth/login/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            first_name: parts[0], 
+            last_name: parts.slice(1).join(" "),
+            password 
+          }),
+        });
       } else {
-        loginData.username = username;
+        // Oddiy username orqali kirish
+        res = await login(username, password);
       }
 
-      const res = await fetchApi('/auth/login/', {
-        method: 'POST',
-        body: JSON.stringify(loginData),
-      });
       if (res.ok) {
         const data = await res.json();
         localStorage.setItem('access_token', data.access);
@@ -82,12 +86,12 @@ export default function LoginPage() {
           </div>
 
           <button type="submit" className="btn-auth" disabled={loading}>
-            {loading ? "Kirish..." : "📖 Tizimga kirish"}
+            {loading ? "Tasdiqlanmoqda..." : "📖 Tasdiqlash"}
           </button>
         </form>
 
         <p className="auth-footer">
-          Hali ro'yxatdan o'tmaganmisiz? <Link href="/register">Ro'yxatdan o'tish</Link>
+          Muammo yuzaga kelsa, maktab ma'muriyatiga murojaat qiling.
         </p>
       </div>
 

@@ -12,13 +12,18 @@ export default function RootLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const isAuthPage = ["/login", "/register"].includes(pathname);
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem("access_token") : null;
     setIsLoggedIn(!!token);
-  }, [pathname]);
-
-  const isAuthPage = ["/login", "/register"].includes(pathname);
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+    
+    // Agar foydalanuvchi tizimga kirmagan bo'lsa va auth sahifasida bo'lmasa, login'ga yo'naltirish
+    if (!token && !isAuthPage) {
+      router.push("/login");
+    }
+  }, [pathname, isAuthPage, router]);
 
   return (
     <html lang="uz" suppressHydrationWarning>

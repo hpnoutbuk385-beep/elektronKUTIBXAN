@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from accounts.models import Organization, CustomUser, SchoolClass
-from library.models import Book, Category, Transaction
+from library.models import Book, Category, Transaction, News
 from exams.models import Quiz, Question, Attempt
 from competitions.models import Competition, Participant
 from market.models import Reward, Purchase
@@ -24,15 +24,16 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = [
             'id', 'username', 'email', 'role', 'organization', 'organization_name', 
-            'school_class', 'school_class_details', 'subject', 'points', 'qr_code', 'phone'
+            'school_class', 'school_class_details', 'subject', 'points', 'qr_code', 'phone', 'plain_password'
         ]
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    email = serializers.EmailField(required=False, allow_blank=True)
     
     class Meta:
         model = CustomUser
-        fields = ['username', 'first_name', 'last_name', 'email', 'password', 'role', 'organization', 'school_class', 'subject', 'phone']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password', 'role', 'organization', 'school_class', 'subject', 'phone', 'plain_password']
 
     def create(self, validated_data):
         # Use provided username or auto-generate from Name + Familya
@@ -57,13 +58,14 @@ class RegistrationSerializer(serializers.ModelSerializer):
             username=username,
             first_name=validated_data.get('first_name', ''),
             last_name=validated_data.get('last_name', ''),
-            email=validated_data['email'],
+            email=validated_data.get('email', ''),
             password=validated_data['password'],
             role=validated_data.get('role', 'STUDENT'),
             organization=validated_data.get('organization'),
             school_class=validated_data.get('school_class'),
             subject=validated_data.get('subject', ''),
-            phone=validated_data.get('phone', '')
+            phone=validated_data.get('phone', ''),
+            plain_password=validated_data.get('password')
         )
         return user
 
@@ -119,6 +121,12 @@ class ParticipantSerializer(serializers.ModelSerializer):
 class RewardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reward
+        fields = '__all__'
+
+class NewsSerializer(serializers.ModelSerializer):
+    organization_name = serializers.ReadOnlyField(source='organization.name')
+    class Meta:
+        model = News
         fields = '__all__'
 
 class PurchaseSerializer(serializers.ModelSerializer):

@@ -54,7 +54,11 @@ export default function ProfilePage() {
             <div className="profile-info">
               <h2 className="profile-name">{user?.first_name} {user?.last_name}</h2>
               <p className="profile-username">@{user?.username}</p>
-              <span className="profile-role-badge">{user?.role}</span>
+              <span className={`profile-role-badge ${user?.role}`}>
+                {user?.role === 'SUPERADMIN' ? 'Super Admin' : 
+                 user?.role === 'SCHOOL_ADMIN' ? 'Maktab Admin' : 
+                 user?.role === 'TEACHER' ? 'O\'qituvchi' : 'O\'quvchi'}
+              </span>
             </div>
           </div>
 
@@ -86,7 +90,7 @@ export default function ProfilePage() {
               <span className="stat-lab">O'qilgan kitoblar</span>
             </div>
             <div className="stat-box">
-              <span className="stat-val">v2.0.0</span>
+              <span className="stat-val">v2.1.0</span>
               <span className="stat-lab">Versiya</span>
             </div>
           </div>
@@ -117,22 +121,25 @@ export default function ProfilePage() {
 
       <style jsx>{`
         .dashboard-content { display: flex; flex-direction: column; gap: 30px; }
-        .welcome-title { font-size: 2rem; color: white; }
+        .welcome-title { font-size: 2rem; color: white; font-family: 'Playfair Display', serif; }
         .profile-container { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; }
 
-        .profile-main { padding: 40px; }
+        .profile-main { padding: 40px; border: 1px solid rgba(218, 165, 32, 0.1) !important; }
         .profile-header { display: flex; align-items: center; gap: 30px; margin-bottom: 40px; }
         .profile-avatar { 
-          width: 100px; height: 100px; background: linear-gradient(135deg, #818cf8, #a855f7);
+          width: 100px; height: 100px; background: linear-gradient(135deg, #8B4513, #DAA520);
           border-radius: 30px; display: flex; align-items: center; justify-content: center;
-          font-size: 3rem; color: white; font-weight: 800; border: 4px solid rgba(255,255,255,0.1);
+          font-size: 3rem; color: white; font-weight: 800; border: 4px solid rgba(218, 165, 32, 0.2);
         }
-        .profile-name { font-size: 1.8rem; color: white; margin-bottom: 5px; }
-        .profile-username { color: rgba(255,255,255,0.4); margin-bottom: 15px; }
+        .profile-name { font-size: 1.8rem; color: white; margin-bottom: 5px; font-family: 'Playfair Display', serif; }
+        .profile-username { color: rgba(196, 168, 130, 0.4); margin-bottom: 15px; font-family: 'Lora', serif; }
         .profile-role-badge { 
-          background: rgba(129, 140, 248, 0.2); color: #818cf8; 
-          padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;
+          background: rgba(218, 165, 32, 0.15); color: #DAA520; 
+          padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 700;
+          text-transform: uppercase; border: 1px solid rgba(218, 165, 32, 0.2);
         }
+        .profile-role-badge.SUPERADMIN { background: rgba(255, 215, 0, 0.2); color: #FFD700; border-color: #FFD700; }
+        .profile-role-badge.SCHOOL_ADMIN { background: rgba(218, 165, 32, 0.2); color: #DAA520; border-color: #DAA520; }
 
         .profile-details { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         .detail-item label { display: block; color: rgba(255,255,255,0.3); font-size: 0.85rem; margin-bottom: 5px; }

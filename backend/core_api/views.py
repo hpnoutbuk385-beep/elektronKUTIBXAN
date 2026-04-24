@@ -11,6 +11,51 @@ from exams.models import Quiz, Question, Attempt
 from competitions.models import Competition, Participant
 from market.models import Reward, Purchase
 
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == 'SUPERADMIN':
+            return CustomUser.objects.all()
+        elif user.role == 'SCHOOL_ADMIN':
+            return CustomUser.objects.filter(organization=user.organization)
+        # Regular users only see themselves in this viewset (or nothing)
+        return CustomUser.objects.filter(id=user.id)
+
+    def create(self, request, *args, **kwargs):
+        if request.user.role not in ['SUPERADMIN', 'SCHOOL_ADMIN']:
+            return Response({"error": "Ruxsat etilmagan"}, status=status.HTTP_403_FORBIDDEN)
+        
+        serializer = RegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            # Force organization for school admins
+            if request.user.role == 'SCHOOL_ADMIN':
+                serializer.validated_data['organization'] = request.user.organization
+            
+            user = serializer.save()
+            return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['post'], url_path='change-password')
+    def change_password(self, request, pk=None):
+        admin = request.user
+        if admin.role not in ['SUPERADMIN', 'SCHOOL_ADMIN']:
+            return Response({"error": "Ruxsat etilmagan"}, status=status.HTTP_403_FORBIDDEN)
+        
+        user = self.get_object()
+        new_password = request.data.get('password')
+        
+        if not new_password:
+            return Response({"error": "Yangi parol kiritilmadi"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user.set_password(new_password)
+        user.plain_password = new_password
+        user.save()
+        return Response({"message": f"{user.username} uchun parol muvaffaqiyatli o'zgartirildi"})
+
 class OrganizationViewSet(viewsets.ModelViewSet):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
@@ -124,11 +169,31 @@ class SchoolClassViewSet(viewsets.ModelViewSet):
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.AllowAny]
+    
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve', 'scan_qr']:
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
 
     def get_queryset(self):
-        # HAMMA KITOBNI HAMMAGA KO'RSATAMIZ
+        # Hamshira / Studentlar hamma kitobni ko'ra oladi
+        # Lekin boshqarish (edit/delete) faqat o'z maktabi uchun bo'ladi
         return Book.objects.all()
+
+    def perform_create(self, serializer):
+        if self.request.user.role == 'SCHOOL_ADMIN':
+            serializer.save(organization=self.request.user.organization)
+        else:
+            serializer.save()
+
+    def check_object_permissions(self, request, obj):
+        super().check_object_permissions(request, obj)
+        if self.action in ['update', 'partial_update', 'destroy']:
+            if request.user.role == 'SUPERADMIN':
+                return
+            if request.user.role == 'SCHOOL_ADMIN' and obj.organization == request.user.organization:
+                return
+            self.permission_denied(request, message="Sizda bu kitobni o'zgartirish huquqi yo'q")
 
     @action(detail=False, methods=['get', 'post'], url_path='force-seed')
     def force_seed(self, request):
@@ -416,17 +481,43 @@ class QuizViewSet(viewsets.ModelViewSet):
         })
 
 class CompetitionViewSet(viewsets.ModelViewSet):
-    queryset = Competition.objects.filter(is_active=True)
+    queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve', 'register']:
+            return [permissions.IsAuthenticated()]
+        return [permissions.IsAuthenticated()]
+
+    def get_queryset(self):
+        # Hamshira / Studentlar hamma aktiv musobaqalarni ko'ra oladi
+        if self.action in ['list', 'retrieve']:
+            return Competition.objects.filter(is_active=True)
+        
+        # Boshqaruv uchun faqat o'z maktabinikini ko'radi (School Admin)
+        user = self.request.user
+        if user.role == 'SUPERADMIN':
+            return Competition.objects.all()
+        elif user.role == 'SCHOOL_ADMIN':
+            return Competition.objects.filter(organization=user.organization)
+        return Competition.objects.none()
+
+    def perform_create(self, serializer):
+        if self.request.user.role == 'SCHOOL_ADMIN':
+            serializer.save(organization=self.request.user.organization, level='SCHOOL')
+        else:
+            serializer.save()
 
     @action(detail=True, methods=['post'], url_path='register')
     def register(self, request, pk=None):
         comp = self.get_object()
+        if request.user.role != 'STUDENT':
+            return Response({"error": "Faqat o'quvchilar ro'yxatdan o'tishi mumkin"}, status=400)
+        
         participant, created = Participant.objects.get_or_create(user=request.user, competition=comp)
         if not created:
-            return Response({"message": "Already registered"}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"message": "Registered successfully"})
+            return Response({"message": "Siz allaqachon ro'yxatdan o'tgansiz"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "Muvaffaqiyatli ro'yxatdan o'tdingiz"})
 
 class RewardViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Reward.objects.filter(is_active=True, stock__gt=0)
@@ -564,3 +655,31 @@ class ProfileView(APIView):
     @action(detail=False, methods=['get'], url_path='dynamic-qr')
     def dynamic_qr(self, request):
         return Response({"dynamic_qr": request.user.get_dynamic_qr()})
+
+class NewsViewSet(viewsets.ModelViewSet):
+    queryset = News.objects.all().order_by('-created_at')
+    serializer_class = NewsSerializer
+    
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
+
+    def get_queryset(self):
+        qs = News.objects.filter(is_active=True)
+        return qs
+
+    def perform_create(self, serializer):
+        if self.request.user.role == 'SCHOOL_ADMIN':
+            serializer.save(organization=self.request.user.organization)
+        else:
+            serializer.save()
+
+    def check_object_permissions(self, request, obj):
+        super().check_object_permissions(request, obj)
+        if self.action in ['update', 'partial_update', 'destroy']:
+            if request.user.role == 'SUPERADMIN':
+                return
+            if request.user.role == 'SCHOOL_ADMIN' and obj.organization == request.user.organization:
+                return
+            self.permission_denied(request, message="Sizda bu yangilikni o'zgartirish huquqi yo'q")

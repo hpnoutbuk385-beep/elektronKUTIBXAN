@@ -25,11 +25,17 @@ export default function Sidebar({ isOpen, onClose }) {
     { name: t('dashboard'), href: "/", icon: "📊" },
     { name: t('library_title'), href: "/library", icon: "📚" },
     { name: t('my_books'), href: "/books", icon: "📖", locked: !user },
+    { name: "Yangiliklar", href: "/news", icon: "📰" },
     { name: t('leaderboard'), href: "/leaderboard", icon: "🏆", locked: !user },
-    { name: t('classes'), href: "/classes", icon: "🏫", locked: !user },
+    { name: t('classes'), href: "/classes", icon: "🏫", locked: !user, hidden: user?.role === 'STUDENT' },
+    { name: "Loglar va Parollar", href: "/admin/passwords", icon: "🔑", hidden: !['SUPERADMIN', 'SCHOOL_ADMIN'].includes(user?.role) },
+    { name: "Shaxsiy Ma'lumotlar", href: "/admin/users", icon: "📂", hidden: !['SUPERADMIN', 'SCHOOL_ADMIN'].includes(user?.role) },
+    { name: "Kitoblar boshqaruvi", href: "/admin/books", icon: "📚", hidden: !['SUPERADMIN', 'SCHOOL_ADMIN'].includes(user?.role) },
+    { name: "Yangiliklar boshqaruvi", href: "/admin/news", icon: "✍️", hidden: !['SUPERADMIN', 'SCHOOL_ADMIN'].includes(user?.role) },
+    { name: "Musobaqalar boshqaruvi", href: "/admin/competitions", icon: "🏆", hidden: !['SUPERADMIN', 'SCHOOL_ADMIN'].includes(user?.role) },
     { name: t('rewards'), href: "/rewards", icon: "🎁", locked: !user },
     { name: t('profile'), href: "/profile", icon: "👤", locked: !user },
-    { name: "Skaner", href: "/admin/scan", icon: "📷", hidden: user?.role !== 'ADMIN' },
+    { name: "Skaner", href: "/admin/scan", icon: "📷", hidden: !['SUPERADMIN', 'SCHOOL_ADMIN', 'ADMIN'].includes(user?.role) },
   ];
 
   return (
@@ -52,7 +58,9 @@ export default function Sidebar({ isOpen, onClose }) {
         {user && (
           <div className="user-quick-info glass-card">
             <div className="user-role-badge">
-              {user.role === 'ADMIN' ? '🏛️ Admin' : user.role === 'TEACHER' ? '🎓 O\'qituvchi' : '📖 O\'quvchi'}
+              {user.role === 'SUPERADMIN' ? '👑 Super Admin' : 
+               user.role === 'SCHOOL_ADMIN' ? '🏛️ Maktab Admin' : 
+               user.role === 'TEACHER' ? '🎓 O\'qituvchi' : '📖 O\'quvchi'}
             </div>
             <div className="user-name-small">{user.first_name} {user.last_name}</div>
           </div>
@@ -148,59 +156,11 @@ export default function Sidebar({ isOpen, onClose }) {
             font-size: 0.85rem; color: #f5e6c8; font-weight: 500; font-family: 'Lora', serif;
           }
 
-          .menu-nav { display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
-          .menu-item, 
-          .menu-nav a.menu-item {
-            display: flex !important; 
-            align-items: center; 
-            gap: 14px; 
-            padding: 12px 18px; 
-            border-radius: 16px;
-            color: rgba(196, 168, 130, 0.7) !important; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            text-decoration: none !important;
-            font-family: 'Lora', serif; font-size: 0.95rem; position: relative;
-            background: rgba(193, 154, 107, 0.05) !important;
-            border: 1px solid rgba(218, 165, 32, 0.1) !important;
-            cursor: pointer;
-            outline: none;
-            width: 100%;
-          }
-          
-          .menu-nav a.menu-item:visited, 
-          .menu-nav a.menu-item:link {
-            color: rgba(196, 168, 130, 0.7) !important;
-          }
-
-          .menu-item:hover,
-          .menu-nav a.menu-item:hover { 
-            color: #f5e6c8 !important; 
-            background: rgba(193, 154, 107, 0.12) !important;
-            border-color: rgba(218, 165, 32, 0.25) !important;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-          }
-
-          .menu-item.active,
-          .menu-nav a.menu-item.active {
-            color: #DAA520 !important;
-            background: rgba(218, 165, 32, 0.15) !important;
-            font-weight: 700;
-            border: 1px solid rgba(218, 165, 32, 0.35) !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-          }
           .menu-icon {
             font-size: 1.2rem;
             width: 24px;
             display: flex;
             justify-content: center;
-          }
-          .menu-label { flex: 1; }
-
-          .active-dot {
-            position: absolute; right: 12px; width: 6px; height: 6px;
-            background: #DAA520; border-radius: 50%;
-            box-shadow: 0 0 8px rgba(218, 165, 32, 0.5);
           }
           .menu-item.locked { 
             opacity: 0.4; 
