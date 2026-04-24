@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { fetchApi } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 export default function CompetitionsManagementPage() {
   const [competitions, setCompetitions] = useState([]);
@@ -8,7 +9,18 @@ export default function CompetitionsManagementPage() {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ title: "", description: "", start_date: "", end_date: "" });
 
+  const router = useRouter();
+
   useEffect(() => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      const user = JSON.parse(userData);
+      if (!['SUPERADMIN', 'SCHOOL_ADMIN'].includes(user.role)) {
+        router.push("/");
+      }
+    } else {
+      router.push("/login");
+    }
     loadCompetitions();
   }, []);
 

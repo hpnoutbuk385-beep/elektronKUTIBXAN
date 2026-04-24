@@ -11,6 +11,15 @@ export default function NewsManagementPage() {
   const router = useRouter();
 
   useEffect(() => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      const user = JSON.parse(userData);
+      if (!['SUPERADMIN', 'SCHOOL_ADMIN'].includes(user.role)) {
+        router.push("/");
+      }
+    } else {
+      router.push("/login");
+    }
     loadNews();
   }, []);
 
