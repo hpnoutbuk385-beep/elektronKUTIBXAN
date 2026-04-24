@@ -3,13 +3,14 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     OrganizationViewSet, BookViewSet, TransactionViewSet, LeaderboardViewSet,
     QuizViewSet, CompetitionViewSet, RewardViewSet, PurchaseViewSet,
-    RegisterView, ProfileView, NameLoginView
+    RegisterView, ProfileView, NameLoginView, SchoolClassViewSet
 )
 from .reports import SchoolReportPDFView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 router = DefaultRouter()
 router.register(r'organizations', OrganizationViewSet)
+router.register(r'classes', SchoolClassViewSet)
 router.register(r'books', BookViewSet)
 router.register(r'transactions', TransactionViewSet)
 router.register(r'leaderboard', LeaderboardViewSet)

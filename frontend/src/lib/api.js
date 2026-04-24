@@ -11,6 +11,15 @@ const getBaseUrl = () => {
 
 const PRODUCTION_API_URL = getBaseUrl();
 
+export const getMediaUrl = (path) => {
+  if (!path) return null;
+  if (path.startsWith('http')) return path;
+  
+  const baseUrl = PRODUCTION_API_URL.replace('/api', '');
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  return `${baseUrl}${cleanPath}`;
+};
+
 export const fetchApi = async (endpoint, options = {}) => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
   

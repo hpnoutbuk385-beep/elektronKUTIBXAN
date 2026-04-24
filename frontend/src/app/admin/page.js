@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useState } from 'react';
-import { fetchApi } from '@/lib/api';
+import { fetchApi, getMediaUrl } from '@/lib/api';
 import { useLanguage } from '@/context/LanguageContext';
 import { useRouter } from 'next/navigation';
 
 export default function AdminDashboard() {
   const { t } = useLanguage();
   const router = useRouter();
+  const [books, setBooks] = useState([]);
   const [stats, setStats] = useState([
     { label: t('total_students'), value: "0", trend: "..." },
     { label: t('book_fund'), value: "0", trend: "..." },
@@ -25,17 +26,14 @@ export default function AdminDashboard() {
     }
     async function loadStats() {
       try {
-        const orgRes = await fetchApi('/organizations/');
-        const orgData = await orgRes.json();
-        
         // This is a simplified mockup of how admin stats might be fetched
-        // In a real app, you'd have a dedicated stats endpoint.
         const booksRes = await fetchApi('/books/');
         const booksData = await booksRes.json();
+        setBooks(booksData);
 
         setStats([
           { label: t('total_students'), value: "850", trend: "+12%" },
-          { label: t('book_fund'), value: booksData.count || "0", trend: `+50 ${t('new_suffix')}` },
+          { label: t('book_fund'), value: booksData.length || "0", trend: `+50 ${t('new_suffix')}` },
           { label: t('monthly_activity'), value: "485", trend: "+24%" },
           { label: t('average_points'), value: "420", trend: "+15" },
         ]);
@@ -90,6 +88,45 @@ export default function AdminDashboard() {
         <p className="mt-20">{t('weekly_activity')}</p>
       </div>
 
+      {/* Book Management Section */}
+      <div className="admin-inventory glass-panel animate-slide-up">
+        <h3 className="section-title">📚 Kitoblar Inventarizatsiyasi</h3>
+        <div className="table-wrapper">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Kitob</th>
+                <th>QR Kod</th>
+                <th>Soni</th>
+                <th>Amal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {books.map(book => (
+                <tr key={book.id}>
+                  <td>
+                    <div className="book-cell">
+                      <span className="b-title">{book.title}</span>
+                      <span className="b-author">{book.author}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="qr-cell">
+                      <img src={getMediaUrl(book.qr_code_image)} alt="QR" className="table-qr" />
+                      <code className="qr-code-text">{book.qr_code}</code>
+                    </div>
+                  </td>
+                  <td>{book.available_copies} / {book.total_copies}</td>
+                  <td>
+                    <button className="btn-secondary btn-sm" onClick={() => window.print()}>🖨️ Chop etish</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <style jsx>{`
         .admin-dashboard { display: flex; flex-direction: column; gap: 30px; }
         .flex-center-between { display: flex; align-items: center; justify-content: space-between; }
@@ -107,6 +144,23 @@ export default function AdminDashboard() {
         }
         .chart-bar:hover { opacity: 1; transform: scaleX(1.1); }
         .mt-20 { margin-top: 20px; }
+
+        .admin-inventory { padding: 30px; }
+        .section-title { font-family: 'Playfair Display', serif; color: #f5e6c8; margin-bottom: 25px; }
+        .table-wrapper { overflow-x: auto; }
+        .admin-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .admin-table th { color: var(--text-muted); font-size: 0.85rem; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .admin-table td { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.03); color: #f5e6c8; }
+        
+        .book-cell { display: flex; flex-direction: column; gap: 4px; }
+        .b-title { font-weight: 700; font-family: 'Playfair Display', serif; }
+        .b-author { font-size: 0.85rem; color: var(--secondary); opacity: 0.7; }
+        
+        .qr-cell { display: flex; align-items: center; gap: 15px; }
+        .table-qr { width: 60px; height: 60px; background: white; padding: 4px; border-radius: 8px; }
+        .qr-code-text { font-size: 0.75rem; color: var(--text-muted); opacity: 0.5; font-family: monospace; }
+        
+        .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
       `}</style>
     </div>
   );

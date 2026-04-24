@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from accounts.models import Organization, CustomUser
+from accounts.models import Organization, CustomUser, SchoolClass
 from library.models import Book, Category, Transaction
 from exams.models import Quiz, Question, Attempt
 from competitions.models import Competition, Participant
@@ -10,19 +10,29 @@ class OrganizationSerializer(serializers.ModelSerializer):
         model = Organization
         fields = ['id', 'name', 'org_type', 'parent', 'region_name', 'district_name']
 
+class SchoolClassSerializer(serializers.ModelSerializer):
+    language_display = serializers.CharField(source='get_language_display', read_only=True)
+    class Meta:
+        model = SchoolClass
+        fields = ['id', 'name', 'language', 'language_display', 'organization']
+
 class UserSerializer(serializers.ModelSerializer):
     organization_name = serializers.ReadOnlyField(source='organization.name')
+    school_class_details = SchoolClassSerializer(source='school_class', read_only=True)
     
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'role', 'organization', 'organization_name', 'points', 'qr_code', 'phone']
+        fields = [
+            'id', 'username', 'email', 'role', 'organization', 'organization_name', 
+            'school_class', 'school_class_details', 'subject', 'points', 'qr_code', 'phone'
+        ]
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
     
     class Meta:
         model = CustomUser
-        fields = ['username', 'first_name', 'last_name', 'email', 'password', 'role', 'organization', 'phone']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password', 'role', 'organization', 'school_class', 'subject', 'phone']
 
     def create(self, validated_data):
         # Use provided username or auto-generate from Name + Familya
@@ -51,6 +61,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
             password=validated_data['password'],
             role=validated_data.get('role', 'STUDENT'),
             organization=validated_data.get('organization'),
+            school_class=validated_data.get('school_class'),
+            subject=validated_data.get('subject', ''),
             phone=validated_data.get('phone', '')
         )
         return user

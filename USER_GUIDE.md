@@ -7,29 +7,34 @@ Ushbu qo'llanma "Raqamli Kutubxona" platformasidan foydalanuvchilarning turli ro
 
 ## 👨‍🎓 O'quvchilar uchun
 
-### 1. Kirish va Ro'yxatdan o'tish
-- **Kirish:** Profilga kirish uchun endi Ism, Familiya va parolingizdan foydalanasiz. Username eslab qolish shart emas.
-- **Ro'yxatdan o'tish:** Yangi foydalanuvchilar o'z Ismi, Familiyasi va telefon raqami orqali oson ro'yxatdan o'tishlari mumkin.
+### 1. Ro'yxatdan o'tish va Kirish
+- **Rol tanlash:** Ro'yxatdan o'tishda "O'quvchi" rolini tanlang.
+- **Sinfni biriktirish:** O'z maktabingiz va o'qiyotgan sinfingizni (masalan: 9-A) ro'yxatdan tanlang. Bu sizning reytingingizni sinfingiz bilan bog'laydi.
+- **Dinamik QR-kod:** Profilingizdagi QR-kod endi xavfsizlik uchun har daqiqada yangilanadi. Skrinshotdan foydalanmang, kutubxonaga borganingizda kodni jonli ko'rsating.
 
 ### 2. Kitob olish va qaytarish
-- Kutubxonaga boring va tanlagan kitobingizdagi QR-kodni kutubxonachiga ko'rsating.
-- Profilingizdagi shaxsiy QR-kodni skanerlash uchun taqdim eting.
+- Kutubxonaga boring, kitobni tanlang va profilingizdagi **dinamik QR-kodni** kutubxonachiga ko'rsating.
 - Kitob qaytarilganda profilingizga avtomatik ravishda **Bilim ballari** qo'shiladi.
 
-### 3. Ballar to'plash va Musobaqalar
-- **Testlar** bo'limiga o'ting va o'qigan kitoblaringiz bo'yicha test topshiring.
-- To'plangan ballar bilan **leaderboard** (reyting)da yuqori o'rinlarga ko'tariling.
-- **Mukofotlar do'koni**dan ballaringizga nishonlar yoki sovg'alar sotib oling.
+---
+
+## 👨‍🏫 O'qituvchilar uchun
+
+### 1. Ro'yxatdan o'tish
+- "O'qituvchi" rolini tanlang va o'z faningizni kiriting.
+- O'qituvchilar o'quvchilarning o'qish faolligini kuzatish va ularga tavsiyalar berish imkoniyatiga ega.
 
 ---
 
 ## 📚 Kutubxonachilar uchun
 
-### 1. Kitoblarni boshqarish
-Admin panel orqali yangi kitoblarni qo'shishingiz yoki CSV fayl orqali ommaviy yuklashingiz mumkin. Har bir kitob uchun avtomatik QR-kod generatsiya qilinadi.
+### 1. Skanerlash tizimi (Yangi!)
+- Menyudagi **"Skaner"** bo'limiga o'ting.
+- Kamerani o'quvchi ko'rsatgan QR-kodga qarating.
+- Tizim o'quvchini aniqlagandan so'ng, berilayotgan kitobni ro'yxatdan tanlang va "Kitobni topshirish" tugmasini bosing.
 
-### 2. Berish va Qaytarish jarayoni
-Navbatdagi o'quvchi kelganda, uning QR-kodi va kitobdagi QR-kodni skanerlash orqali tranzaksiyani tasdiqlang. Tizim kitobning qachon qaytarilishi kerakligini avtomatik hisoblab boradi.
+### 2. Tranzaksiyalar xavfsizligi
+Dinamik QR tizimi tufayli eski yoki o'zganing QR-kodi bilan kitob olish imkonsiz. Skaner faqat haqiqiy va vaqti o'tmagan kodlarni qabul qiladi.
 
 ### 3. Hisobotlar
 Oylik yoki haftalik hisobotlarni PDF formatida yuklab oling va maktab ma'muriyatiga taqdim eting.
