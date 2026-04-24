@@ -123,14 +123,14 @@ export default function PreviewPage() {
       </div>
 
       <style jsx>{`
-        .preview-page { background: #0f172a; min-height: 100vh; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .preview-page { background: #1a0f0a; min-height: 100vh; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
         .top-nav { display: flex; align-items: center; gap: 15px; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .btn-back { background: rgba(255,255,255,0.05); color: white; padding: 8px 16px; border-radius: 12px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); font-size: 0.9rem; }
-        .book-top-info h3 { font-size: 1.1rem; margin: 0; color: white; }
-        .book-top-info span { font-size: 0.8rem; color: #818cf8; }
+        .btn-back { background: rgba(217,119,6,0.05); color: #fef3c7; padding: 8px 16px; border-radius: 12px; cursor: pointer; border: 1px solid rgba(217,119,6,0.15); font-size: 0.9rem; }
+        .book-top-info h3 { font-size: 1.1rem; margin: 0; color: #fef3c7; }
+        .book-top-info span { font-size: 0.8rem; color: #d97706; }
 
         .preview-container { display: grid; grid-template-columns: 1fr 380px; gap: 25px; max-width: 1400px; margin: 0 auto; width: 100%; flex-grow: 1; min-height: 0; }
-        .page-viewer { display: flex; flex-direction: column; background: #1e293b; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .page-viewer { display: flex; flex-direction: column; background: #2d1a12; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         .text-page-wrapper { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 25px; position: relative; overflow: hidden; }
         
         .page-stack { position: relative; width: 100%; max-width: 500px; aspect-ratio: 3/4.2; }
@@ -151,21 +151,21 @@ export default function PreviewPage() {
         .footer-line { height: 1px; background: rgba(0,0,0,0.05); margin-bottom: 8px; }
         .author-name-mini { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: #2c3e50; }
         
-        .viewer-controls { display: flex; align-items: center; justify-content: center; gap: 20px; padding: 20px; background: rgba(0,0,0,0.4); border-top: 1px solid rgba(255,255,255,0.05); }
-        .nav-btn-modern { background: #6366f1; border: none; color: white; padding: 12px 28px; border-radius: 14px; cursor: pointer; font-weight: 700; transition: 0.3s; font-size: 1rem; flex: 1; max-width: 160px; }
-        .nav-btn-modern:disabled { opacity: 0.3; cursor: not-allowed; background: #475569; }
-        .nav-btn-modern:hover:not(:disabled) { transform: translateY(-2px); background: #818cf8; box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4); }
+        .viewer-controls { display: flex; align-items: center; justify-content: center; gap: 20px; padding: 20px; background: rgba(0,0,0,0.4); border-top: 1px solid rgba(217,119,6,0.1); }
+        .nav-btn-modern { background: #d97706; border: none; color: #fef3c7; padding: 12px 28px; border-radius: 14px; cursor: pointer; font-weight: 700; transition: 0.3s; font-size: 1rem; flex: 1; max-width: 160px; }
+        .nav-btn-modern:disabled { opacity: 0.3; cursor: not-allowed; background: #451a03; }
+        .nav-btn-modern:hover:not(:disabled) { transform: translateY(-2px); background: #f59e0b; box-shadow: 0 5px 15px rgba(217, 119, 6, 0.4); }
 
         .side-panel-modern { padding: 30px; border-radius: 24px; overflow-y: auto; display: flex; flex-direction: column; }
         .side-cover-img { width: 100%; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        .side-desc-text { color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px; }
-        .borrow-btn-large { background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%); width: 100%; padding: 16px; border-radius: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; color: white; border: none; }
+        .side-desc-text { color: rgba(254, 243, 199, 0.7); font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px; }
+        .borrow-btn-large { background: linear-gradient(135deg, #d97706 0%, #92400e 100%); width: 100%; padding: 16px; border-radius: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; color: #fef3c7; border: none; }
         
-        .overlay-lock-modern { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 100; border-radius: 4px; }
-        .lock-card-modern { padding: 30px; text-align: center; color: white; width: 100%; border-radius: 30px; }
+        .overlay-lock-modern { position: absolute; inset: 0; background: rgba(26, 15, 10, 0.95); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 100; border-radius: 4px; }
+        .lock-card-modern { padding: 30px; text-align: center; color: #fef3c7; width: 100%; border-radius: 30px; }
         .lock-icon { font-size: 3rem; margin-bottom: 15px; }
-        .btn-primary-modern { background: #818cf8; color: white; border: none; padding: 14px; border-radius: 15px; width: 100%; margin-top: 20px; cursor: pointer; font-weight: 700; font-size: 1rem; }
-        .preview-loading { background: #0f172a; height: 100vh; display: flex; align-items: center; justify-content: center; color: white; }
+        .btn-primary-modern { background: #d97706; color: #fef3c7; border: none; padding: 14px; border-radius: 15px; width: 100%; margin-top: 20px; cursor: pointer; font-weight: 700; font-size: 1rem; }
+        .preview-loading { background: #1a0f0a; height: 100vh; display: flex; align-items: center; justify-content: center; color: #fef3c7; }
 
         @media (max-width: 1100px) { 
           .preview-container { grid-template-columns: 1fr; } 
