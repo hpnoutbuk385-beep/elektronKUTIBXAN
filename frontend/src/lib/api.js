@@ -2,13 +2,20 @@ export const getBaseUrl = () => {
   if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
+    const origin = window.location.origin;
     
     // Mahalliy server uchun
     if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.')) {
       return 'http://localhost:8000/api';
     }
     
-    // Production backend manzili (Railway)
+    // Agar frontend va backend bitta domenda bo'lsa (yoki o'z-o'zini aniqlash)
+    if (hostname.includes('railway.app')) {
+      // Ba'zan Railway bitta service ichida ikkala frontend/backend'ni beradi
+      // Agar o'sha domenda /api/ ishlamasa, fallback production manzili
+      return `${origin}/api`;
+    }
+
     return 'https://elektronkutibxan-production.up.railway.app/api';
   }
   return 'https://elektronkutibxan-production.up.railway.app/api';
