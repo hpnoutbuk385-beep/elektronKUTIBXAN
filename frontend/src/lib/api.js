@@ -1,5 +1,3 @@
-// Dinamik API manzili: Environment variable'dan oladi, bo'lmasa nisbiy yo'l ishlatadi
-// Agarda domen localhost bo'lmasa va env bo'sh bo'lsa, aniq production manziliga ulanadi
 const getBaseUrl = () => {
   if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
   if (typeof window !== 'undefined') {
@@ -8,7 +6,8 @@ const getBaseUrl = () => {
     if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.')) {
       return 'http://localhost:8000/api';
     }
-    return `${window.location.origin}/api`;
+    // Agar dastur Railway'da yoki boshqa joyda tursa va .env berilmagan bo'lsa, aniq backend manzilini qaytaramiz:
+    return 'https://elektronkutibxan-production.up.railway.app/api';
   }
   return 'https://elektronkutibxan-production.up.railway.app/api';
 };

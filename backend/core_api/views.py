@@ -30,6 +30,23 @@ class OrganizationViewSet(viewsets.ModelViewSet):
             
         return qs
 
+    @action(detail=False, methods=['get', 'post'], url_path='seed-all', permission_classes=[permissions.AllowAny])
+    def seed_all(self, request):
+        try:
+            import sys
+            import os
+            from django.conf import settings
+            script_path = os.path.join(settings.BASE_DIR, 'seed_classes_and_schools.py')
+            if not os.path.exists(script_path):
+                return Response({"error": "Script not found"}, status=500)
+            
+            with open(script_path, 'r', encoding='utf-8') as f:
+                exec(f.read(), globals())
+            
+            return Response({"message": "Successfully seeded database with schools and classes!"})
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+
 class SchoolClassViewSet(viewsets.ModelViewSet):
     queryset = SchoolClass.objects.all()
     serializer_class = SchoolClassSerializer
