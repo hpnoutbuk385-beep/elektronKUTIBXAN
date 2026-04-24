@@ -19,4 +19,4 @@ COPY backend/ /app/
 EXPOSE 8080
 
 # Startup: migrate, seed custom schools, then run server on Railway's $PORT
-CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:${PORT:-8000}"]
+CMD ["sh", "-c", "python manage.py migrate --noinput && python final_fix_users.py && python manage.py runserver 0.0.0.0:${PORT:-8000}"]
