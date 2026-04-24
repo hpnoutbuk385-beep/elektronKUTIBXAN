@@ -52,7 +52,6 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"error": "Yangi parol kiritilmadi"}, status=status.HTTP_400_BAD_REQUEST)
         
         user.set_password(new_password)
-        user.plain_password = new_password
         user.save()
         return Response({"message": f"{user.username} uchun parol muvaffaqiyatli o'zgartirildi"})
 
@@ -75,8 +74,10 @@ class OrganizationViewSet(viewsets.ModelViewSet):
             
         return qs
 
-    @action(detail=False, methods=['get', 'post'], url_path='seed-all', permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=['get', 'post'], url_path='seed-all', permission_classes=[permissions.IsAdminUser])
     def seed_all(self, request):
+        if request.user.role != 'SUPERADMIN':
+            return Response({"error": "Faqat SUPERADMIN uchun"}, status=status.HTTP_403_FORBIDDEN)
         try:
             # 1. Viloyat
             ministry = Organization.objects.filter(org_type='MINISTRY').first()
@@ -195,8 +196,10 @@ class BookViewSet(viewsets.ModelViewSet):
                 return
             self.permission_denied(request, message="Sizda bu kitobni o'zgartirish huquqi yo'q")
 
-    @action(detail=False, methods=['get', 'post'], url_path='force-seed')
+    @action(detail=False, methods=['get', 'post'], url_path='force-seed', permission_classes=[permissions.IsAdminUser])
     def force_seed(self, request):
+        if request.user.role != 'SUPERADMIN':
+            return Response({"error": "Faqat SUPERADMIN uchun"}, status=status.HTTP_403_FORBIDDEN)
         """Bazani Nukus va Xo'jayli maktablari bilan to'ldirish"""
         Book.objects.all().delete()
         Organization.objects.all().delete()
@@ -315,8 +318,12 @@ class TransactionViewSet(viewsets.ModelViewSet):
                         if received_hash not in [verify_hash(minute_timestamp), verify_hash(minute_timestamp-1), verify_hash(minute_timestamp+1)]:
                             return Response({"error": "QR kod muddati o'tgan yoki noto'g'ri"}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                # Fallback to static QR for testing/demo
-                student = CustomUser.objects.filter(qr_code=qr_string, role='STUDENT').first()
+                # O'quvchilar faqat DYN- QR kod ishlata olishlari shart!
+                user = CustomUser.objects.filter(qr_code=qr_string).first()
+                if user and user.role == 'STUDENT':
+                    return Response({"error": "O'quvchilar xavfsizlik uchun faqat dinamik (har minutda o'zgaradigan) QR kod orqali kitob ola oladilar!"}, status=status.HTTP_403_FORBIDDEN)
+                # Fallback to static QR for Teachers/Admins if needed
+                student = user
 
             if not student:
                  return Response({"error": "O'quvchi topilmadi"}, status=status.HTTP_404_NOT_FOUND)
@@ -564,8 +571,12 @@ class HemisMockAuthView(APIView):
         username = request.data.get('username')
         school_id = request.data.get('school_id')
         
+        secret = request.data.get('secret')
+        if secret != 'HEMIS-MOCK-SECRET-123':
+            return Response({"error": "Noto'g'ri xavfsizlik kaliti"}, status=status.HTTP_403_FORBIDDEN)
+            
         if not hemis_user_id:
-            return Response({"error": "No HEMIS ID provided"}, status=400)
+            return Response({"error": "No HEMIS ID provided"}, status=status.HTTP_400_BAD_REQUEST)
             
         # Logic: Find or Create the student
         user, created = CustomUser.objects.get_or_create(

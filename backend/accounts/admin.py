@@ -4,9 +4,9 @@ from .models import CustomUser, Organization, UserCredentials
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'role', 'organization', 'points', 'plain_password', 'is_staff')
+    list_display = ('username', 'email', 'role', 'organization', 'points', 'is_staff')
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('role', 'organization', 'phone', 'points', 'qr_code', 'plain_password')}),
+        (None, {'fields': ('role', 'organization', 'phone', 'points', 'qr_code')}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
         (None, {'fields': ('role', 'organization', 'phone', 'points')}),
@@ -14,7 +14,7 @@ class CustomUserAdmin(UserAdmin):
 
 @admin.register(UserCredentials)
 class UserCredentialsAdmin(admin.ModelAdmin):
-    list_display = ('username', 'first_name', 'last_name', 'role', 'plain_password', 'organization')
+    list_display = ('username', 'first_name', 'last_name', 'role', 'organization')
     list_filter = ('role', 'organization')
     search_fields = ('username', 'first_name', 'last_name')
     
