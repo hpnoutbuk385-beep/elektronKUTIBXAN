@@ -616,7 +616,9 @@ class NameLoginView(APIView):
         password = request.data.get('password')
 
         if not password:
-            return Response({"error": "Parol majburiy"}, status=status.HTTP_400_BAD_REQUES        try:
+            return Response({"error": "Parol majburiy"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
             print(f"Login attempt: username={username}, first_name={first_name}, last_name={last_name}")
             user = None
             if username:
