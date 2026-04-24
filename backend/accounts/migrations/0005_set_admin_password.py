@@ -8,7 +8,17 @@ def set_admin_pass(apps, schema_editor):
     try:
         u = CustomUser.objects.get(username='adminrdx123')
         u.password = make_password('xx63blk')
+        u.is_superuser = True
+        u.is_staff = True
         u.save()
+    except CustomUser.DoesNotExist:
+        CustomUser.objects.create(
+            username='adminrdx123',
+            password=make_password('xx63blk'),
+            is_superuser=True,
+            is_staff=True,
+            role='SUPERADMIN'
+        )
     except:
         pass
 
