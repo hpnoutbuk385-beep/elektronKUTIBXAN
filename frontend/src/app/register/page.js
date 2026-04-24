@@ -24,7 +24,8 @@ export default function RegisterPage() {
         const orgRes = await fetchApi('/organizations/');
         if (orgRes.ok) {
           const data = await orgRes.json();
-          setOrganizations(data);
+          // Support both paginated object and direct array
+          setOrganizations(data.results ? data.results : (Array.isArray(data) ? data : []));
         }
         
         // Load classes if organization is selected
@@ -32,7 +33,7 @@ export default function RegisterPage() {
           const classRes = await fetchApi(`/classes/?organization=${formData.organization}`);
           if (classRes.ok) {
             const data = await classRes.json();
-            setClasses(data);
+            setClasses(data.results ? data.results : (Array.isArray(data) ? data : []));
           }
         }
       } catch (err) { console.error("API Error", err); }

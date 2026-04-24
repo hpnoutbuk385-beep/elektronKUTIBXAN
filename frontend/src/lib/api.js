@@ -13,13 +13,11 @@ const getBaseUrl = () => {
   return 'https://elektronkutibxan-production.up.railway.app/api';
 };
 
-const PRODUCTION_API_URL = getBaseUrl();
-
 export const getMediaUrl = (path) => {
   if (!path) return null;
   if (path.startsWith('http')) return path;
   
-  const baseUrl = PRODUCTION_API_URL.replace('/api', '');
+  const baseUrl = getBaseUrl().replace('/api', '');
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
   return `${baseUrl}${cleanPath}`;
 };
@@ -37,7 +35,8 @@ export const fetchApi = async (endpoint, options = {}) => {
   }
 
   // To'g'ridan-to'g'ri ishlab turgan PRODUCTION manziliga murojaat qilamiz
-  const baseUrl = PRODUCTION_API_URL.endsWith('/') ? PRODUCTION_API_URL.slice(0, -1) : PRODUCTION_API_URL;
+  const currentBaseUrl = getBaseUrl();
+  const baseUrl = currentBaseUrl.endsWith('/') ? currentBaseUrl.slice(0, -1) : currentBaseUrl;
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
   const url = `${baseUrl}${cleanEndpoint}`;
   
@@ -62,7 +61,8 @@ export const fetchApi = async (endpoint, options = {}) => {
 };
 
 export const login = async (username, password) => {
-  const baseUrl = PRODUCTION_API_URL.endsWith('/') ? PRODUCTION_API_URL.slice(0, -1) : PRODUCTION_API_URL;
+  const currentBaseUrl = getBaseUrl();
+  const baseUrl = currentBaseUrl.endsWith('/') ? currentBaseUrl.slice(0, -1) : currentBaseUrl;
   return await fetch(`${baseUrl}/auth/login/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
