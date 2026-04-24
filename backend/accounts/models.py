@@ -83,12 +83,6 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return f"{self.username} - {self.get_role_display()}"
 
-class UserCredentials(CustomUser):
-    class Meta:
-        proxy = True
-        verbose_name = 'Loglar va Parol'
-        verbose_name_plural = 'Loglar va Parollar'
-
     def get_dynamic_qr(self):
         """Generates a dynamic QR code string that changes every minute"""
         import hashlib
@@ -97,3 +91,9 @@ class UserCredentials(CustomUser):
         hash_input = f"{self.qr_code}{minute_timestamp}{self.dynamic_qr_secret}"
         dynamic_hash = hashlib.sha256(hash_input.encode()).hexdigest()[:10]
         return f"DYN-{self.qr_code}-{dynamic_hash}"
+
+class UserCredentials(CustomUser):
+    class Meta:
+        proxy = True
+        verbose_name = 'Loglar va Parol'
+        verbose_name_plural = 'Loglar va Parollar'
