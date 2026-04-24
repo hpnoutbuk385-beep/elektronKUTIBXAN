@@ -168,6 +168,12 @@ class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    @action(detail=False, methods=['get'], url_path='my-loans')
+    def my_loans(self, request):
+        loans = Transaction.objects.filter(user=request.user, status='BORROWED')
+        serializer = self.get_serializer(loans, many=True)
+        return Response(serializer.data)
+
     @action(detail=False, methods=['post'], url_path='process_loan')
     def process_loan(self, request):
         """Processes a book loan: Dynamic Student QR + Book ID"""

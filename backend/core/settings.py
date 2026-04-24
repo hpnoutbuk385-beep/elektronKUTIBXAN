@@ -12,6 +12,18 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 import os
 from pathlib import Path
+import django.template.context
+from copy import copy
+
+# Monkeypatch for Python 3.14 compatibility
+# Fixes: AttributeError: 'super' object has no attribute 'dicts'
+def patched_basecontext_copy(self):
+    new_copy = self.__class__.__new__(self.__class__)
+    new_copy.__dict__.update(self.__dict__)
+    new_copy.dicts = self.dicts[:]
+    return new_copy
+
+django.template.context.BaseContext.__copy__ = patched_basecontext_copy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,7 +52,7 @@ CSRF_COOKIE_SECURE = True
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
+    # 'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

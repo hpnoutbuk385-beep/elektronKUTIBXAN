@@ -49,7 +49,8 @@ def seed_data():
     # 2. Categories
     categories = ["Badiiy adabiyot", "Ilmiy-ommabop", "Darsliklar", "Tarixiy", "Psixologiya"]
     for cat_name in categories:
-        Category.objects.get_or_create(name=cat_name)
+        if not Category.objects.filter(name=cat_name).exists():
+            Category.objects.create(name=cat_name)
     
     # 3. Create the Main Admin (Superuser)
     admin_username = os.environ.get("ADMIN_USERNAME", "admin_demo")

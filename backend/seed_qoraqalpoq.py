@@ -66,9 +66,9 @@ def seed_qoraqalpoq_data():
 
     # 5. Kitoblarni qo'shish (Nukus shahri 1-maktab uchun)
     if nukus_1_maktab:
-        badiiy, _ = Category.objects.get_or_create(name="Badiiy adabiyot")
-        tarixiy, _ = Category.objects.get_or_create(name="Tarixiy")
-        darslik, _ = Category.objects.get_or_create(name="Darsliklar")
+        badiiy = Category.objects.filter(name="Badiiy adabiyot").first() or Category.objects.create(name="Badiiy adabiyot")
+        tarixiy = Category.objects.filter(name="Tarixiy").first() or Category.objects.create(name="Tarixiy")
+        darslik = Category.objects.filter(name="Darsliklar").first() or Category.objects.create(name="Darsliklar")
         
         books_data = [
             {"title": "O'tkan kunlar", "author": "Abdulla Qodiriy", "category": badiiy},

@@ -10,7 +10,14 @@ export default function Dashboard() {
   const [qrData, setQrData] = useState(null);
   const [timeLeft, setTimeLeft] = useState(120);
 
+  const [isChecking, setIsChecking] = useState(true);
+
   useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      router.push('/login');
+      return;
+    }
     const userData = localStorage.getItem('user');
     if (userData && userData !== "undefined") {
       try {
@@ -20,7 +27,9 @@ export default function Dashboard() {
         console.error("Failed to parse user", e);
       }
     }
-  }, []);
+    setIsChecking(false);
+  }, [router]);
+
 
   const loadQrData = async () => {
     try {
@@ -51,6 +60,7 @@ export default function Dashboard() {
     }
     return () => clearInterval(interval);
   }, [user]);
+  if (isChecking) return <div className="flex-center h-full" style={{color: '#DAA520'}}>Yuklanmoqda...</div>;
 
   return (
     <div className="dashboard-container animate-fade">

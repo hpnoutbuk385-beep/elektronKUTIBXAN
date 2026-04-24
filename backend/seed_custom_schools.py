@@ -187,7 +187,9 @@ def seed_custom_schools():
         
         books_created = 0
         for b in books_data:
-            cat, _ = Category.objects.get_or_create(name=b["category"])
+            cat = Category.objects.filter(name=b["category"]).first()
+            if not cat:
+                cat = Category.objects.create(name=b["category"])
             book, created = Book.objects.update_or_create(
                 title=b["title"],
                 organization=qoraqalpoq_reg,

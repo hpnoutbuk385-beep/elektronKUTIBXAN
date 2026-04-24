@@ -2,8 +2,6 @@
 import { useEffect, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { fetchApi } from "@/lib/api";
-import Sidebar from "@/components/Sidebar";
-import Navbar from "@/components/Navbar";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function ScanPage() {
@@ -84,14 +82,9 @@ export default function ScanPage() {
   };
 
   return (
-    <div className="app-layout">
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
-      
-      <main className="main-content">
-        <Navbar onMenuClick={() => setSidebarOpen(true)} />
-        
-        <div className="page-container animate-fade">
-          <div className="page-header">
+    <>
+    <div className="page-container animate-fade">
+      <div className="page-header">
             <h1 className="page-title">Kutubxonachi Skaneri</h1>
             <p className="page-subtitle">O'quvchi QR-kodini skanerlang ва kitobni biriktiring</p>
           </div>
@@ -144,12 +137,9 @@ export default function ScanPage() {
               </div>
             </div>
           </div>
-        </div>
-      </main>
+    </div>
 
-      <style jsx>{`
-        .app-layout { display: flex; background: #1a120b; min-height: 100vh; }
-        .main-content { flex-grow: 1; padding: 0 20px 20px 0; display: flex; flex-direction: column; }
+    <style jsx>{`
         .page-container { padding: 20px; }
         .page-header { margin-bottom: 30px; }
         .page-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: #f5e6c8; margin-bottom: 8px; }
@@ -210,6 +200,6 @@ export default function ScanPage() {
           .scan-grid { grid-template-columns: 1fr; }
         }
       `}</style>
-    </div>
+    </>
   );
 }

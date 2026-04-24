@@ -29,7 +29,7 @@ export default function Sidebar({ isOpen, onClose }) {
     { name: t('classes'), href: "/classes", icon: "🏫", locked: !user },
     { name: t('rewards'), href: "/rewards", icon: "🎁", locked: !user },
     { name: t('profile'), href: "/profile", icon: "👤", locked: !user },
-    { name: "Skaner", href: "/admin/scan", icon: "📷", hidden: user?.role !== 'ADMIN' },
+    { name: "Skaner", href: "/admin/scan", icon: "📷", hidden: !['SUPERADMIN', 'REGION_ADMIN', 'DISTRICT_ADMIN', 'SCHOOL_ADMIN', 'ADMIN'].includes(user?.role) },
   ];
 
   return (
@@ -52,7 +52,7 @@ export default function Sidebar({ isOpen, onClose }) {
         {user && (
           <div className="user-quick-info glass-card">
             <div className="user-role-badge">
-              {user.role === 'ADMIN' ? '🏛️ Admin' : user.role === 'TEACHER' ? '🎓 O\'qituvchi' : '📖 O\'quvchi'}
+              {['SUPERADMIN', 'REGION_ADMIN', 'DISTRICT_ADMIN', 'SCHOOL_ADMIN', 'ADMIN'].includes(user.role) ? '🏛️ Admin' : user.role === 'TEACHER' ? '🎓 O\'qituvchi' : '📖 O\'quvchi'}
             </div>
             <div className="user-name-small">{user.first_name} {user.last_name}</div>
           </div>
@@ -149,8 +149,8 @@ export default function Sidebar({ isOpen, onClose }) {
           }
 
           .menu-nav { display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
-          .menu-item, 
-          .menu-nav a.menu-item {
+          :global(.sidebar .menu-item), 
+          :global(.sidebar .menu-nav a.menu-item) {
             display: flex !important; 
             align-items: center; 
             gap: 14px; 
@@ -167,13 +167,13 @@ export default function Sidebar({ isOpen, onClose }) {
             width: 100%;
           }
           
-          .menu-nav a.menu-item:visited, 
-          .menu-nav a.menu-item:link {
+          :global(.sidebar .menu-nav a.menu-item:visited), 
+          :global(.sidebar .menu-nav a.menu-item:link) {
             color: rgba(196, 168, 130, 0.7) !important;
           }
 
-          .menu-item:hover,
-          .menu-nav a.menu-item:hover { 
+          :global(.sidebar .menu-item:hover),
+          :global(.sidebar .menu-nav a.menu-item:hover) { 
             color: #f5e6c8 !important; 
             background: rgba(193, 154, 107, 0.12) !important;
             border-color: rgba(218, 165, 32, 0.25) !important;
@@ -181,13 +181,18 @@ export default function Sidebar({ isOpen, onClose }) {
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
           }
 
-          .menu-item.active,
-          .menu-nav a.menu-item.active {
+          :global(.sidebar .menu-item.active),
+          :global(.sidebar .menu-nav a.menu-item.active) {
             color: #DAA520 !important;
             background: rgba(218, 165, 32, 0.15) !important;
             font-weight: 700;
             border: 1px solid rgba(218, 165, 32, 0.35) !important;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          }
+          :global(.sidebar .menu-item.locked) { 
+            opacity: 0.4; 
+            cursor: not-allowed; 
+            filter: grayscale(0.5);
           }
           .menu-icon {
             font-size: 1.2rem;

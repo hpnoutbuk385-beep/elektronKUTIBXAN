@@ -2,8 +2,6 @@
 import { useEffect, useState } from "react";
 import { fetchApi } from "@/lib/api";
 import { useLanguage } from "@/context/LanguageContext";
-import Sidebar from "@/components/Sidebar";
-import Navbar from "@/components/Navbar";
 
 export default function ClassesPage() {
   const { t } = useLanguage();
@@ -30,14 +28,9 @@ export default function ClassesPage() {
   }, []);
 
   return (
-    <div className="app-layout">
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
-      
-      <main className="main-content">
-        <Navbar onMenuClick={() => setSidebarOpen(true)} />
-        
-        <div className="page-container animate-fade">
-          <div className="page-header">
+    <>
+    <div className="page-container animate-fade">
+      <div className="page-header">
             <h1 className="page-title">{t('classes')}</h1>
             <p className="page-subtitle">O'quv maskanidagi barcha sinflar va ta'lim tillari</p>
           </div>
@@ -69,10 +62,9 @@ export default function ClassesPage() {
               )}
             </div>
           )}
-        </div>
-      </main>
+    </div>
 
-      <style jsx>{`
+    <style jsx>{`
         .app-layout { display: flex; background: #1a120b; min-height: 100vh; }
         .main-content { flex-grow: 1; padding: 0 20px 20px 0; display: flex; flex-direction: column; }
         .page-container { padding: 20px; }
@@ -141,6 +133,6 @@ export default function ClassesPage() {
           .main-content { padding: 0 15px 15px 15px; }
         }
       `}</style>
-    </div>
+    </>
   );
 }
