@@ -97,13 +97,34 @@ class BookViewSet(viewsets.ModelViewSet):
             )
 
         # 5. Xo'jayli maktablari (1-44)
+        schools = []
         for i in range(1, 45):
-            Organization.objects.create(
+            school = Organization.objects.create(
                 name=f"{i}-maktab — Xo'jayli",
                 org_type='SCHOOL',
                 parent=xojayli_dist,
                 district_name="Xo'jayli tumani"
             )
+            schools.append(school)
+            
+        # 5.5 Nukus maktablarini ham listga qo'shish
+        for i in range(1, 61):
+            school = Organization.objects.get(name=f"{i}-maktab — Nukus")
+            schools.append(school)
+
+        # 5.6 Har bir maktab uchun sinflar yaratish
+        from accounts.models import SchoolClass
+        for school in schools:
+            SchoolClass.objects.create(name="5-A", language='kk', organization=school)
+            SchoolClass.objects.create(name="6-B", language='uz', organization=school)
+            SchoolClass.objects.create(name="11-V", language='ru', organization=school)
+
+        # 5.7 Kategoriyalar yaratish
+        from library.models import Category
+        cats = ["Badiiy adabiyot", "Ilmiy-ommabop", "Darsliklar", "Psixologiya", "Biznes"]
+        cat_objs = []
+        for cname in cats:
+            cat_objs.append(Category.objects.create(name=cname))
 
         # 6. Kitoblarni qo'shish
         books_data = [

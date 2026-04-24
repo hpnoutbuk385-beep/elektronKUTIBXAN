@@ -90,6 +90,11 @@ export default function RegisterPage() {
             <input type="text" placeholder={t('username')} required onChange={(e) => setFormData({...formData, username: e.target.value})} />
           </div>
 
+          <div className="input-group">
+            <label>Email</label>
+            <input type="email" placeholder="example@mail.com" required onChange={(e) => setFormData({...formData, email: e.target.value})} />
+          </div>
+
           <div className="form-grid">
             <div className="input-group">
               <label>{t('select_role')}</label>
@@ -108,23 +113,11 @@ export default function RegisterPage() {
             <label>{t('organization')}</label>
             <select required onChange={(e) => setFormData({...formData, organization: e.target.value})}>
               <option value="">{t('select_org')}</option>
-              {organizations.map(org => (
+              {organizations.filter(org => org.org_type === 'SCHOOL').map(org => (
                 <option key={org.id} value={org.id}>{org.name}</option>
               ))}
             </select>
           </div>
-
-          {formData.role === 'STUDENT' && (
-            <div className="input-group animate-slide-up">
-              <label>{t('school_class')}</label>
-              <select required onChange={(e) => setFormData({...formData, school_class: e.target.value})}>
-                <option value="">{t('select')}</option>
-                {classes.map(cls => (
-                  <option key={cls.id} value={cls.id}>{cls.name} ({cls.language_display})</option>
-                ))}
-              </select>
-            </div>
-          )}
 
           {formData.role === 'TEACHER' && (
             <div className="input-group animate-slide-up">

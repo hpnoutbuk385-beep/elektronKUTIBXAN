@@ -36,7 +36,7 @@ export default function PreviewPage() {
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access_token");
     setIsAuth(!!token);
 
     async function loadBook() {
@@ -97,7 +97,9 @@ export default function PreviewPage() {
                       <div className="lock-icon">🔒</div>
                       <h3>Kitobni to'liq o'qing</h3>
                       <p>Davomini o'qish uchun ro'yxatdan o'ting.</p>
-                      <button className="btn-primary-modern" onClick={() => router.push("/register")}>Ro'yxatdan o'tish</button>
+                      <button className="btn-primary-modern" onClick={() => isAuth ? setShowOverlay(false) : router.push("/register")}>
+                        {isAuth ? "Tushunarli" : "Ro'yxatdan o'tish"}
+                      </button>
                     </div>
                   </div>
                 )}
@@ -115,8 +117,11 @@ export default function PreviewPage() {
           <div className="side-desc-wrap">
             <h4>Batafsil Tavsif</h4>
             <p className="side-desc-text">{book.description}</p>
-            <button className="btn-primary-modern borrow-btn-large" onClick={() => router.push('/register')}>
-              📖 Kitobni ijaraga olish
+            <button 
+              className="btn-primary-modern borrow-btn-large" 
+              onClick={() => isAuth ? alert("Kitobni ijaraga olish uchun profilingizdagi QR-kodni kutubxonachiga ko'rsating.") : router.push('/register')}
+            >
+              {isAuth ? "📖 Qanday ijaraga olish?" : "📖 Kitobni ijaraga olish"}
             </button>
           </div>
         </div>

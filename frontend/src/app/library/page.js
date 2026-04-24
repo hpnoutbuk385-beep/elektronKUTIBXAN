@@ -102,7 +102,7 @@ export default function LibraryPage() {
             <div className="v-info">
               <h3 className="v-title">{book.title}</h3>
               <p className="v-author">{book.author}</p>
-              <button className="v-btn" onClick={(e) => { e.stopPropagation(); router.push('/register'); }}>
+              <button className="v-btn" onClick={(e) => { e.stopPropagation(); router.push(`/preview/${book.id}`); }}>
                 📖 Ijaraga olish
               </button>
             </div>
