@@ -5,25 +5,25 @@ O'zbekiston ta'lim muassasalari uchun mo'ljallangan zamonaviy va premium elektro
 ## 🚀 So'nggi Yangilanishlar (v2.1 - 24.04.2026)
 
 ### 🏫 Maktablar va Sinflar To'liq Qo'shildi
-- **104 ta maktab** bazaga kiritildi:
-  - Nukus shahri — 60 ta maktab (1-maktab — Nukus ... 60-maktab — Nukus)
-  - Xo'jayli tumani — 44 ta maktab (1-maktab — Xo'jayli ... 44-maktab — Xo'jayli)
-- **3432 ta sinf** har bir maktabga qo'shildi:
+- **139 ta maktab** bazaga kiritildi:
+  - Nukus shahri — 60 ta maktab
+  - Xo'jayli tumani — 44 ta maktab
+  - Nukus tumani — 35 ta maktab
+- **4587 ta sinf** har bir maktabga qo'shildi:
   - 1-A sinf — O'zbek tili
   - 1-B sinf — Rus tili
-  - 1-V sinf — Qaraqalpoq tili
-  - ... (2-A, 2-B, 2-V dan 11-A, 11-B, 11-V gacha)
+  - 1-V sinf — Qoraqalpoq tili
+  - ... (jami 11-sinfgacha barcha tillarda)
 
 ### 🔧 API va Ro'yxatdan O'tish Tuzatishlari
-- Ro'yxatdan o'tish sahifasida faqat **SCHOOL** turdagi tashkilotlar ko'rsatiladi
-- Maktab tanlagandan keyin **sinflar avtomatik yuklanadi**
-- API `organizations/` va `classes/` endpointlari **autentifikatsiyasiz** ochiq (ro'yxatdan o'tish uchun)
-- `seed-all` endpointi orqali jonli serverga maktab va sinflarni yuklash imkoniyati
+- Ro'yxatdan o'tish sahifasida faqat **SCHOOL** turdagi tashkilotlar ko'rsatiladi.
+- Maktab tanlagandan keyin **sinflar avtomatik yuklanadi**.
+- API `organizations/` va `classes/` endpointlari **autentifikatsiyasiz** ochiq.
+- `seed-all` endpointi orqali production bazani istalgan vaqt to'ldirish mumkin.
 
-### 🌐 Production API Tuzatishlari
-- Frontend API manzili Railway serverida to'g'ri ishlaydi
-- Eski tokenlar bilan 401 xatosi avtomatik hal qilinadi
-- `getBaseUrl()` dinamik ravishda localhost yoki production manzilni aniqlaydi
+### 🌐 Production va Persistence (Railway)
+- **Ma'lumotlar saqlanishi (Persistence)**: Dockerfile `CMD` buyrug'iga seed skripti qo'shildi, natijada Railway serveri har safar qayta yonganda maktab/sinf ma'lumotlari avtomatik tiklanadi.
+- **Dinamik API**: Frontend endi o'zi turgan domenga qarab localhost yoki Railway backend'ga avtomatik ulanadi.
 
 ---
 
