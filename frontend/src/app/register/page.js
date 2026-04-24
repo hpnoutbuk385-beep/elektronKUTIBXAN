@@ -19,26 +19,37 @@ export default function RegisterPage() {
   const router = useRouter();
 
   useEffect(() => {
-    async function loadInitialData() {
+    async function loadOrganizations() {
       try {
-        const orgRes = await fetchApi('/organizations/');
+        // Faqat SCHOOL turdagi tashkilotlarni yuklash
+        const orgRes = await fetchApi('/organizations/?org_type=SCHOOL');
         if (orgRes.ok) {
           const data = await orgRes.json();
-          // Support both paginated object and direct array
-          setOrganizations(data.results ? data.results : (Array.isArray(data) ? data : []));
+          const orgs = data.results ? data.results : (Array.isArray(data) ? data : []);
+          setOrganizations(orgs);
         }
-        
-        // Load classes if organization is selected
-        if (formData.organization) {
-          const classRes = await fetchApi(`/classes/?organization=${formData.organization}`);
-          if (classRes.ok) {
-            const data = await classRes.json();
-            setClasses(data.results ? data.results : (Array.isArray(data) ? data : []));
-          }
-        }
-      } catch (err) { console.error("API Error", err); }
+      } catch (err) { console.error("Org API Error", err); }
     }
-    loadInitialData();
+    loadOrganizations();
+  }, []);
+
+  // Maktab tanlanganda sinflarni yuklash
+  useEffect(() => {
+    async function loadClasses() {
+      if (!formData.organization) {
+        setClasses([]);
+        return;
+      }
+      try {
+        const classRes = await fetchApi(`/classes/?organization=${formData.organization}`);
+        if (classRes.ok) {
+          const data = await classRes.json();
+          const cls = data.results ? data.results : (Array.isArray(data) ? data : []);
+          setClasses(cls);
+        }
+      } catch (err) { console.error("Class API Error", err); }
+    }
+    loadClasses();
   }, [formData.organization]);
 
   const handleSubmit = async (e) => {
