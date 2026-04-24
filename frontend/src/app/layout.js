@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const isAuthPage = ["/login", "/register"].includes(pathname);
+  const isAuthPage = ["/login"].includes(pathname);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   useEffect(() => {

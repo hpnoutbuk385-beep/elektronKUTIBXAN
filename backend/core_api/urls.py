@@ -26,7 +26,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('auth/login/', NameLoginView.as_view(), name='token_obtain_pair'), # Override with NameLogin
     path('auth/login-username/', TokenObtainPairView.as_view(), name='token_obtain_pair_original'),
-    path('auth/register/', RegisterView.as_view(), name='token_register'),
     path('auth/profile/', ProfileView.as_view(), name='token_profile'),
     path('auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('reports/school-pdf/', SchoolReportPDFView.as_view(), name='school_report_pdf'),
