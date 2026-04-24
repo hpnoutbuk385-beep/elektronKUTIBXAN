@@ -110,7 +110,7 @@ export default function ProfilePage() {
               </div>
               <div className="qr-item">
                 <div className="qr-box static">
-                   <img src={getMediaUrl(user?.qr_code_image)} alt="Static" />
+                   <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${user?.qr_code}`} alt="Static" />
                 </div>
                 <span className="qr-type">Doimiy ID</span>
               </div>

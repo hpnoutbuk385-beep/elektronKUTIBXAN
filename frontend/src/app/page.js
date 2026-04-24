@@ -107,7 +107,7 @@ export default function Dashboard() {
                   </div>
                   <div className="side-static-qr">
                     <span>Doimiy ID:</span>
-                    <img src={getMediaUrl(qrData.qr_code_image)} alt="Static" />
+                    <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qrData?.qr_code}`} alt="Static" />
                   </div>
                 </>
               ) : (
