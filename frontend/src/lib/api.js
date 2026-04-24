@@ -3,7 +3,11 @@
 const getBaseUrl = () => {
   if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
   if (typeof window !== 'undefined') {
-    if (window.location.hostname === 'localhost') return 'http://localhost:8000/api';
+    const hostname = window.location.hostname;
+    // Mahalliy server uchun (localhost, 127.0.0.1 yoki LAN IP)
+    if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.')) {
+      return 'http://localhost:8000/api';
+    }
     return `${window.location.origin}/api`;
   }
   return 'https://elektronkutibxan-production.up.railway.app/api';
