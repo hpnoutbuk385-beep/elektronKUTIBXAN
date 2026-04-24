@@ -646,7 +646,6 @@ class NameLoginView(APIView):
         except Exception as e:
             print(f"Login error: {str(e)}")
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-EST)
 
 class ProfileView(APIView):
     permission_classes = [permissions.IsAuthenticated]
