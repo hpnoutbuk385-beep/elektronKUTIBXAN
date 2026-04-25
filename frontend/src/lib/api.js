@@ -53,10 +53,9 @@ export const fetchApi = async (endpoint, options = {}) => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('user');
     
-    // Auth-siz qayta urinish
-    const newHeaders = { ...headers };
-    delete newHeaders['Authorization'];
-    response = await fetch(url, { ...options, headers: newHeaders });
+    // Auth xatoligi bo'lsa darhol tizimdan chiqarib, login sahifasiga yo'naltirish
+    window.location.href = '/login';
+    return response;
   }
 
   return response;
