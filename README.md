@@ -1,31 +1,102 @@
-# 📚 Raqamli Kutubxona Platformasi (Digital Library)
+# 📚 Online Kutibxona (Raqamli Kutubxona)
 
-O'zbekiston ta'lim muassasalari uchun mo'ljallangan zamonaviy va premium elektron kutubxona platformasi.
+Zamonaviy maktablar uchun mo'ljallangan, QR-kod tizimi orqali ishlaydigan aqlli kutubxona boshqaruv tizimi.
 
-## 🚀 So'nggi Yangilanishlar (v2.0 - Cinematic Release)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)
+![Django](https://img.shields.io/badge/django-5.0%2B-green.svg)
 
-Platforma to'liq "Production-ready" holatga keltirildi:
+## ✨ Asosiy imkoniyatlar
 
-*   **✨ Mehmonlar uchun ochiqlik**: Saytga kirgan har qanday foydalanuvchi (ro'yxatdan o'tmasdan) kitoblar ro'yxatini ko'rishi va asarlar bilan tanishishi mumkin.
-*   **📖 Matnli Preview (Haqiqiy kitob hissi)**: Kitoblarni o'qishdan oldin ularning 3 ta sahifasi bilan "Paper-Stack" (varaqlangan kitob) dizaynida tanishish imkoniyati qo'shildi.
-*   **🔓 To'liq PDF O'quvchi**: Ro'yxatdan o'tgan foydalanuvchilar uchun kitobning barcha 100+ sahifalari to'liq PDF formatida (iframe orqali) ochiladi.
-*   **🖼️ Ishonchli Rasmlar (Image Proxy)**: Kitob muqovalari endi `images.weserv.nl` proksisi orqali yuklanadi, bu rasmlarning har doim ko'rinishini ta'minlaydi.
-*   **📱 Mobil Optimizatsiya**: Sayt barcha turdagi qurilmalar (smartfon, planshet, kompyuter) uchun to'liq moslashtirilgan.
-*   **💳 Ijaraga olish tizimi**: Har bir kitobda "Ijaraga olish" tugmasi mavjud bo'lib, u foydalanuvchini ro'yxatdan o'tishga va asarni shaxsiy javoniga qo'shishga yo'naltiradi.
+*   🛡️ **Xavfsiz dinamik QR-kodlar:** Har 2 daqiqada yangilanadigan xavfsiz identifikatsiya tizimi.
+*   👨‍💼 **Ko'p darajali boshqaruv:**
+    *   **Super Admin:** Barcha maktablarni va muassasalarni nazorat qilish.
+    *   **Maktab Admini (Kutubxonachi):** Kitoblar fondini boshqarish, o'quvchilarni ro'yxatga olish va kitob berish/qabul qilish.
+    *   **O'quvchi/O'qituvchi:** Kitoblarni qidirish, bron qilish va shaxsiy kabinet orqali o'z kitoblarini kuzatish.
+*   🎨 **Premium Dizayn:** Zamonaviy "Glassmorphism" uslubidagi va "Library Amber" mavzusidagi qulay interfeys.
+*   📸 **Kamera bilan ishlash:** Mobil qurilmalar orqali kitob muqovalarini suratga olish va yuklash.
+*   📊 **Real-vaqt statistikasi:** Kitoblar aylanishi va o'quvchilar faolligini tahlil qilish.
+*   🌍 **Ko'p tilli qo'llab-quvvatlash:** O'zbek, Rus va Ingliz tillari.
 
-## 🛠 Texnologiyalar
+## 🏗️ Loyiha strukturasi (Architecture)
 
-*   **Frontend**: Next.js 14, React, CSS Modules (Cinematic Glassmorphism)
-*   **Backend**: Django 5.0, Django REST Framework
-*   **Ma'lumotlar bazasi**: PostgreSQL
-*   **Deployment**: Railway / Docker
+Loyiha modulli arxitekturaga asoslangan bo'lib, har bir rol uchun alohida frontend ilovalari mavjud:
 
-## 📥 O'rnatish va Ishga tushirish
+```text
+elektronKUTIBXAN/
+├── backend/                  # Django asosiy loyiha papkasi
+│   ├── core/                 # Sozlamalar va global marshrutlash
+│   ├── accounts/             # Foydalanuvchilar, rollar va xavfsizlik (HMAC Tokens)
+│   ├── schools/              # Maktablar va muassasalar bazasi
+│   ├── books/                # Kitoblar katalogi, inventar va ijara tizimi
+│   ├── stats/                # Tizim loglari va tahliliy ma'lumotlar
+│   ├── frontend_admin/       # Super Admin interfeysi (Django Templates)
+│   ├── frontend_school/      # Maktab Admini/Kutubxonachi interfeysi
+│   ├── frontend_user/        # O'quvchi va O'qituvchi interfeysi
+│   ├── static/               # Global CSS/JS va dizayn aktivlari
+│   └── templates/            # Umumiy va asosiy shablonlar (Base layouts)
+├── scripts/                  # Avtomatlashtirish skriptlari
+│   ├── seed_demo.py          # Demo ma'lumotlarni yaratish
+│   ├── make_translations.py  # Tarjimalarni avtomatlashtirish
+│   └── fix_roles.py          # Rollarni tekshirish va tuzatish
+├── media/                    # Yuklangan rasmlar va QR-kodlar (Git-da saqlanmaydi)
+├── Dockerfile                # Docker sozlamalari
+└── README.md                 # Loyiha hujjatlari
+```
 
-1.  Repozitoriyani klon qiling: `git clone https://github.com/hpnoutbuk385-beep/elektronKUTIBXAN.git`
-2.  Backendni ishga tushiring: `python manage.py runserver`
-3.  Frontendni ishga tushiring: `npm run dev`
-4.  Brauzerda `localhost:3000` ni oching.
+## 🛠️ Texnologiyalar
+
+*   **Backend:** Python 3.12, Django 5.0, PostgreSQL
+*   **Frontend:** Vanilla JS, HTML5, CSS3 (Glassmorphism design)
+*   **QR System:** qrcode (python) + html5-qrcode (JS)
+*   **UI Framework:** Jazzmin (Admin panel uchun)
+
+## 🚀 O'rnatish
+
+1.  **Loyiha nusxasini olish:**
+    ```bash
+    git clone https://github.com/username/elektron-kutibxona.git
+    cd elektron-kutibxona
+    ```
+
+2.  **Virtual muhitni sozlash:**
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # Windows uchun: venv\Scripts\activate
+    ```
+
+3.  **Kutubxonalarni o'rnatish:**
+    ```bash
+    pip install -r backend/requirements.txt
+    ```
+
+4.  **Bazani tayyorlash:**
+    ```bash
+    cd backend
+    python manage.py migrate
+    ```
+
+5.  **Admin foydalanuvchi yaratish:**
+    ```bash
+    python manage.py createsuperuser
+    ```
+
+6.  **Loyihani ishga tushirish:**
+    ```bash
+    python manage.py runserver
+    ```
+
+## 📜 Foydali buyruqlar (Scripts)
+
+Loyiha ildiz papkasidagi `scripts/` papkasida foydali skriptlar mavjud:
+
+*   **Demo ma'lumotlar yuklash:** `python scripts/seed_demo.py`
+*   **Tarjimalarni yangilash:** `python scripts/make_translations.py`
+*   **Rollar xatosini tuzatish:** `python scripts/fix_roles.py`
 
 ## 📄 Litsenziya
-Ushbu loyiha o'quv va ma'rifiy maqsadlar uchun yaratilgan.
+
+Ushbu loyiha MIT litsenziyasi ostida tarqatiladi.
+
+---
+Developed with ❤️ for Modern Schools.

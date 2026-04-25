@@ -12,8 +12,8 @@ class TenantSecurityMiddleware:
     def __call__(self, request):
         if request.user.is_authenticated:
             # Set the tenant for django-multitenant globally for this request
-            if request.user.organization:
-                set_current_tenant(request.user.organization)
+            if hasattr(request.user, 'school') and request.user.school:
+                set_current_tenant(request.user.school)
             
             # Simple security check: if a request context (like school_id in JSON) 
             # is different from the user's school, block it.

@@ -1,19 +1,15 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Organization
+from .models import CustomUser
 
-@admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'role', 'organization', 'points', 'is_staff')
+    list_display = ('username', 'email', 'first_name', 'last_name', 'role', 'school', 'is_staff')
+    list_filter = ('role', 'school', 'is_staff', 'is_superuser')
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('role', 'organization', 'phone', 'points', 'qr_code')}),
+        ('Qo\'shimcha ma\'lumotlar', {'fields': ('role', 'school', 'grade')}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('role', 'organization', 'phone', 'points')}),
+        ('Qo\'shimcha ma\'lumotlar', {'fields': ('role', 'school', 'grade')}),
     )
 
-@admin.register(Organization)
-class OrganizationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'org_type', 'parent', 'region_name')
-    list_filter = ('org_type', 'region_name')
-    search_fields = ('name',)
+admin.site.register(CustomUser, CustomUserAdmin)

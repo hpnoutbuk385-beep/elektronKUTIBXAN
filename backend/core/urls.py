@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -25,12 +26,14 @@ admin.site.site_header = _("Raqamli Kutubxona Admin Paneli")
 admin.site.site_title = _("Kutubxona Admin")
 admin.site.index_title = _("Boshqaruv")
 
-from django.http import HttpResponseRedirect
-
 urlpatterns = [
-    path('', lambda request: HttpResponseRedirect('/admin/')),
     path('admin/', admin.site.urls),
-    path('api/', include('core_api.urls')),
+    path('', lambda r: redirect('login')), # Redirect root to login
+    path('', include('accounts.urls')),
+    path('admin-panel/', include('frontend_admin.urls')),
+    path('school-panel/', include('frontend_school.urls')),
+    path('library/', include('frontend_user.urls')),
+    path('i18n/', include('django.conf.urls.i18n')),
 ]
 
 if settings.DEBUG:
